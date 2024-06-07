@@ -1,14 +1,20 @@
-export function Nonogram({ puzzle }: { puzzle: number[][] }) {
-  return (
-    <div className="grid grid-cols-5 gap-2">
-      {puzzle.map((row, i) =>
-        row.map((cell, j) => (
-          <div
-            key={`${i}-${j}`}
-            className={`w-6 h-6 ${cell ? "bg-black" : "bg-white"}`}
-          />
-        ))
-      )}
-    </div>
-  );
+import { NonogramGrid } from "@/lib/nonograms";
+import { NonogramCell } from "./nonogram-cell";
+
+interface NonogramProps {
+  puzzle: NonogramGrid;
+}
+
+export function Nonogram({ puzzle }: NonogramProps) {
+  const renderCells = (row: number[], rowIndex: number) => {
+    return row.map((cell, cellIndex) => {
+      const key = `${rowIndex}-${cellIndex}`;
+      const correct = !!cell;
+      return <NonogramCell key={key} correct={correct} />;
+    });
+  };
+
+  const renderRows = puzzle.map(renderCells);
+
+  return <div className="grid grid-cols-5 gap-2">{renderRows}</div>;
 }
