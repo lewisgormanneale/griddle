@@ -9,9 +9,9 @@ interface NonogramProps {
   puzzle: NonogramGrid;
 }
 
-export function Nonogram({ puzzle }: NonogramProps) {
+export function NonogramPuzzle({ puzzle }: NonogramProps) {
   const [time, setTime] = useState(0);
-  const [timerActive, setTimerActive] = useState(false);
+  const [timerActive, setTimerActive] = useState(true);
   const renderCells = (row: number[], rowIndex: number) => {
     return row.map((cell, cellIndex) => {
       const key = `${rowIndex}-${cellIndex}`;
@@ -23,7 +23,7 @@ export function Nonogram({ puzzle }: NonogramProps) {
   const renderRows = puzzle.map(renderCells);
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-2">
       <Timer time={time} timerActive={timerActive} setTime={setTime} />
       <div className="grid grid-cols-5 gap-2">{renderRows}</div>
     </div>
