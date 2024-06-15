@@ -1,4 +1,4 @@
-import { NonogramGrid } from "@/lib/nonograms";
+import { NonogramGrid } from "@/lib/types";
 
 export function generatePuzzle(rows: number, cols: number): NonogramGrid {
   return Array.from({ length: rows }, () =>
