@@ -1,10 +1,14 @@
 import { useState } from "react";
 
-export function Square({ correct }: { correct: boolean }) {
-  const [filled, setFilled] = useState(false);
-
+export function Square({
+  filled,
+  onClick,
+}: {
+  filled: boolean;
+  onClick: () => void;
+}) {
   const handleClick = () => {
-    setFilled(!filled);
+    onClick();
   };
 
   return (
@@ -14,7 +18,7 @@ export function Square({ correct }: { correct: boolean }) {
       }`}
       onClick={handleClick}
     >
-      {correct ? <div className="bg-black"></div> : null}
+      {filled ? <div className="bg-black"></div> : null}
     </td>
   );
 }

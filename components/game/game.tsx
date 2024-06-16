@@ -1,18 +1,36 @@
 "use client";
 
 import { Puzzle } from "@/lib/types";
-import { Square } from "./square";
 import { useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
+import { Square } from "./square";
 
 interface NonogramProps {
   puzzle: Puzzle;
 }
 
-export function Game({ puzzle }: NonogramProps) {
+export function Game({ puzzle }: { puzzle: Puzzle }) {
+  const [guesses, setGuesses] = useState(
+    puzzle.map((row) => row.map(() => false))
+  );
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
+
+  const handleSquareClick = (rowIndex: number, cellIndex: number) => {
+    if (puzzle[rowIndex][cellIndex] === false) {
+      setTime(time + 60);
+      return;
+    }
+    setGuesses(
+      guesses.map((row, rIndex) =>
+        row.map((cell, cIndex) =>
+          rIndex === rowIndex && cIndex === cellIndex ? true : cell
+        )
+      )
+    );
+  };
+
   return (
     <div className="flex flex-col items-center gap-2">
       <Timer time={time} timerActive={timerActive} setTime={setTime} />
@@ -30,8 +48,14 @@ export function Game({ puzzle }: NonogramProps) {
                 <Clue key={rowIndex} row={row} />
                 {row.map((cell, cellIndex) => {
                   const key = `${rowIndex}-${cellIndex}`;
-                  const correct = !!cell;
-                  return <Square key={key} correct={correct} />;
+                  const filled = !!cell;
+                  return (
+                    <Square
+                      key={key}
+                      filled={guesses[rowIndex][cellIndex]}
+                      onClick={() => handleSquareClick(rowIndex, cellIndex)}
+                    />
+                  );
                 })}
               </tr>
             );
