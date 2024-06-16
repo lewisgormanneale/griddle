@@ -6,10 +6,6 @@ import { Timer } from "./timer";
 import { Clue } from "./clue";
 import { Square } from "./square";
 
-interface NonogramProps {
-  puzzle: Puzzle;
-}
-
 export function Game({ puzzle }: { puzzle: Puzzle }) {
   const [guesses, setGuesses] = useState(
     puzzle.map((row) => row.map(() => false))
@@ -35,6 +31,10 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
     }
   };
 
+  const handleRightClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+  };
+
   const updateGuesses = (rowIndex: number, cellIndex: number) => {
     setGuesses(
       guesses.map((row, rIndex) =>
@@ -46,7 +46,7 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 select-none">
       <Timer time={time} timerActive={timerActive} setTime={setTime} />
       <table className="table-fixed border-[1px] border-black">
         <tbody>
@@ -69,6 +69,7 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
                       filled={guesses[rowIndex][cellIndex]}
                       onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
                       onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
+                      onRightClick={(event) => handleRightClick(event)}
                     />
                   );
                 })}

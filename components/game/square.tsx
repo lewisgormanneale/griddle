@@ -2,10 +2,12 @@ export function Square({
   filled,
   onMouseDown,
   onMouseEnter,
+  onRightClick,
 }: {
   filled: boolean;
   onMouseDown: () => void;
   onMouseEnter: () => void;
+  onRightClick: (event: React.MouseEvent) => void;
 }) {
   return (
     <td
@@ -14,6 +16,7 @@ export function Square({
       }`}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
+      onContextMenu={onRightClick}
     >
       {filled ? <div className="bg-black"></div> : null}
     </td>
