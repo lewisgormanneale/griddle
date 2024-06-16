@@ -10,16 +10,20 @@ export function Timer({
   timerActive: boolean;
 }) {
   useEffect(() => {
-    let interval = null;
-    if (timerActive)
+    let interval: ReturnType<typeof setInterval> | null = null;
+    if (timerActive) {
       interval = setInterval(() => {
         setTime((time: number) => time + 1);
       }, 1000);
-    else clearInterval(interval);
-    return () => {
+    } else if (interval) {
       clearInterval(interval);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
     };
-  }, [timerActive]);
+  }, [timerActive, setTime]);
 
   return <div>Time: {time}s</div>;
 }

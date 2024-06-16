@@ -1,3 +1,5 @@
+import { CellState } from "@/lib/types";
+
 export function Clue({ row, column }: { row?: boolean[]; column?: boolean[] }) {
   const getClueNumbers = (line: boolean[]) => {
     const numbers = line.reduce((acc, cell) => {
@@ -14,10 +16,12 @@ export function Clue({ row, column }: { row?: boolean[]; column?: boolean[] }) {
   };
 
   if (row) {
-    return <td>{getClueNumbers(row).join(" ")}</td>;
+    return (
+      <td className="border border-black"> {getClueNumbers(row).join(" ")}</td>
+    );
   } else if (column) {
     return (
-      <td>
+      <td className="border border-black">
         {getClueNumbers(column).map((num, index) => (
           <div key={index}>{num}</div>
         ))}

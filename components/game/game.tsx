@@ -1,33 +1,48 @@
 "use client";
 
-import { Puzzle } from "@/lib/types";
+import { CellState, Puzzle } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
-import { Square } from "./square";
+import { Cell } from "./cell";
 
 export function Game({ puzzle }: { puzzle: Puzzle }) {
   const [guesses, setGuesses] = useState(
-    puzzle.map((row) => row.map(() => false))
+    puzzle.map((row) => row.map(() => CellState.Blank))
   );
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [rightMouseDown, setRightMouseDown] = useState(false);
 
   useEffect(() => {
-    const handleMouseUp = () => setIsMouseDown(false);
+    const handleMouseUp = () => {
+      setIsMouseDown(false);
+      setRightMouseDown(false);
+    };
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);
   }, []);
 
-  const handleMouseDown = (rowIndex: number, cellIndex: number) => {
+  const handleMouseDown = (
+    event: React.MouseEvent,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
     setIsMouseDown(true);
-    updateGuesses(rowIndex, cellIndex);
+    if (event.button === 2) {
+      setRightMouseDown(true);
+      updateGuessesWithRightClick(rowIndex, cellIndex);
+    } else {
+      updateGuessesWithLeftClick(rowIndex, cellIndex);
+    }
   };
 
   const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
-    if (isMouseDown) {
-      updateGuesses(rowIndex, cellIndex);
+    if (isMouseDown && rightMouseDown) {
+      updateGuessesWithRightClick(rowIndex, cellIndex);
+    } else if (isMouseDown) {
+      updateGuessesWithLeftClick(rowIndex, cellIndex);
     }
   };
 
@@ -35,12 +50,48 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
     event.preventDefault();
   };
 
-  const updateGuesses = (rowIndex: number, cellIndex: number) => {
+  const updateGuessesWithLeftClick = (rowIndex: number, cellIndex: number) => {
     setGuesses(
       guesses.map((row, rIndex) =>
-        row.map((cell, cIndex) =>
-          rIndex === rowIndex && cIndex === cellIndex ? !cell : cell
-        )
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === cellIndex) {
+            switch (cell) {
+              case CellState.Blank:
+                return CellState.Filled;
+              case CellState.CrossedOut:
+                return CellState.Filled;
+              case CellState.Filled:
+                return CellState.Filled;
+              default:
+                return cell;
+            }
+          } else {
+            return cell;
+          }
+        })
+      )
+    );
+  };
+
+  const updateGuessesWithRightClick = (rowIndex: number, cellIndex: number) => {
+    setGuesses(
+      guesses.map((row, rIndex) =>
+        row.map((cell, cIndex) => {
+          if (rIndex === rowIndex && cIndex === cellIndex) {
+            switch (cell) {
+              case CellState.Blank:
+                return CellState.CrossedOut;
+              case CellState.Filled:
+                return CellState.CrossedOut;
+              case CellState.CrossedOut:
+                return CellState.CrossedOut;
+              default:
+                return cell;
+            }
+          } else {
+            return cell;
+          }
+        })
       )
     );
   };
@@ -48,7 +99,7 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
   return (
     <div className="flex flex-col items-center gap-2 select-none">
       <Timer time={time} timerActive={timerActive} setTime={setTime} />
-      <table className="table-fixed border-[1px] border-black">
+      <table>
         <tbody>
           <tr>
             <td></td>
@@ -60,16 +111,18 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
             return (
               <tr key={rowIndex}>
                 <Clue key={rowIndex} row={row} />
-                {row.map((cell, cellIndex) => {
-                  const key = `${rowIndex}-${cellIndex}`;
-                  const filled = !!cell;
+                {row.map((_, cellIndex) => {
                   return (
-                    <Square
-                      key={key}
-                      filled={guesses[rowIndex][cellIndex]}
-                      onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
+                    <Cell
+                      key={`${rowIndex}-${cellIndex}`}
+                      cellState={guesses[rowIndex][cellIndex]}
+                      onMouseDown={(event: React.MouseEvent) =>
+                        handleMouseDown(event, rowIndex, cellIndex)
+                      }
                       onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                      onRightClick={(event) => handleRightClick(event)}
+                      onRightClick={(event: React.MouseEvent) =>
+                        handleRightClick(event)
+                      }
                     />
                   );
                 })}
