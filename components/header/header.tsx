@@ -4,7 +4,9 @@ import { ThemeToggle } from "./themeToggle";
 export function Header() {
   return (
     <header className="flex justify-between p-3">
-      <Link href="/">Nonogrammable</Link>
+      <Link className="font-serif" href="/">
+        Nonogrammable
+      </Link>
       <ThemeToggle />
     </header>
   );

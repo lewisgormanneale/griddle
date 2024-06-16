@@ -14,7 +14,7 @@ export function Cell({
 }) {
   return (
     <td
-      className={`w-8 h-8 border-black border-[1px] cursor-pointer ${
+      className={`w-8 h-8 border border-black cursor-pointer ${
         cellState === CellState.Filled ? "bg-black" : "bg-white"
       }`}
       onMouseDown={onMouseDown}
@@ -23,7 +23,7 @@ export function Cell({
     >
       {cellState === CellState.CrossedOut ? (
         <div className="flex justify-center items-center">
-          <LuX />
+          <LuX className="text-black" />
         </div>
       ) : null}
     </td>

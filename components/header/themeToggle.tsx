@@ -3,7 +3,6 @@
 import { LuSun, LuMoon } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import Image from "next/image";
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
