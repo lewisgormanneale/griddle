@@ -9,7 +9,9 @@ export function Square({ correct }: { correct: boolean }) {
 
   return (
     <td
-      className={`w-6 h-6 cursor-pointer ${filled ? "bg-black" : "bg-white"}`}
+      className={`w-8 h-8 border-black border-[1px] cursor-pointer ${
+        filled ? "bg-black" : "bg-white"
+      }`}
       onClick={handleClick}
     >
       {correct ? <div className="bg-black"></div> : null}

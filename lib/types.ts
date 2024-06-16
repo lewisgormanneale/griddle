@@ -1,1 +1,1 @@
-export type NonogramGrid = number[][];
+export type Puzzle = boolean[][];

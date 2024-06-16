@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex flex-col justify-center items-center min-h-screen p-4 ">
+    <div className="flex flex-col justify-center items-center min-h-screen p-4 ">
       <div className="flex flex-col items-center gap-3">
         <h2 className="font-serif text-2xl">Nonogrammable</h2>
         <p className="font-serif">
@@ -20,6 +20,6 @@ export default function Home() {
         <p className="font-serif">June 15th 2024</p>
         <p className="font-serif">No. 241</p>
       </div>
-    </main>
+    </div>
   );
 }
