@@ -14,11 +14,15 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
   const [timerActive, setTimerActive] = useState(true);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [rightMouseDown, setRightMouseDown] = useState(false);
+  const [firstChangedCellOnDrag, setFirstChangedCellOnDrag] = useState(
+    CellState.Null
+  );
 
   useEffect(() => {
     const handleMouseUp = () => {
       setIsMouseDown(false);
       setRightMouseDown(false);
+      setFirstChangedCellOnDrag(CellState.Null);
     };
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);
@@ -51,49 +55,85 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
   };
 
   const updateGuessesWithLeftClick = (rowIndex: number, cellIndex: number) => {
-    setGuesses(
-      guesses.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
-          if (rIndex === rowIndex && cIndex === cellIndex) {
-            switch (cell) {
-              case CellState.Blank:
-                return CellState.Filled;
-              case CellState.CrossedOut:
-                return CellState.Filled;
-              case CellState.Filled:
-                return CellState.Filled;
-              default:
-                return cell;
+    if (firstChangedCellOnDrag !== CellState.Null) {
+      setGuesses(
+        guesses.map((row, rIndex) =>
+          row.map((cell, cIndex) => {
+            if (rIndex === rowIndex && cIndex === cellIndex) {
+              return firstChangedCellOnDrag;
+            } else {
+              return cell;
             }
-          } else {
-            return cell;
-          }
-        })
-      )
-    );
+          })
+        )
+      );
+      return;
+    } else {
+      setGuesses(
+        guesses.map((row, rIndex) =>
+          row.map((cell, cIndex) => {
+            if (rIndex === rowIndex && cIndex === cellIndex) {
+              switch (cell) {
+                case CellState.Blank:
+                  setFirstChangedCellOnDrag(CellState.Filled);
+                  return CellState.Filled;
+                case CellState.CrossedOut:
+                  setFirstChangedCellOnDrag(CellState.Filled);
+                  return CellState.Filled;
+                case CellState.Filled:
+                  setFirstChangedCellOnDrag(CellState.Blank);
+                  return CellState.Blank;
+                default:
+                  return cell;
+              }
+            } else {
+              return cell;
+            }
+          })
+        )
+      );
+    }
   };
 
   const updateGuessesWithRightClick = (rowIndex: number, cellIndex: number) => {
-    setGuesses(
-      guesses.map((row, rIndex) =>
-        row.map((cell, cIndex) => {
-          if (rIndex === rowIndex && cIndex === cellIndex) {
-            switch (cell) {
-              case CellState.Blank:
-                return CellState.CrossedOut;
-              case CellState.Filled:
-                return CellState.CrossedOut;
-              case CellState.CrossedOut:
-                return CellState.CrossedOut;
-              default:
-                return cell;
+    if (firstChangedCellOnDrag !== CellState.Null) {
+      setGuesses(
+        guesses.map((row, rIndex) =>
+          row.map((cell, cIndex) => {
+            if (rIndex === rowIndex && cIndex === cellIndex) {
+              return firstChangedCellOnDrag;
+            } else {
+              return cell;
             }
-          } else {
-            return cell;
-          }
-        })
-      )
-    );
+          })
+        )
+      );
+      return;
+    } else {
+      setGuesses(
+        guesses.map((row, rIndex) =>
+          row.map((cell, cIndex) => {
+            if (rIndex === rowIndex && cIndex === cellIndex) {
+              switch (cell) {
+                case CellState.Blank:
+                  setFirstChangedCellOnDrag(CellState.CrossedOut);
+                  return CellState.CrossedOut;
+                case CellState.Filled:
+                  setFirstChangedCellOnDrag(CellState.CrossedOut);
+                  return CellState.CrossedOut;
+                case CellState.CrossedOut:
+                  setFirstChangedCellOnDrag(CellState.Blank);
+                  return CellState.Blank;
+                default:
+                  return cell;
+              }
+            } else {
+              return cell;
+            }
+          })
+        )
+      );
+    }
   };
 
   return (

@@ -17,7 +17,7 @@ export function Clue({ row, column }: { row?: boolean[]; column?: boolean[] }) {
 
   if (row) {
     return (
-      <td className="border border-black w-48">
+      <td className="border border-black dark:border-white w-48">
         <div className="flex justify-end items-center w-full gap-2 px-2">
           {getClueNumbers(row).map((num, index) => (
             <div key={index}>{num}</div>
@@ -27,7 +27,7 @@ export function Clue({ row, column }: { row?: boolean[]; column?: boolean[] }) {
     );
   } else if (column) {
     return (
-      <td className="border border-black h-48">
+      <td className="border border-black dark:border-white h-48">
         <div className="flex flex-col justify-end items-center h-full py-2">
           {getClueNumbers(column).map((num, index) => (
             <div key={index}>{num}</div>
