@@ -1,22 +1,19 @@
-import { useState } from "react";
-
 export function Square({
   filled,
-  onClick,
+  onMouseDown,
+  onMouseEnter,
 }: {
   filled: boolean;
-  onClick: () => void;
+  onMouseDown: () => void;
+  onMouseEnter: () => void;
 }) {
-  const handleClick = () => {
-    onClick();
-  };
-
   return (
     <td
       className={`w-8 h-8 border-black border-[1px] cursor-pointer ${
         filled ? "bg-black" : "bg-white"
       }`}
-      onClick={handleClick}
+      onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
     >
       {filled ? <div className="bg-black"></div> : null}
     </td>

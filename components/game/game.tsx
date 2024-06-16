@@ -1,7 +1,7 @@
 "use client";
 
 import { Puzzle } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
 import { Square } from "./square";
@@ -16,16 +16,30 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
   );
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
+  const [isMouseDown, setIsMouseDown] = useState(false);
 
-  const handleSquareClick = (rowIndex: number, cellIndex: number) => {
-    if (puzzle[rowIndex][cellIndex] === false) {
-      setTime(time + 60);
-      return;
+  useEffect(() => {
+    const handleMouseUp = () => setIsMouseDown(false);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, []);
+
+  const handleMouseDown = (rowIndex: number, cellIndex: number) => {
+    setIsMouseDown(true);
+    updateGuesses(rowIndex, cellIndex);
+  };
+
+  const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
+    if (isMouseDown) {
+      updateGuesses(rowIndex, cellIndex);
     }
+  };
+
+  const updateGuesses = (rowIndex: number, cellIndex: number) => {
     setGuesses(
       guesses.map((row, rIndex) =>
         row.map((cell, cIndex) =>
-          rIndex === rowIndex && cIndex === cellIndex ? true : cell
+          rIndex === rowIndex && cIndex === cellIndex ? !cell : cell
         )
       )
     );
@@ -53,7 +67,8 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
                     <Square
                       key={key}
                       filled={guesses[rowIndex][cellIndex]}
-                      onClick={() => handleSquareClick(rowIndex, cellIndex)}
+                      onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
+                      onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
                     />
                   );
                 })}
