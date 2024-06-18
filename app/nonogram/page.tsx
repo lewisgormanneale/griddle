@@ -2,9 +2,9 @@ import { Game } from "@/components/game/game";
 import { generatePuzzle } from "@/lib/functions";
 
 export default function Nonogram() {
-  const puzzle = generatePuzzle(10, 10);
+  const puzzle = generatePuzzle(2, 2);
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen p-4">
+    <div className="flex flex-col items-center p-4 mt-8">
       <Game puzzle={puzzle} />
     </div>
   );
