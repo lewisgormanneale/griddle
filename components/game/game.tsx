@@ -5,18 +5,26 @@ import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
 import { Cell } from "./cell";
+import { generatePuzzle } from "@/lib/functions";
 
-export function Game({ puzzle }: { puzzle: Puzzle }) {
-  const [guesses, setGuesses] = useState(
-    puzzle.map((row) => row.map(() => CellState.Blank))
-  );
+export function Game() {
+  const [puzzle, setPuzzle] = useState([]);
+  const [guesses, setGuesses] = useState([]);
+
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
+  const [winConditionMet, setWinConditionMet] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [rightMouseDown, setRightMouseDown] = useState(false);
   const [firstChangedCellOnDrag, setFirstChangedCellOnDrag] = useState(
     CellState.Null
   );
+
+  useEffect(() => {
+    const initialPuzzle = generatePuzzle(5, 5);
+    setPuzzle(initialPuzzle);
+    setGuesses(initialPuzzle.map((row) => row.map(() => CellState.Blank)));
+  }, []);
 
   useEffect(() => {
     const handleMouseUp = () => {
@@ -28,6 +36,34 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
     return () => window.removeEventListener("mouseup", handleMouseUp);
   }, []);
 
+  useEffect(() => {
+    const checkWinCondition = () => {
+      for (let rowIndex = 0; rowIndex < puzzle.length; rowIndex++) {
+        for (
+          let cellIndex = 0;
+          cellIndex < puzzle[rowIndex].length;
+          cellIndex++
+        ) {
+          const puzzleCell = puzzle[rowIndex][cellIndex];
+          const guessCell = guesses[rowIndex][cellIndex];
+          if (guessCell === CellState.Filled && puzzleCell === false) {
+            return false;
+          } else if (guessCell === CellState.Blank && puzzleCell === true) {
+            return false;
+          }
+        }
+      }
+      setWinConditionMet(true);
+      setTimerActive(false);
+      console.log("YOU WIN!");
+    };
+
+    // Optionally, ensure guesses have been made before checking win condition
+    if (guesses.some((row) => row.some((cell) => cell !== CellState.Blank))) {
+      checkWinCondition();
+    }
+  }, [guesses, puzzle]);
+
   const handleMouseDown = (
     event: React.MouseEvent,
     rowIndex: number,
@@ -36,17 +72,17 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
     setIsMouseDown(true);
     if (event.button === 2) {
       setRightMouseDown(true);
-      updateGuessesWithRightClick(rowIndex, cellIndex);
+      updateGuesses(rowIndex, cellIndex, "right");
     } else {
-      updateGuessesWithLeftClick(rowIndex, cellIndex);
+      updateGuesses(rowIndex, cellIndex, "left");
     }
   };
 
   const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
     if (isMouseDown && rightMouseDown) {
-      updateGuessesWithRightClick(rowIndex, cellIndex);
+      updateGuesses(rowIndex, cellIndex, "right");
     } else if (isMouseDown) {
-      updateGuessesWithLeftClick(rowIndex, cellIndex);
+      updateGuesses(rowIndex, cellIndex, "left");
     }
   };
 
@@ -54,123 +90,106 @@ export function Game({ puzzle }: { puzzle: Puzzle }) {
     event.preventDefault();
   };
 
-  const updateGuessesWithLeftClick = (rowIndex: number, cellIndex: number) => {
-    if (firstChangedCellOnDrag !== CellState.Null) {
-      setGuesses(
-        guesses.map((row, rIndex) =>
-          row.map((cell, cIndex) => {
-            if (rIndex === rowIndex && cIndex === cellIndex) {
-              return firstChangedCellOnDrag;
-            } else {
-              return cell;
-            }
-          })
-        )
-      );
-      return;
-    } else {
-      setGuesses(
-        guesses.map((row, rIndex) =>
-          row.map((cell, cIndex) => {
-            if (rIndex === rowIndex && cIndex === cellIndex) {
-              switch (cell) {
-                case CellState.Blank:
-                  setFirstChangedCellOnDrag(CellState.Filled);
-                  return CellState.Filled;
-                case CellState.CrossedOut:
-                  setFirstChangedCellOnDrag(CellState.Filled);
-                  return CellState.Filled;
-                case CellState.Filled:
-                  setFirstChangedCellOnDrag(CellState.Blank);
-                  return CellState.Blank;
-                default:
-                  return cell;
-              }
-            } else {
-              return cell;
-            }
-          })
-        )
-      );
-    }
+  const updateCellState = (rowIndex, cellIndex, newState) => {
+    const updateState = (cell, rIndex, cIndex) => {
+      if (rIndex === rowIndex && cIndex === cellIndex) {
+        return typeof newState === "function" ? newState(cell) : newState;
+      }
+      return cell;
+    };
+
+    setGuesses(
+      guesses.map((row, rIndex) =>
+        row.map((cell, cIndex) => updateState(cell, rIndex, cIndex))
+      )
+    );
   };
 
-  const updateGuessesWithRightClick = (rowIndex: number, cellIndex: number) => {
-    if (firstChangedCellOnDrag !== CellState.Null) {
-      setGuesses(
-        guesses.map((row, rIndex) =>
-          row.map((cell, cIndex) => {
-            if (rIndex === rowIndex && cIndex === cellIndex) {
-              return firstChangedCellOnDrag;
-            } else {
-              return cell;
-            }
-          })
-        )
-      );
+  const updateGuesses = (rowIndex, cellIndex, clickMethod) => {
+    if (winConditionMet) {
       return;
+    }
+    if (firstChangedCellOnDrag !== CellState.Null) {
+      updateCellState(rowIndex, cellIndex, firstChangedCellOnDrag);
     } else {
-      setGuesses(
-        guesses.map((row, rIndex) =>
-          row.map((cell, cIndex) => {
-            if (rIndex === rowIndex && cIndex === cellIndex) {
-              switch (cell) {
-                case CellState.Blank:
-                  setFirstChangedCellOnDrag(CellState.CrossedOut);
-                  return CellState.CrossedOut;
-                case CellState.Filled:
-                  setFirstChangedCellOnDrag(CellState.CrossedOut);
-                  return CellState.CrossedOut;
-                case CellState.CrossedOut:
-                  setFirstChangedCellOnDrag(CellState.Blank);
-                  return CellState.Blank;
-                default:
-                  return cell;
-              }
-            } else {
+      updateCellState(rowIndex, cellIndex, (cell) => {
+        if (clickMethod === "left") {
+          switch (cell) {
+            case CellState.Blank:
+            case CellState.CrossedOut:
+              setFirstChangedCellOnDrag(CellState.Filled);
+              return CellState.Filled;
+            case CellState.Filled:
+              setFirstChangedCellOnDrag(CellState.Blank);
+              return CellState.Blank;
+            default:
               return cell;
-            }
-          })
-        )
-      );
+          }
+        } else if (clickMethod === "right") {
+          switch (cell) {
+            case CellState.Blank:
+              setFirstChangedCellOnDrag(CellState.CrossedOut);
+              return CellState.CrossedOut;
+            case CellState.Filled:
+              setFirstChangedCellOnDrag(CellState.CrossedOut);
+              return CellState.CrossedOut;
+            case CellState.CrossedOut:
+              setFirstChangedCellOnDrag(CellState.Blank);
+              return CellState.Blank;
+            default:
+              return cell;
+          }
+        }
+      });
     }
   };
 
   return (
     <div className="flex flex-col items-center gap-2 select-none">
-      <Timer time={time} timerActive={timerActive} setTime={setTime} />
-      <table>
-        <tbody>
-          <tr>
-            <td></td>
-            {puzzle[0].map((_, index) => (
-              <Clue key={index} column={puzzle.map((row) => row[index])} />
-            ))}
-          </tr>
-          {puzzle.map((row, rowIndex) => {
-            return (
-              <tr key={rowIndex}>
-                <Clue key={rowIndex} row={row} />
-                {row.map((_, cellIndex) => {
-                  return (
-                    <Cell
-                      key={`${rowIndex}-${cellIndex}`}
-                      cellState={guesses[rowIndex][cellIndex]}
-                      onMouseDown={(event: React.MouseEvent) =>
-                        handleMouseDown(event, rowIndex, cellIndex)
-                      }
-                      onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                      onRightClick={(event: React.MouseEvent) =>
-                        handleRightClick(event)
-                      }
+      {puzzle &&
+        puzzle.length > 0 &&
+        guesses.length > 0 && ( //
+          <div>
+            <Timer time={time} timerActive={timerActive} setTime={setTime} />
+            <table>
+              <tbody>
+                <tr>
+                  <td></td>
+                  {puzzle[0].map((_, index) => (
+                    <Clue
+                      key={index}
+                      column={puzzle.map((row) => row[index])}
                     />
+                  ))}
+                </tr>
+                {puzzle.map((row, rowIndex) => {
+                  return (
+                    <tr key={rowIndex}>
+                      <Clue key={rowIndex} row={row} />
+                      {row.map((_, cellIndex) => {
+                        return (
+                          <Cell
+                            key={`${rowIndex}-${cellIndex}`}
+                            cellState={guesses[rowIndex][cellIndex]}
+                            onMouseDown={(event: React.MouseEvent) =>
+                              handleMouseDown(event, rowIndex, cellIndex)
+                            }
+                            onMouseEnter={() =>
+                              handleMouseEnter(rowIndex, cellIndex)
+                            }
+                            onRightClick={(event: React.MouseEvent) =>
+                              handleRightClick(event)
+                            }
+                          />
+                        );
+                      })}
+                    </tr>
                   );
                 })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+              </tbody>
+            </table>
+          </div>
+        )}
     </div>
   );
 }
