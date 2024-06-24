@@ -7,3 +7,7 @@
     text-wrap: balance;
   }
 }
+
+body *:not(.nonogram-cell) {
+  @apply transition-colors duration-200;
+}

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen p-4 ">
+    <div className="flex flex-col items-center p-4 mt-8">
       <div className="flex flex-col items-center gap-3">
         <h2 className="font-serif text-2xl">Nonogrammable</h2>
         <p className="font-serif">
@@ -10,9 +10,6 @@ export default function Home() {
           reveal a picture.
         </p>
         <div className="flex gap-3">
-          <Link className="p-4 bg-orange-500 rounded" href="/nonogram">
-            Log In
-          </Link>
           <Link className="p-4 bg-orange-500 rounded" href="/nonogram">
             Play
           </Link>

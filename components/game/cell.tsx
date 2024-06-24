@@ -8,13 +8,13 @@ export function Cell({
   onRightClick,
 }: {
   cellState: CellState;
-  onMouseDown: (event: React.MouseEvent) => void;
+  onMouseDown: () => void;
   onMouseEnter: () => void;
   onRightClick: (event: React.MouseEvent) => void;
 }) {
   return (
     <td
-      className={`w-8 h-8 border border-black cursor-pointer ${
+      className={`w-8 h-8 border border-black cursor-pointer nonogram-cell ${
         cellState === CellState.Filled ? "bg-black" : "bg-white"
       }`}
       onMouseDown={onMouseDown}
