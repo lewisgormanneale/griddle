@@ -4,9 +4,11 @@ import { LuPencil, LuEraser, LuX } from "react-icons/lu";
 
 export function Controls({
   winConditionMet,
+  selectedFillState,
   onSelectedFillState,
 }: {
   winConditionMet: boolean;
+  selectedFillState: CellState;
   onSelectedFillState: (cellState: CellState) => void;
 }) {
   const [time, setTime] = useState(0);
@@ -35,24 +37,36 @@ export function Controls({
   }, [winConditionMet]);
 
   return (
-    <div className="flex  justify-between items-center w-full p-4 rounded bg-orange-400 dark:bg-orange-700">
-      <div>Time: {time}s</div>
+    <div className="flex justify-between items-center w-full p-4 rounded bg-orange-400 dark:bg-orange-700">
+      <div className="font-serif">Time: {time}s</div>
       <div className="flex items-center">
         <button
           onClick={() => onSelectedFillState(CellState.Filled)}
-          className="px-4 py-1 rounded-l bg-orange-500 dark:bg-orange-800"
+          className={`px-4 py-1 rounded-l ${
+            selectedFillState === CellState.Filled
+              ? "bg-zinc-500 text-white"
+              : "bg-zinc-50 dark:bg-zinc-700"
+          }`}
         >
           <LuPencil className="w-6 h-6" />
         </button>
         <button
           onClick={() => onSelectedFillState(CellState.Blank)}
-          className="px-4 py-1  bg-orange-500 dark:bg-orange-800"
+          className={`px-4 py-1 ${
+            selectedFillState === CellState.Blank
+              ? "bg-zinc-500 text-white"
+              : "bg-zinc-50 dark:bg-zinc-700"
+          }`}
         >
           <LuEraser className="w-6 h-6" />
         </button>
         <button
           onClick={() => onSelectedFillState(CellState.CrossedOut)}
-          className="px-4 py-1 rounded-r bg-orange-500 dark:bg-orange-800"
+          className={`px-4 py-1 rounded-r ${
+            selectedFillState === CellState.CrossedOut
+              ? "bg-zinc-500 text-white"
+              : "bg-zinc-50 dark:bg-zinc-700"
+          }`}
         >
           <LuX className="w-6 h-6" />
         </button>

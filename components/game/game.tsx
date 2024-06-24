@@ -36,6 +36,7 @@ export function Game() {
         <React.Fragment>
           <Controls
             winConditionMet={winConditionMet}
+            selectedFillState={selectedFillState}
             onSelectedFillState={handleFillStateChange}
           />
           <Grid
