@@ -3,7 +3,6 @@
 import { CellState, Puzzle } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { generatePuzzle } from "@/lib/functions";
-import { useCheckWinCondition } from "@/lib/hooks";
 import { Grid } from "./grid";
 import { Controls } from "./controls";
 import React from "react";
