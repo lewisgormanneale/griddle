@@ -30,13 +30,13 @@ export function Sidebar() {
 
   return (
     <div className="h-screen w-72 flex flex-col p-4 border-r">
-      <ScrollArea className="h-full flex flex-col gap-2">
+      <ScrollArea className="h-full">
         <div className="flex justify-end items-center">
           <Button variant="ghost" size="icon">
             <Menu />
           </Button>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mt-2">
           {menus.map((menu) => (
             <React.Fragment key={menu.name}>
               <div key={menu.name}>

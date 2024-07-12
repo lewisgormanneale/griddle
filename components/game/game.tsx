@@ -13,7 +13,7 @@ export function Game() {
   const [selectedFillState, setSelectedFillState] = useState(CellState.Filled);
 
   useEffect(() => {
-    const initialPuzzle = generatePuzzle(5, 5);
+    const initialPuzzle = generatePuzzle(10, 10);
     setPuzzle(initialPuzzle);
   }, []);
 
