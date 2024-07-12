@@ -1,9 +1,10 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center p-4 mt-8">
+    <div className="h-screen w-full flex flex-col justify-center items-center p-4">
       <div className="flex flex-col items-center gap-3">
         <h2 className="font-serif text-2xl">Nonogrammable</h2>
         <p className="font-serif">
