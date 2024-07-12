@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { CellState } from "@/lib/types";
-import { LuPencil, LuEraser, LuX } from "react-icons/lu";
+import { Pencil, Eraser, LucideX } from "lucide-react";
 
 export function Controls({
   winConditionMet,
@@ -48,7 +48,7 @@ export function Controls({
               : "bg-zinc-50 dark:bg-zinc-700"
           }`}
         >
-          <LuPencil className="w-6 h-6" />
+          <Pencil className="w-6 h-6" />
         </button>
         <button
           onClick={() => onSelectedFillState(CellState.Blank)}
@@ -58,7 +58,7 @@ export function Controls({
               : "bg-zinc-50 dark:bg-zinc-700"
           }`}
         >
-          <LuEraser className="w-6 h-6" />
+          <Eraser className="w-6 h-6" />
         </button>
         <button
           onClick={() => onSelectedFillState(CellState.CrossedOut)}
@@ -68,7 +68,7 @@ export function Controls({
               : "bg-zinc-50 dark:bg-zinc-700"
           }`}
         >
-          <LuX className="w-6 h-6" />
+          <LucideX className="w-6 h-6" />
         </button>
       </div>
     </div>
