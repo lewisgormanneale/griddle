@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {
@@ -11,9 +11,12 @@ export default function Home() {
           Solve this logic puzzle by filling in squares in a 10x10 grid to
           reveal a picture.
         </p>
-        <Button>
-          <Link href="/nonogram">Play</Link>
-        </Button>
+        <Link
+          className={buttonVariants({ variant: "default" })}
+          href="/nonogram"
+        >
+          Play
+        </Link>
         <p className="font-serif">June 15th 2024</p>
         <p className="font-serif">No. 241</p>
       </div>
