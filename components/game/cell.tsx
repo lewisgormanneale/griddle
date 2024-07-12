@@ -1,5 +1,5 @@
 import { CellState } from "@/lib/types";
-import { LuX } from "react-icons/lu";
+import { LucideX } from "lucide-react";
 
 export function Cell({
   cellState,
@@ -23,7 +23,7 @@ export function Cell({
     >
       {cellState === CellState.CrossedOut ? (
         <div className="flex justify-center items-center">
-          <LuX className="text-black" />
+          <LucideX className="text-black" />
         </div>
       ) : null}
     </td>

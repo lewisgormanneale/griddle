@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { CellState } from "@/lib/types";
-import { LuPencil, LuEraser, LuX } from "react-icons/lu";
+import { Pencil, Eraser, LucideX } from "lucide-react";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
+import { Toggle } from "../ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 export function Controls({
   winConditionMet,
@@ -37,40 +41,33 @@ export function Controls({
   }, [winConditionMet]);
 
   return (
-    <div className="flex justify-between items-center w-full p-4 rounded bg-orange-400 dark:bg-orange-700">
-      <div className="font-serif">Time: {time}s</div>
-      <div className="flex items-center">
-        <button
-          onClick={() => onSelectedFillState(CellState.Filled)}
-          className={`px-4 py-1 rounded-l ${
-            selectedFillState === CellState.Filled
-              ? "bg-zinc-500 text-white"
-              : "bg-zinc-50 dark:bg-zinc-700"
-          }`}
-        >
-          <LuPencil className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => onSelectedFillState(CellState.Blank)}
-          className={`px-4 py-1 ${
-            selectedFillState === CellState.Blank
-              ? "bg-zinc-500 text-white"
-              : "bg-zinc-50 dark:bg-zinc-700"
-          }`}
-        >
-          <LuEraser className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => onSelectedFillState(CellState.CrossedOut)}
-          className={`px-4 py-1 rounded-r ${
-            selectedFillState === CellState.CrossedOut
-              ? "bg-zinc-500 text-white"
-              : "bg-zinc-50 dark:bg-zinc-700"
-          }`}
-        >
-          <LuX className="w-6 h-6" />
-        </button>
+    <Card className="bg-primary-foreground w-full">
+      <div className="flex justify-between items-center w-full p-4 rounded">
+        <div className="font-serif">Time: {time}s</div>
+        <ToggleGroup type="single">
+          <ToggleGroupItem
+            value="fill"
+            onClick={() => onSelectedFillState(CellState.Filled)}
+            aria-label="Toggle fill"
+          >
+            <Pencil className="w-6 h-6" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="erase"
+            aria-label="Toggle erase"
+            onClick={() => onSelectedFillState(CellState.Blank)}
+          >
+            <Eraser className="w-6 h-6" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="cross"
+            aria-label="Toggle cross"
+            onClick={() => onSelectedFillState(CellState.CrossedOut)}
+          >
+            <LucideX className="w-6 h-6" />
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
-    </div>
+    </Card>
   );
 }
