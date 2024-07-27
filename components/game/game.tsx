@@ -1,6 +1,6 @@
 "use client";
 
-import { CellState, Puzzle } from "@/lib/types";
+import { CellState, Puzzle, FillMode } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { generatePuzzle } from "@/lib/functions";
 import { Grid } from "./grid";
@@ -10,6 +10,7 @@ import React from "react";
 export function Game() {
   const [puzzle, setPuzzle] = useState<Puzzle>([]);
   const [winConditionMet, setWinConditionMet] = useState(false);
+  const [selectedFillMode, setSelectedFillMode] = useState(FillMode.Free);
   const [selectedFillState, setSelectedFillState] = useState(CellState.Filled);
 
   useEffect(() => {
@@ -19,6 +20,10 @@ export function Game() {
 
   const handleFillStateChange = (newFillState: CellState) => {
     setSelectedFillState(newFillState);
+  };
+
+  const handleFillModeStateChange = (newFillMode: FillMode) => {
+    setSelectedFillMode(newFillMode);
   };
 
   const handleWin = () => {
@@ -35,7 +40,9 @@ export function Game() {
         <React.Fragment>
           <Controls
             winConditionMet={winConditionMet}
+            selectedFillMode={selectedFillMode}
             selectedFillState={selectedFillState}
+            onSelectedFillMode={handleFillModeStateChange}
             onSelectedFillState={handleFillStateChange}
           />
           <Grid

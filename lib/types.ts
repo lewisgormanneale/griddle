@@ -6,3 +6,8 @@ export enum CellState {
   Filled,
   CrossedOut,
 }
+
+export enum FillMode {
+  Free = "free",
+  Set = "set",
+}

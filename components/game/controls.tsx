@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
-import { CellState } from "@/lib/types";
-import { Pencil, Eraser, LucideX } from "lucide-react";
+import { CellState, FillMode } from "@/lib/types";
+import { Pencil, Eraser, LucideX, Mouse, Pointer } from "lucide-react";
 import { Card } from "../ui/card";
-import { Button } from "../ui/button";
-import { Toggle } from "../ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 export function Controls({
   winConditionMet,
+  selectedFillMode,
   selectedFillState,
+  onSelectedFillMode,
   onSelectedFillState,
 }: {
   winConditionMet: boolean;
-  selectedFillState: CellState;
+  selectedFillMode: FillMode;
+  selectedFillState: FillMode;
+  onSelectedFillMode: (fillMode: FillMode) => void;
   onSelectedFillState: (cellState: CellState) => void;
 }) {
   const [time, setTime] = useState(0);
@@ -41,32 +43,60 @@ export function Controls({
   }, [winConditionMet]);
 
   return (
-    <Card className="bg-primary-foreground w-full">
+    <Card className=" w-full">
       <div className="flex justify-between items-center w-full p-4 rounded">
-        <div className="font-serif">Time: {time}s</div>
-        <ToggleGroup type="single">
-          <ToggleGroupItem
-            value="fill"
-            onClick={() => onSelectedFillState(CellState.Filled)}
-            aria-label="Toggle fill"
+        <div className="font-serif">
+          <span className="font-semibold">Time: </span>
+          {time}s
+        </div>
+        <div className="flex">
+          <ToggleGroup
+            type="single"
+            onValueChange={(value) => {
+              onSelectedFillMode(value);
+            }}
+            value={selectedFillMode}
+            aria-label="Toggle fill mode"
           >
-            <Pencil className="w-6 h-6" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="erase"
-            aria-label="Toggle erase"
-            onClick={() => onSelectedFillState(CellState.Blank)}
-          >
-            <Eraser className="w-6 h-6" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="cross"
-            aria-label="Toggle cross"
-            onClick={() => onSelectedFillState(CellState.CrossedOut)}
-          >
-            <LucideX className="w-6 h-6" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+            <ToggleGroupItem value={FillMode.Free} aria-label="Free mode">
+              <Mouse className="w-6 h-6" />
+            </ToggleGroupItem>
+            {selectedFillMode === FillMode.Free && (
+              <ToggleGroupItem value={FillMode.Set} aria-label="Set mode">
+                <Pointer className="w-6 h-6" />
+              </ToggleGroupItem>
+            )}
+          </ToggleGroup>
+          {selectedFillMode === FillMode.Set && (
+            <ToggleGroup
+              type="single"
+              onValueChange={(value) => {
+                onSelectedFillState(value);
+              }}
+              value={selectedFillState}
+              aria-label="Toggle fill state"
+            >
+              <ToggleGroupItem
+                value={CellState.Filled}
+                aria-label="Toggle fill"
+              >
+                <Pencil className="w-6 h-6" />
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value={CellState.Blank}
+                aria-label="Toggle erase"
+              >
+                <Eraser className="w-6 h-6" />
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value={CellState.CrossedOut}
+                aria-label="Toggle cross"
+              >
+                <LucideX className="w-6 h-6" />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          )}
+        </div>
       </div>
     </Card>
   );

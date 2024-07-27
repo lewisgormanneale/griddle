@@ -15,7 +15,7 @@ export function Cell({
   return (
     <td
       className={`w-8 h-8 border border-black cursor-pointer nonogram-cell ${
-        cellState === CellState.Filled ? "bg-black" : "bg-white"
+        cellState === CellState.Filled ? "bg-black" : "bg-zinc-50"
       }`}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
