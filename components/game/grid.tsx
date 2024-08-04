@@ -58,14 +58,32 @@ export function Grid({
     return () => window.removeEventListener("mouseup", handleMouseUp);
   }, []);
 
-  const handleMouseDown = (rowIndex: number, cellIndex: number) => {
+  const handleMouseDown = (
+    event: React.MouseEvent,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
     setIsMouseDown(true);
-    updateCellState(rowIndex, cellIndex);
+    if (selectedInputMode === InputMode.Free) {
+      const newState =
+        event.button === 0 ? CellState.Filled : CellState.CrossedOut;
+      updateCellState(rowIndex, cellIndex, newState);
+    } else {
+      updateCellState(rowIndex, cellIndex);
+    }
   };
 
-  const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
-    if (isMouseDown) {
-      updateCellState(rowIndex, cellIndex);
+  const handleMouseEnter = (
+    event: React.MouseEvent,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    if (isMouseDown && selectedInputMode === InputMode.Free) {
+      const newState =
+        event.buttons === 1 ? CellState.Filled : CellState.CrossedOut;
+      updateCellState(rowIndex, cellIndex, newState);
+    } else if (isMouseDown) {
+      updateCellState(rowIndex, cellIndex, selectedFillState);
     }
   };
 
@@ -73,14 +91,18 @@ export function Grid({
     event.preventDefault();
   };
 
-  const updateCellState = (rowIndex: number, cellIndex: number) => {
+  const updateCellState = (
+    rowIndex: number,
+    cellIndex: number,
+    newState: CellState
+  ) => {
     if (!winConditionMet) {
       setGuesses((prevGuesses) =>
         prevGuesses.map((row, i) =>
           i === rowIndex
             ? [
                 ...row.slice(0, cellIndex),
-                selectedFillState,
+                newState,
                 ...row.slice(cellIndex + 1),
               ]
             : row
@@ -109,9 +131,11 @@ export function Grid({
                       <Cell
                         key={`${rowIndex}-${cellIndex}`}
                         cellState={guesses[rowIndex][cellIndex]}
-                        onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
-                        onMouseEnter={() =>
-                          handleMouseEnter(rowIndex, cellIndex)
+                        onMouseDown={(event: React.MouseEvent) =>
+                          handleMouseDown(event, rowIndex, cellIndex)
+                        }
+                        onMouseEnter={(event: React.MouseEvent) =>
+                          handleMouseEnter(event, rowIndex, cellIndex)
                         }
                         onRightClick={(event: React.MouseEvent) =>
                           handleRightClick(event)

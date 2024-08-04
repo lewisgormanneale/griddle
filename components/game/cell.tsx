@@ -8,8 +8,8 @@ export function Cell({
   onRightClick,
 }: {
   cellState: CellState;
-  onMouseDown: () => void;
-  onMouseEnter: () => void;
+  onMouseDown: (event: React.MouseEvent) => void;
+  onMouseEnter: (event: React.MouseEvent) => void;
   onRightClick: (event: React.MouseEvent) => void;
 }) {
   return (
