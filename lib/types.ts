@@ -1,10 +1,10 @@
 export type Puzzle = boolean[][];
 
 export enum CellState {
-  Null,
-  Blank,
-  Filled,
-  CrossedOut,
+  Null = "null",
+  Blank = "blank",
+  Filled = "filled",
+  CrossedOut = "crossed-out",
 }
 
 export enum FillMode {

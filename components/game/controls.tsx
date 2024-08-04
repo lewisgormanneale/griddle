@@ -13,7 +13,7 @@ export function Controls({
 }: {
   winConditionMet: boolean;
   selectedFillMode: FillMode;
-  selectedFillState: FillMode;
+  selectedFillState: CellState;
   onSelectedFillMode: (fillMode: FillMode) => void;
   onSelectedFillState: (cellState: CellState) => void;
 }) {
@@ -52,7 +52,7 @@ export function Controls({
         <div className="flex">
           <ToggleGroup
             type="single"
-            onValueChange={(value) => {
+            onValueChange={(value: FillMode) => {
               onSelectedFillMode(value);
             }}
             value={selectedFillMode}
@@ -70,7 +70,7 @@ export function Controls({
           {selectedFillMode === FillMode.Set && (
             <ToggleGroup
               type="single"
-              onValueChange={(value) => {
+              onValueChange={(value: CellState) => {
                 onSelectedFillState(value);
               }}
               value={selectedFillState}
