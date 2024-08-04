@@ -103,7 +103,7 @@ export function Grid({
   const updateCellState = (
     rowIndex: number,
     cellIndex: number,
-    newFillState?: FillState
+    newFillState?: CellState
   ) => {
     if (!winConditionMet) {
       setGuesses((prevGuesses) =>
