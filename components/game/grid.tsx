@@ -11,6 +11,7 @@ export function Grid({
   selectedInputMode,
   selectedFillState,
   winConditionMet,
+  onSelectedFillState,
   onWin,
   onError,
 }: {
@@ -18,6 +19,7 @@ export function Grid({
   selectedInputMode: InputMode;
   selectedFillState: CellState;
   winConditionMet: boolean;
+  onSelectedFillState: (cellState: CellState) => void;
   onWin: () => void;
   onError: () => void;
 }) {
@@ -64,13 +66,24 @@ export function Grid({
     cellIndex: number
   ) => {
     setIsMouseDown(true);
+    let newFillState = selectedFillState;
+
     if (selectedInputMode === InputMode.Free) {
-      const newState =
-        event.button === 0 ? CellState.Filled : CellState.CrossedOut;
-      updateCellState(rowIndex, cellIndex, newState);
-    } else {
-      updateCellState(rowIndex, cellIndex);
+      const currentCellState = guesses[rowIndex][cellIndex];
+      if (event.button === 2) {
+        newFillState =
+          currentCellState === CellState.Filled
+            ? CellState.CrossedOut
+            : CellState.CrossedOut;
+      } else {
+        newFillState =
+          currentCellState === CellState.Filled
+            ? CellState.Blank
+            : CellState.Filled;
+      }
+      onSelectedFillState(newFillState);
     }
+    updateCellState(rowIndex, cellIndex, newFillState);
   };
 
   const handleMouseEnter = (
@@ -78,12 +91,8 @@ export function Grid({
     rowIndex: number,
     cellIndex: number
   ) => {
-    if (isMouseDown && selectedInputMode === InputMode.Free) {
-      const newState =
-        event.buttons === 1 ? CellState.Filled : CellState.CrossedOut;
-      updateCellState(rowIndex, cellIndex, newState);
-    } else if (isMouseDown) {
-      updateCellState(rowIndex, cellIndex, selectedFillState);
+    if (isMouseDown) {
+      updateCellState(rowIndex, cellIndex);
     }
   };
 
@@ -94,7 +103,7 @@ export function Grid({
   const updateCellState = (
     rowIndex: number,
     cellIndex: number,
-    newState: CellState
+    newFillState?: FillState
   ) => {
     if (!winConditionMet) {
       setGuesses((prevGuesses) =>
@@ -102,7 +111,7 @@ export function Grid({
           i === rowIndex
             ? [
                 ...row.slice(0, cellIndex),
-                newState,
+                newFillState || selectedFillState,
                 ...row.slice(cellIndex + 1),
               ]
             : row

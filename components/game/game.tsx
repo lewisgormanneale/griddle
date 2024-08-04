@@ -50,6 +50,7 @@ export function Game() {
             selectedInputMode={selectedInputMode}
             selectedFillState={selectedFillState}
             winConditionMet={winConditionMet}
+            onSelectedFillState={handleFillStateChange}
             onWin={handleWin}
             onError={handleError}
           />
