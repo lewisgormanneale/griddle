@@ -37,7 +37,7 @@ export function Sidebar() {
     <div
       className={`h-screen ${
         isExpanded ? "w-screen sm:w-64" : "w-18"
-      } flex flex-col p-2 border-r transition-all flex-shrink-0 flex-grow-0`}
+      } flex flex-col p-2 border-r transition-all bg-card flex-shrink-0 flex-grow-0`}
     >
       <ScrollArea className="h-full">
         <div className="flex justify-end items-center m-1">

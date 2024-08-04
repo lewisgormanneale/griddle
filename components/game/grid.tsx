@@ -1,6 +1,6 @@
 "use client";
 
-import { CellState, Puzzle } from "@/lib/types";
+import { CellState, Puzzle, InputMode } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
@@ -8,14 +8,18 @@ import { Cell } from "./cell";
 
 export function Grid({
   puzzle,
+  selectedInputMode,
   selectedFillState,
   winConditionMet,
+  onSelectedFillState,
   onWin,
   onError,
 }: {
   puzzle: Puzzle;
+  selectedInputMode: InputMode;
   selectedFillState: CellState;
   winConditionMet: boolean;
+  onSelectedFillState: (cellState: CellState) => void;
   onWin: () => void;
   onError: () => void;
 }) {
@@ -56,12 +60,37 @@ export function Grid({
     return () => window.removeEventListener("mouseup", handleMouseUp);
   }, []);
 
-  const handleMouseDown = (rowIndex: number, cellIndex: number) => {
+  const handleMouseDown = (
+    event: React.MouseEvent,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
     setIsMouseDown(true);
-    updateCellState(rowIndex, cellIndex);
+    let newFillState = selectedFillState;
+
+    if (selectedInputMode === InputMode.Free) {
+      const currentCellState = guesses[rowIndex][cellIndex];
+      if (event.button === 2) {
+        newFillState =
+          currentCellState === CellState.Filled
+            ? CellState.CrossedOut
+            : CellState.CrossedOut;
+      } else {
+        newFillState =
+          currentCellState === CellState.Filled
+            ? CellState.Blank
+            : CellState.Filled;
+      }
+      onSelectedFillState(newFillState);
+    }
+    updateCellState(rowIndex, cellIndex, newFillState);
   };
 
-  const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
+  const handleMouseEnter = (
+    event: React.MouseEvent,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
     if (isMouseDown) {
       updateCellState(rowIndex, cellIndex);
     }
@@ -71,14 +100,18 @@ export function Grid({
     event.preventDefault();
   };
 
-  const updateCellState = (rowIndex: number, cellIndex: number) => {
+  const updateCellState = (
+    rowIndex: number,
+    cellIndex: number,
+    newFillState?: CellState
+  ) => {
     if (!winConditionMet) {
       setGuesses((prevGuesses) =>
         prevGuesses.map((row, i) =>
           i === rowIndex
             ? [
                 ...row.slice(0, cellIndex),
-                selectedFillState,
+                newFillState || selectedFillState,
                 ...row.slice(cellIndex + 1),
               ]
             : row
@@ -107,9 +140,11 @@ export function Grid({
                       <Cell
                         key={`${rowIndex}-${cellIndex}`}
                         cellState={guesses[rowIndex][cellIndex]}
-                        onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
-                        onMouseEnter={() =>
-                          handleMouseEnter(rowIndex, cellIndex)
+                        onMouseDown={(event: React.MouseEvent) =>
+                          handleMouseDown(event, rowIndex, cellIndex)
+                        }
+                        onMouseEnter={(event: React.MouseEvent) =>
+                          handleMouseEnter(event, rowIndex, cellIndex)
                         }
                         onRightClick={(event: React.MouseEvent) =>
                           handleRightClick(event)
