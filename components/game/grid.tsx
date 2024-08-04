@@ -1,6 +1,6 @@
 "use client";
 
-import { CellState, Puzzle } from "@/lib/types";
+import { CellState, Puzzle, InputMode } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 import { Clue } from "./clue";
@@ -8,12 +8,14 @@ import { Cell } from "./cell";
 
 export function Grid({
   puzzle,
+  selectedInputMode,
   selectedFillState,
   winConditionMet,
   onWin,
   onError,
 }: {
   puzzle: Puzzle;
+  selectedInputMode: InputMode;
   selectedFillState: CellState;
   winConditionMet: boolean;
   onWin: () => void;

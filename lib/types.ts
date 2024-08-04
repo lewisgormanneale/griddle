@@ -7,7 +7,7 @@ export enum CellState {
   CrossedOut = "crossed-out",
 }
 
-export enum FillMode {
+export enum InputMode {
   Free = "free",
   Set = "set",
 }

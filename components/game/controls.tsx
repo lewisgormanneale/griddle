@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
-import { CellState, FillMode } from "@/lib/types";
+import { CellState, InputMode } from "@/lib/types";
 import { Pencil, Eraser, LucideX, Mouse, Pointer } from "lucide-react";
 import { Card } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 export function Controls({
   winConditionMet,
-  selectedFillMode,
+  selectedInputMode,
   selectedFillState,
-  onSelectedFillMode,
+  onSelectedInputMode,
   onSelectedFillState,
 }: {
   winConditionMet: boolean;
-  selectedFillMode: FillMode;
+  selectedInputMode: InputMode;
   selectedFillState: CellState;
-  onSelectedFillMode: (fillMode: FillMode) => void;
+  onSelectedInputMode: (inputMode: InputMode) => void;
   onSelectedFillState: (cellState: CellState) => void;
 }) {
   const [time, setTime] = useState(0);
@@ -52,22 +52,22 @@ export function Controls({
         <div className="flex">
           <ToggleGroup
             type="single"
-            onValueChange={(value: FillMode) => {
-              onSelectedFillMode(value);
+            onValueChange={(value: InputMode) => {
+              onSelectedInputMode(value);
             }}
-            value={selectedFillMode}
+            value={selectedInputMode}
             aria-label="Toggle fill mode"
           >
-            <ToggleGroupItem value={FillMode.Free} aria-label="Free mode">
+            <ToggleGroupItem value={InputMode.Free} aria-label="Free mode">
               <Mouse className="w-6 h-6" />
             </ToggleGroupItem>
-            {selectedFillMode === FillMode.Free && (
-              <ToggleGroupItem value={FillMode.Set} aria-label="Set mode">
+            {selectedInputMode === InputMode.Free && (
+              <ToggleGroupItem value={InputMode.Set} aria-label="Set mode">
                 <Pointer className="w-6 h-6" />
               </ToggleGroupItem>
             )}
           </ToggleGroup>
-          {selectedFillMode === FillMode.Set && (
+          {selectedInputMode === InputMode.Set && (
             <ToggleGroup
               type="single"
               onValueChange={(value: CellState) => {
