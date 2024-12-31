@@ -2,7 +2,13 @@
 
 import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Home, Menu, Puzzle } from "lucide-react";
+import {
+  BarChart3,
+  Boxes,
+  Home,
+  Menu, PencilRuler,
+  Puzzle
+} from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
@@ -29,8 +35,26 @@ export function Sidebar() {
       label: "play",
       name: "Play",
       icon: <Puzzle size={15} />,
-      href: "/nonogram",
+      href: "/play",
     },
+    {
+      label: "nonograms",
+      name: "Creations & Packs",
+      icon: <Boxes size={15} />,
+      href: "/nonograms",
+    },
+    {
+      label: "creator",
+      name: "Creator",
+      icon: <PencilRuler size={15} />,
+      href: "/creator",
+    },
+    {
+      label: "statistics",
+      name: "Statistics",
+      icon: <BarChart3 size={15} />,
+      href: "/statistics",
+    }
   ];
 
   return (
@@ -41,13 +65,14 @@ export function Sidebar() {
     >
       <ScrollArea className="h-full">
         <div className="flex justify-end items-center m-1">
+          {isExpanded ? <span className={"font-bold"}>Nonogrammable</span> : ""}
           <Button onClick={toggleSidebar} variant="ghost" size="icon">
             <Menu />
           </Button>
         </div>
         <div className={`flex flex-col gap-2 mt-2`}>
           {menus.map((menu) => (
-            <React.Fragment key={menu.name}>
+              <React.Fragment key={menu.name}>
               <Link
                 href={menu.href}
                 className="flex items-center bg-white p-3 m-1 text-xs hover:bg-primary dark:hover:bg-primary dark:bg-background dark:hover:text-background hover:text-white rounded-md"
