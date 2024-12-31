@@ -20,7 +20,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ["var(--font-inter)", ...fontFamily.sans],
+        serif: ["var(--font-unna)", ...fontFamily.serif],
         "zen-dots": ["var(--font-zen-dots)", ...fontFamily.mono],
       },
       colors: {

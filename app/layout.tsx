@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { Inter as FontSans, Zen_Dots as ZenDots } from "next/font/google";
+import {Inter, Unna, Zen_Dots} from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Sidebar } from "@/components/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 
-const fontSans = FontSans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
 });
 
-const zenDots = ZenDots({
+const zenDots = Zen_Dots({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-zen-dots"
+});
+
+const unna = Unna({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-unna"
 });
 
 export const metadata: Metadata = {
@@ -31,8 +37,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable, zenDots.variable
+          "min-h-screen bg-background font-serif antialiased",
+            inter.variable, zenDots.variable, unna.variable
         )}
       >
         <ThemeProvider

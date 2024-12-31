@@ -4,7 +4,7 @@ import * as React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   BarChart3,
-  Boxes,
+  Boxes, CircleHelp,
   Home,
   Menu, PencilRuler,
   Puzzle
@@ -22,7 +22,7 @@ type Menu = {
 };
 
 export function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const toggleSidebar = () => setIsExpanded(!isExpanded);
   const menus: Menu[] = [
     {
@@ -39,7 +39,7 @@ export function Sidebar() {
     },
     {
       label: "nonograms",
-      name: "Creations & Packs",
+      name: "Packs & Creations",
       icon: <Boxes size={15} />,
       href: "/nonograms",
     },
@@ -54,6 +54,12 @@ export function Sidebar() {
       name: "Statistics",
       icon: <BarChart3 size={15} />,
       href: "/statistics",
+    },
+    {
+      label: "help",
+      name: "Help",
+      icon: <CircleHelp size={15} />,
+      href: "/help",
     }
   ];
 
@@ -75,7 +81,7 @@ export function Sidebar() {
               <React.Fragment key={menu.name}>
               <Link
                 href={menu.href}
-                className="flex items-center bg-white p-3 m-1 text-xs hover:bg-primary dark:hover:bg-primary dark:bg-background dark:hover:text-background hover:text-white rounded-md"
+                className="flex font-serif font-bold items-center bg-white p-3 m-1 hover:bg-primary dark:hover:bg-primary dark:bg-background dark:hover:text-background hover:text-white rounded-md"
               >
                 <div>{menu.icon}</div>
                 <span
