@@ -64,8 +64,8 @@ export function Sidebar() {
       } flex flex-col p-2 border-r transition-all bg-card flex-shrink-0 flex-grow-0`}
     >
       <ScrollArea className="h-full">
-        <div className="flex justify-end items-center m-1">
-          {isExpanded ? <span className={"font-bold"}>Nonogrammable</span> : ""}
+        <div className="flex justify-between items-center m-1">
+          {isExpanded ? <span className={"font-zen-dots text-3xl"}>GRIDDLE</span> : ""}
           <Button onClick={toggleSidebar} variant="ghost" size="icon">
             <Menu />
           </Button>

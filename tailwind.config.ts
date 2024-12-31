@@ -21,6 +21,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        "zen-dots": ["var(--font-zen-dots)", ...fontFamily.mono],
       },
       colors: {
         border: "hsl(var(--border))",

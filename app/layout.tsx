@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { Inter as FontSans } from "next/font/google";
+import { Inter as FontSans, Zen_Dots as ZenDots } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Sidebar } from "@/components/sidebar";
@@ -11,8 +11,14 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
+const zenDots = ZenDots({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-zen-dots"
+});
+
 export const metadata: Metadata = {
-  title: "Nonogrammable",
+  title: "Griddle",
   description: "Solve and generate nonogram puzzles online",
 };
 
@@ -26,7 +32,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          fontSans.variable, zenDots.variable
         )}
       >
         <ThemeProvider
