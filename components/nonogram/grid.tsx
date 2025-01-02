@@ -83,7 +83,7 @@ export function Grid({
                             <Cell
                                 key={`${rowIndex}-${cellIndex}`}
                                 cellState={grid[rowIndex][cellIndex]}
-                                onMouseDown={() => handleMouseDown(event, rowIndex, cellIndex)}
+                                onMouseDown={(event: React.MouseEvent) => handleMouseDown(event, rowIndex, cellIndex)}
                                 onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
                                 onRightClick={(event: React.MouseEvent) =>
                                     handleRightClick(event)
