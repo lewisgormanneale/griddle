@@ -1,8 +1,6 @@
-"use client";
-
-import {useEffect, useState} from "react";
-import {CellState, InputMode} from "@/lib/types";
+import React, {useEffect, useState} from "react";
 import {Cell} from "@/components/nonogram/cell";
+import {CellState, InputMode, NonogramGrid} from "@/types/types"
 
 export function Grid({
                          grid,
@@ -11,11 +9,11 @@ export function Grid({
                          selectedFillState,
                          onGridChange,
                      }: {
-    grid: CellState[][];
+    grid: NonogramGrid;
     winConditionMet: boolean;
     selectedInputMode: InputMode;
     selectedFillState: CellState;
-    onGridChange: (newGrid: CellState[][]) => void;
+    onGridChange: (newGrid: NonogramGrid) => void;
 }) {
     const [isMouseDown, setIsMouseDown] = useState(false);
 
@@ -66,7 +64,7 @@ export function Grid({
         }
     }
 
-    const handleGridChange = (newGrid: CellState[][]) => {
+    const handleGridChange = (newGrid: NonogramGrid) => {
         onGridChange(newGrid);
     }
 

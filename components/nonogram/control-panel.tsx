@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {CellState, InputMode} from "@/lib/types";
+import {CellState, InputMode} from "@/types/types";
 import {Eraser, LucideX, Mouse, Pencil, Pointer} from "lucide-react";
 import {Card} from "../ui/card";
 import {ToggleGroup, ToggleGroupItem} from "../ui/toggle-group";

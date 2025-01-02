@@ -1,9 +1,9 @@
 import {Tables} from "@/types/database.types";
-import {CellState} from "@/lib/types";
+import {NonogramGrid} from "@/types/types";
 
 export function RowHints({nonogram, grid}: {
     nonogram: Tables<"nonograms">;
-    grid: CellState[][];
+    grid: NonogramGrid;
 }) {
     return null;
 }

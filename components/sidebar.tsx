@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {BarChart3, Boxes, CircleHelp, Home, Menu, PencilRuler, Puzzle} from "lucide-react";
 import Link from "next/link";

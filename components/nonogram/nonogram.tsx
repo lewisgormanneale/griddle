@@ -1,6 +1,6 @@
 "use client";
 
-import {CellState, InputMode} from "@/lib/types";
+import {CellState, InputMode, NonogramGrid} from "@/types/types";
 import React, {useEffect, useState} from "react";
 import {ControlPanel} from "@/components/nonogram/control-panel";
 import {Grid} from "@/components/nonogram/grid";
@@ -10,7 +10,7 @@ import {RowHints} from "@/components/nonogram/row-hints";
 
 export function Nonogram() {
     const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
-    const [grid, setGrid] = useState<CellState[][]>([]);
+    const [grid, setGrid] = useState<NonogramGrid>([]);
     const [winConditionMet, setWinConditionMet] = useState(false);
     const [selectedInputMode, setSelectedInputMode] = useState(InputMode.Free);
     const [selectedFillState, setSelectedFillState] = useState(CellState.Filled);
@@ -46,7 +46,7 @@ export function Nonogram() {
         setSelectedInputMode(newInputMode);
     };
 
-    const handleGridChange = (newGrid: CellState[][]) => {
+    const handleGridChange = (newGrid: NonogramGrid) => {
         setGrid(newGrid);
     }
 
