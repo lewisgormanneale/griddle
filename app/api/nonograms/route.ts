@@ -1,7 +1,7 @@
 import {supabase} from '@/utils/supabase/client';
 import {Tables} from "@/types/database.types";
 
-export async function getNonogram(id: string): Promise<Tables<"nonograms">> {
+async function getNonogram(id: string): Promise<Tables<"nonograms">> {
     const {data, error} = await supabase.from('nonograms').select('*').eq('id', id).single();
 
     if (error) {
@@ -11,7 +11,7 @@ export async function getNonogram(id: string): Promise<Tables<"nonograms">> {
     return data;
 }
 
-export async function getNonograms() {
+async function getNonograms() {
     const {data, error} = await supabase.from('nonograms').select('*');
 
     if (error) {
