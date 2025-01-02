@@ -1,58 +1,58 @@
-import type { Metadata } from "next";
+import React from "react";
+import type {Metadata} from "next";
 import "@/styles/globals.css";
 import {Inter, Unna, Zen_Dots} from "next/font/google";
-import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Sidebar } from "@/components/sidebar";
-import { ModeToggle } from "@/components/mode-toggle";
+import {cn} from "@/lib/utils";
+import {ThemeProvider} from "@/components/theme-provider";
+import {Sidebar} from "@/components/sidebar";
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+    subsets: ["latin"],
+    variable: "--font-inter",
 });
 
 const zenDots = Zen_Dots({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-zen-dots"
+    subsets: ["latin"],
+    weight: "400",
+    variable: "--font-zen-dots"
 });
 
 const unna = Unna({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-unna"
+    subsets: ["latin"],
+    weight: ["400", "700"],
+    variable: "--font-unna"
 });
 
 export const metadata: Metadata = {
-  title: "Griddle",
-  description: "Solve and generate nonogram puzzles online",
+    title: "Griddle",
+    description: "Solve and generate nonogram puzzles online",
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+                                       children,
+                                   }: Readonly<{
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-serif antialiased",
-            inter.variable, zenDots.variable, unna.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    return (
+        <html lang="en" suppressHydrationWarning>
+        <body
+            className={cn(
+                "min-h-screen bg-background font-serif antialiased",
+                inter.variable, zenDots.variable, unna.variable
+            )}
         >
-          <div className="flex">
-            <Sidebar />
-            <main className="w-full">{children}</main>
-          </div>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <div className="flex">
+                <Sidebar/>
+                <main className="w-full">{children}</main>
+            </div>
         </ThemeProvider>
-      </body>
-    </html>
-  );
+        </body>
+        </html>
+    );
 }
