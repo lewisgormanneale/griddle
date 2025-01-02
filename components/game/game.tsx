@@ -6,12 +6,26 @@ import { generatePuzzle } from "@/lib/functions";
 import { Grid } from "./grid";
 import { Controls } from "./controls";
 import React from "react";
+import {supabase} from "@/utils/supabase/client";
 
 export function Game() {
   const [puzzle, setPuzzle] = useState<Puzzle>([]);
   const [winConditionMet, setWinConditionMet] = useState(false);
   const [selectedInputMode, setSelectedInputMode] = useState(InputMode.Free);
   const [selectedFillState, setSelectedFillState] = useState(CellState.Filled);
+
+  useEffect(() => {
+    async function getNonogram() {
+      try {
+        const response = await fetch(`/api/nonograms?id=1`)
+        const data = await response.json()
+        console.log(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    getNonogram()
+  }, [])
 
   useEffect(() => {
     const initialPuzzle = generatePuzzle(10, 10);
