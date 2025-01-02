@@ -1,29 +1,30 @@
-import {supabase} from '@/utils/supabase/client';
+import {createClient} from "@/utils/supabase/client";
 import {Tables} from "@/types/database.types";
 
-async function getNonogram(id: string): Promise<Tables<"nonograms">> {
-    const {data, error} = await supabase.from('nonograms').select('*').eq('id', id).single();
-
-    if (error) {
-        throw new Error(error.message);
-    }
-
-    return data;
-}
-
-async function getNonograms() {
-    const {data, error} = await supabase.from('nonograms').select('*');
-
-    if (error) {
-        throw new Error(error.message);
-    }
-
-    return data;
-}
-
 export async function GET(request: Request) {
+    async function getNonogram(id: string): Promise<Tables<"nonograms">> {
+        const {data, error} = await supabase.from('nonograms').select('*').eq('id', id).single();
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return data;
+    }
+
+    async function getNonograms() {
+        const {data, error} = await supabase.from('nonograms').select('*');
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return data;
+    }
+
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
+    const supabase = createClient();
 
     if (id) {
         const nonogram = await getNonogram(id);
@@ -39,6 +40,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+    const supabase = createClient();
     const body = await request.json();
     const {data, error} = await supabase.from('nonograms').insert([body]);
 
