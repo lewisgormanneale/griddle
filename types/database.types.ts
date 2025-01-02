@@ -12,30 +12,30 @@ export type Database = {
       nonograms: {
         Row: {
           author: string | null
+          columns: number
           created_at: string | null
-          height: number
           id: number
+          rows: number
           solution: string
           title: string
-          width: number
         }
         Insert: {
           author?: string | null
+          columns: number
           created_at?: string | null
-          height: number
           id?: number
+          rows: number
           solution: string
           title: string
-          width: number
         }
         Update: {
           author?: string | null
+          columns?: number
           created_at?: string | null
-          height?: number
           id?: number
+          rows?: number
           solution?: string
           title?: string
-          width?: number
         }
         Relationships: []
       }
