@@ -82,6 +82,7 @@ export function Nonogram() {
                             winConditionMet={winConditionMet}
                             selectedInputMode={selectedInputMode}
                             selectedFillState={selectedFillState}
+                            onSelectedFillState={handleFillStateChange}
                             onGridChange={handleGridChange}
                         ></Grid>
                     </div>

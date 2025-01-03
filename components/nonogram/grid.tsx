@@ -8,11 +8,13 @@ export function Grid({
                          selectedInputMode,
                          selectedFillState,
                          onGridChange,
+                         onSelectedFillState
                      }: {
     grid: NonogramGrid;
     winConditionMet: boolean;
     selectedInputMode: InputMode;
     selectedFillState: CellState;
+    onSelectedFillState: (cellState: CellState) => void;
     onGridChange: (newGrid: NonogramGrid) => void;
 }) {
     const [isMouseDown, setIsMouseDown] = useState(false);
@@ -24,17 +26,18 @@ export function Grid({
             const currentCellState = grid[rowIndex][cellIndex];
             if (event.button === 2) {
                 newFillState =
-                    currentCellState === CellState.Filled
+                    currentCellState === CellState.Blank
                         ? CellState.CrossedOut
-                        : CellState.CrossedOut;
+                        : CellState.Blank;
             } else {
                 newFillState =
-                    currentCellState === CellState.Filled
-                        ? CellState.Blank
-                        : CellState.Filled;
+                    currentCellState === CellState.Blank
+                        ? CellState.Filled
+                        : CellState.Blank;
             }
-            updateCellState(rowIndex, cellIndex, newFillState);
+            onSelectedFillState(newFillState);
         }
+        updateCellState(rowIndex, cellIndex, newFillState);
 
 
     };

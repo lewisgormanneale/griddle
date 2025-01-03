@@ -64,7 +64,7 @@ export function Sidebar() {
         >
             <ScrollArea className="h-full">
                 <div className="flex justify-between items-center m-1">
-                    {isExpanded ? <span className={"font-zen-dots text-3xl"}>GRIDDLE</span> : ""}
+                    {isExpanded ? <span className={"font-zen-dots text-xl"}>GRIDDLE</span> : ""}
                     <Button onClick={toggleSidebar} variant="ghost" size="icon">
                         <Menu/>
                     </Button>
