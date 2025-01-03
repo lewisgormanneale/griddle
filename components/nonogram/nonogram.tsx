@@ -5,8 +5,7 @@ import React, {useEffect, useState} from "react";
 import {ControlPanel} from "@/components/nonogram/control-panel";
 import {Grid} from "@/components/nonogram/grid";
 import {Tables} from "@/types/database.types";
-import {ColumnHints} from "@/components/nonogram/column-hints";
-import {RowHints} from "@/components/nonogram/row-hints";
+import {Hints} from "@/components/nonogram/hints";
 
 export function Nonogram() {
     const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
@@ -51,7 +50,7 @@ export function Nonogram() {
     }
 
     return (
-        <div className="flex flex-col items-center gap-3 select-none w-full">
+        <div className="flex flex-col items-center gap-3 w-full">
             {nonogram && (
                 <div>
                     <h1 className="flex flex-col items-center text-3xl">Nonogram
@@ -68,16 +67,18 @@ export function Nonogram() {
                             ></ControlPanel>
                         </div>
                         <div className="col-span-2">
-                            <ColumnHints
+                            <Hints
                                 nonogram={nonogram}
                                 grid={grid}
-                            ></ColumnHints>
+                                isColumn={true}
+                            ></Hints>
                         </div>
                         <div className="row-span-2 row-start-2">
-                            <RowHints
+                            <Hints
                                 nonogram={nonogram}
                                 grid={grid}
-                            ></RowHints>
+                                isColumn={false}
+                            ></Hints>
                         </div>
                         <div className="col-span-2 row-span-2 row-start-2">
                             <Grid
