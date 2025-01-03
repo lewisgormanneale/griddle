@@ -48,7 +48,6 @@ export function ControlPanel({
     return (
         <Card className="w-full">
             <div className="flex flex-col justify-between items-center w-full p-4 rounded">
-                <h1 className="text-xl font-bold italic">&quot;{nonogram.title}&quot;</h1>
                 <div className="font-serif">
                     <span className="font-semibold">Status: </span>
                     {winConditionMet ? "You win!" : "In progress"}

@@ -8,11 +8,13 @@ export function Grid({
                          selectedInputMode,
                          selectedFillState,
                          onGridChange,
+                         onSelectedFillState
                      }: {
     grid: NonogramGrid;
     winConditionMet: boolean;
     selectedInputMode: InputMode;
     selectedFillState: CellState;
+    onSelectedFillState: (cellState: CellState) => void;
     onGridChange: (newGrid: NonogramGrid) => void;
 }) {
     const [isMouseDown, setIsMouseDown] = useState(false);
@@ -24,17 +26,18 @@ export function Grid({
             const currentCellState = grid[rowIndex][cellIndex];
             if (event.button === 2) {
                 newFillState =
-                    currentCellState === CellState.Filled
+                    currentCellState === CellState.Blank
                         ? CellState.CrossedOut
-                        : CellState.CrossedOut;
+                        : CellState.Blank;
             } else {
                 newFillState =
-                    currentCellState === CellState.Filled
-                        ? CellState.Blank
-                        : CellState.Filled;
+                    currentCellState === CellState.Blank
+                        ? CellState.Filled
+                        : CellState.Blank;
             }
-            updateCellState(rowIndex, cellIndex, newFillState);
+            onSelectedFillState(newFillState);
         }
+        updateCellState(rowIndex, cellIndex, newFillState);
 
 
     };
@@ -73,27 +76,27 @@ export function Grid({
         return () => window.removeEventListener("mouseup", handleMouseUp);
     }, []);
 
+
+    if (!grid || grid.length === 0) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <div className="select-none">
-            <table>
-                <tbody>
-                {grid.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {row.map((cell, cellIndex) => (
-                            <Cell
-                                key={`${rowIndex}-${cellIndex}`}
-                                cellState={grid[rowIndex][cellIndex]}
-                                onMouseDown={(event: React.MouseEvent) => handleMouseDown(event, rowIndex, cellIndex)}
-                                onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                                onRightClick={(event: React.MouseEvent) =>
-                                    handleRightClick(event)
-                                }
-                            ></Cell>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="select-none flex flex-wrap" style={{
+            width: `${grid[0].length * 2}rem`,
+            height: `${grid.length * 2}rem`
+        }}>
+            {grid.map((row, rowIndex) =>
+                row.map((cell, cellIndex) => (
+                    <Cell
+                        key={`${rowIndex}-${cellIndex}`}
+                        cellState={grid[rowIndex][cellIndex]}
+                        onMouseDown={(event: React.MouseEvent) => handleMouseDown(event, rowIndex, cellIndex)}
+                        onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
+                        onRightClick={(event: React.MouseEvent) => handleRightClick(event)}
+                    />
+                ))
+            )}
         </div>
     );
 }

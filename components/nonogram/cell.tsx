@@ -13,8 +13,8 @@ export function Cell({
     onRightClick: (event: React.MouseEvent) => void;
 }) {
     return (
-        <td
-            className={`w-8 h-8 border border-black cursor-pointer nonogram-cell ${
+        <div
+            className={`w-8 h-8 m-0 p-0 border border-black cursor-pointer ${
                 cellState === CellState.Filled ? "bg-black" : "bg-zinc-50"
             }`}
             onMouseDown={onMouseDown}
@@ -26,6 +26,6 @@ export function Cell({
                     <LucideX className="text-black"/>
                 </div>
             ) : null}
-        </td>
+        </div>
     );
 }
