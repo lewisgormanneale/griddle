@@ -76,27 +76,27 @@ export function Grid({
         return () => window.removeEventListener("mouseup", handleMouseUp);
     }, []);
 
+
+    if (!grid || grid.length === 0) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <div className="select-none">
-            <table>
-                <tbody>
-                {grid.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {row.map((cell, cellIndex) => (
-                            <Cell
-                                key={`${rowIndex}-${cellIndex}`}
-                                cellState={grid[rowIndex][cellIndex]}
-                                onMouseDown={(event: React.MouseEvent) => handleMouseDown(event, rowIndex, cellIndex)}
-                                onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                                onRightClick={(event: React.MouseEvent) =>
-                                    handleRightClick(event)
-                                }
-                            ></Cell>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="select-none flex flex-wrap" style={{
+            width: `${grid[0].length * 2}rem`,
+            height: `${grid.length * 2}rem`
+        }}>
+            {grid.map((row, rowIndex) =>
+                row.map((cell, cellIndex) => (
+                    <Cell
+                        key={`${rowIndex}-${cellIndex}`}
+                        cellState={grid[rowIndex][cellIndex]}
+                        onMouseDown={(event: React.MouseEvent) => handleMouseDown(event, rowIndex, cellIndex)}
+                        onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
+                        onRightClick={(event: React.MouseEvent) => handleRightClick(event)}
+                    />
+                ))
+            )}
         </div>
     );
 }

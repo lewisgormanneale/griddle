@@ -53,7 +53,7 @@ export function Nonogram() {
     return (
         <div className="flex flex-col items-center gap-3 select-none w-full">
             {nonogram && (
-                <div className="grid grid-cols-3 grid-rows-3 w-full">
+                <div className="grid grid-cols-3 grid-rows-3">
                     <div className="p-3">
                         <ControlPanel
                             nonogram={nonogram}
