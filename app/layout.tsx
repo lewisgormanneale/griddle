@@ -2,7 +2,7 @@ import React from "react";
 import type {Metadata} from "next";
 import "@/styles/globals.css";
 import {Inter, Unna, Zen_Dots} from "next/font/google";
-import {cn} from "@/lib/utils";
+import {cn} from "@/utils/shad-cn-utils";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Sidebar} from "@/components/sidebar";
 
