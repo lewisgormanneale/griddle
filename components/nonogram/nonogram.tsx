@@ -50,46 +50,42 @@ export function Nonogram() {
     }
 
     return (
-        <div className="flex flex-col items-center gap-3 w-full">
+        <div className="flex flex-col items-center">
             {nonogram && (
-                <div>
-                    <h1 className="flex flex-col items-center text-3xl">Nonogram
-                        #{nonogram.id}: <span className="italic">&quot;{nonogram.title}&quot;</span></h1>
-                    <div className="grid grid-cols-3 grid-rows-3">
-                        <div className="p-3">
-                            <ControlPanel
-                                nonogram={nonogram}
-                                winConditionMet={winConditionMet}
-                                selectedInputMode={selectedInputMode}
-                                selectedFillState={selectedFillState}
-                                onSelectedInputMode={handleInputModeStateChange}
-                                onSelectedFillState={handleFillStateChange}
-                            ></ControlPanel>
-                        </div>
-                        <div className="col-span-2">
-                            <Hints
-                                nonogram={nonogram}
-                                grid={grid}
-                                isColumn={true}
-                            ></Hints>
-                        </div>
-                        <div className="row-span-2 row-start-2">
-                            <Hints
-                                nonogram={nonogram}
-                                grid={grid}
-                                isColumn={false}
-                            ></Hints>
-                        </div>
-                        <div className="col-span-2 row-span-2 row-start-2">
-                            <Grid
-                                grid={grid}
-                                winConditionMet={winConditionMet}
-                                selectedInputMode={selectedInputMode}
-                                selectedFillState={selectedFillState}
-                                onSelectedFillState={handleFillStateChange}
-                                onGridChange={handleGridChange}
-                            ></Grid>
-                        </div>
+                <div className="grid grid-cols-3 grid-rows-3">
+                    <div className="p-4">
+                        <ControlPanel
+                            nonogram={nonogram}
+                            winConditionMet={winConditionMet}
+                            selectedInputMode={selectedInputMode}
+                            selectedFillState={selectedFillState}
+                            onSelectedInputMode={handleInputModeStateChange}
+                            onSelectedFillState={handleFillStateChange}
+                        ></ControlPanel>
+                    </div>
+                    <div className="col-span-2">
+                        <Hints
+                            nonogram={nonogram}
+                            grid={grid}
+                            isColumn={true}
+                        ></Hints>
+                    </div>
+                    <div className="row-span-2 row-start-2">
+                        <Hints
+                            nonogram={nonogram}
+                            grid={grid}
+                            isColumn={false}
+                        ></Hints>
+                    </div>
+                    <div className="col-span-2 row-span-2 row-start-2">
+                        <Grid
+                            grid={grid}
+                            winConditionMet={winConditionMet}
+                            selectedInputMode={selectedInputMode}
+                            selectedFillState={selectedFillState}
+                            onSelectedFillState={handleFillStateChange}
+                            onGridChange={handleGridChange}
+                        ></Grid>
                     </div>
                 </div>
             )}
