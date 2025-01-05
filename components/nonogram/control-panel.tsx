@@ -5,6 +5,7 @@ import {Card} from "../ui/card";
 import {ToggleGroup, ToggleGroupItem} from "../ui/toggle-group";
 import {Tables} from "@/types/database.types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Timer} from "@/components/nonogram/timer";
 
 export function ControlPanel({
                                  nonogram,
@@ -25,38 +26,23 @@ export function ControlPanel({
     const [timerActive, setTimerActive] = useState(true);
 
     useEffect(() => {
-        let interval: ReturnType<typeof setInterval> | null = null;
-        if (timerActive) {
-            interval = setInterval(() => {
-                setTime((time: number) => time + 1);
-            }, 1000);
-        } else if (interval) {
-            clearInterval(interval);
-        }
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-    }, [timerActive, setTime]);
-
-    useEffect(() => {
         if (winConditionMet) {
             setTimerActive(false);
         }
     }, [winConditionMet]);
 
     return (
-        <Card className="w-full">
-            <div className="flex flex-col justify-between items-center w-full p-4 rounded">
-                <div className="font-serif">
-                    <span className="font-semibold">Status: </span>
-                    {winConditionMet ? "You win!" : "In progress"}
+        <Card className="w-52 h-52">
+            <div className="flex flex-col justify-between items-center w-full h-full gap-3 p-4 rounded">
+                <div className="flex items-center gap-3">
+                    <div className="font-serif text-xl">
+                        #{nonogram.id}
+                    </div>
+                    <div className="font-serif text-xl italic">
+                        &quot;{nonogram.title}&quot;
+                    </div>
                 </div>
-                <div className="font-serif">
-                    <span className="font-semibold">Time: </span>
-                    {time}s
-                </div>
+                <Timer time={time} setTime={setTime} timerActive={timerActive}/>
                 <div className="flex flex-col gap-3">
                     <Select
                         value={selectedInputMode}
@@ -71,8 +57,8 @@ export function ControlPanel({
                             <SelectItem value="touch">Touch</SelectItem>
                         </SelectContent>
                     </Select>
-                    {selectedInputMode === 'touch' &&
-                        <div className="ml-4">
+                    <div className="h-28">
+                        {selectedInputMode === 'touch' &&
                             <ToggleGroup
                                 type="single"
                                 onValueChange={(value: CellState) => {
@@ -100,8 +86,8 @@ export function ControlPanel({
                                     <LucideX className="w-6 h-6"/>
                                 </ToggleGroupItem>
                             </ToggleGroup>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </Card>
