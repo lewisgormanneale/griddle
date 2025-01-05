@@ -8,6 +8,6 @@ export enum CellState {
 }
 
 export enum InputMode {
-    Free = "free",
-    Set = "set",
+    Free = "cursor",
+    Set = "touch",
 }

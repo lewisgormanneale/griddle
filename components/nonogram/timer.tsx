@@ -1,4 +1,5 @@
 import {useEffect} from "react";
+import {formatTime} from "@/utils/utils";
 
 export function Timer({
                           time,
@@ -25,5 +26,9 @@ export function Timer({
         };
     }, [timerActive, setTime]);
 
-    return <div>Time: {time}s</div>;
+    return (
+        <div className="font-serif text-2xl">
+            {formatTime(time)}
+        </div>
+    );
 }

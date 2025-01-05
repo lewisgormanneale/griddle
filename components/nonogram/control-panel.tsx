@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {CellState, InputMode} from "@/types/types";
-import {Eraser, LucideX, Mouse, Pencil, Pointer} from "lucide-react";
+import {Eraser, LucideX, Pencil} from "lucide-react";
 import {Card} from "../ui/card";
 import {ToggleGroup, ToggleGroupItem} from "../ui/toggle-group";
 import {Tables} from "@/types/database.types";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Timer} from "@/components/nonogram/timer";
 
 export function ControlPanel({
                                  nonogram,
@@ -24,85 +26,68 @@ export function ControlPanel({
     const [timerActive, setTimerActive] = useState(true);
 
     useEffect(() => {
-        let interval: ReturnType<typeof setInterval> | null = null;
-        if (timerActive) {
-            interval = setInterval(() => {
-                setTime((time: number) => time + 1);
-            }, 1000);
-        } else if (interval) {
-            clearInterval(interval);
-        }
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-    }, [timerActive, setTime]);
-
-    useEffect(() => {
         if (winConditionMet) {
             setTimerActive(false);
         }
     }, [winConditionMet]);
 
     return (
-        <Card className="w-full">
-            <div className="flex flex-col justify-between items-center w-full p-4 rounded">
-                <div className="font-serif">
-                    <span className="font-semibold">Status: </span>
-                    {winConditionMet ? "You win!" : "In progress"}
+        <Card className="w-52 h-52 m-2">
+            <div className="flex flex-col justify-between items-center w-full h-full gap-3 p-4 rounded">
+                <div className="flex items-center gap-3">
+                    <div className="font-serif text-xl">
+                        #{nonogram.id}
+                    </div>
+                    <div className="font-serif text-xl italic">
+                        &quot;{nonogram.title}&quot;
+                    </div>
                 </div>
-                <div className="font-serif">
-                    <span className="font-semibold">Time: </span>
-                    {time}s
-                </div>
-                <div className="flex">
-                    <ToggleGroup
-                        type="single"
+                <Timer time={time} setTime={setTime} timerActive={timerActive}/>
+                <div className="flex flex-col gap-3">
+                    <Select
+                        value={selectedInputMode}
                         onValueChange={(value: InputMode) => {
                             onSelectedInputMode(value);
-                        }}
-                        value={selectedInputMode}
-                        aria-label="Toggle fill mode"
-                    >
-                        <ToggleGroupItem value={InputMode.Free} aria-label="Free mode">
-                            <Mouse className="w-6 h-6"/>
-                        </ToggleGroupItem>
-                        {selectedInputMode === InputMode.Free && (
-                            <ToggleGroupItem value={InputMode.Set} aria-label="Set mode">
-                                <Pointer className="w-6 h-6"/>
-                            </ToggleGroupItem>
-                        )}
-                    </ToggleGroup>
-                    {selectedInputMode === InputMode.Set && (
-                        <ToggleGroup
-                            type="single"
-                            onValueChange={(value: CellState) => {
-                                onSelectedFillState(value);
-                            }}
-                            value={selectedFillState}
-                            aria-label="Toggle fill state"
-                        >
-                            <ToggleGroupItem
-                                value={CellState.Filled}
-                                aria-label="Toggle fill"
+                        }}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="cursor">Cursor</SelectItem>
+                            <SelectItem value="touch">Touch</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <div className="h-28">
+                        {selectedInputMode === 'touch' &&
+                            <ToggleGroup
+                                type="single"
+                                onValueChange={(value: CellState) => {
+                                    onSelectedFillState(value);
+                                }}
+                                value={selectedFillState}
+                                aria-label="Toggle fill state"
                             >
-                                <Pencil className="w-6 h-6"/>
-                            </ToggleGroupItem>
-                            <ToggleGroupItem
-                                value={CellState.Blank}
-                                aria-label="Toggle erase"
-                            >
-                                <Eraser className="w-6 h-6"/>
-                            </ToggleGroupItem>
-                            <ToggleGroupItem
-                                value={CellState.CrossedOut}
-                                aria-label="Toggle cross"
-                            >
-                                <LucideX className="w-6 h-6"/>
-                            </ToggleGroupItem>
-                        </ToggleGroup>
-                    )}
+                                <ToggleGroupItem
+                                    value={CellState.Filled}
+                                    aria-label="Toggle fill"
+                                >
+                                    <Pencil className="w-6 h-6"/>
+                                </ToggleGroupItem>
+                                <ToggleGroupItem
+                                    value={CellState.Blank}
+                                    aria-label="Toggle erase"
+                                >
+                                    <Eraser className="w-6 h-6"/>
+                                </ToggleGroupItem>
+                                <ToggleGroupItem
+                                    value={CellState.CrossedOut}
+                                    aria-label="Toggle cross"
+                                >
+                                    <LucideX className="w-6 h-6"/>
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        }
+                    </div>
                 </div>
             </div>
         </Card>

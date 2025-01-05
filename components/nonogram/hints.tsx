@@ -28,7 +28,7 @@ export function Hints({nonogram, grid, isColumn}: {
         <div className={`flex items-end flex-nowrap ${!isColumn ? 'flex-col' : 'flex-row'} h-full select-none`}>
             {hints.map((lineHints, index) => (
                 <div key={index}
-                     className={`flex ${isColumn ? 'flex-col w-8 h-24 rounded-t py-2' : 'flex-row h-8 w-24 bg-accent rounded-l px-2'} justify-end items-center bg-accent gap-3 border`}>
+                     className={`flex ${isColumn ? 'flex-col w-8 h-56 rounded-t py-2' : 'flex-row h-8 w-56 bg-accent rounded-l px-2'} justify-end items-center bg-accent gap-3 border`}>
                     {lineHints.map((hint, hintIndex) => (
                         <div key={hintIndex} className="text-center font-bold m-0 p-0 leading-3">
                             {hint}
