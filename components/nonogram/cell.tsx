@@ -23,7 +23,7 @@ export function Cell({
         >
             {cellState === CellState.CrossedOut ? (
                 <div className="flex justify-center items-center">
-                    <LucideX className="text-black"/>
+                    <LucideX className="text-black w-full h-full"/>
                 </div>
             ) : null}
         </div>
