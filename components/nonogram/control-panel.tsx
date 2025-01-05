@@ -32,7 +32,7 @@ export function ControlPanel({
     }, [winConditionMet]);
 
     return (
-        <Card className="w-52 h-52">
+        <Card className="w-52 h-52 m-2">
             <div className="flex flex-col justify-between items-center w-full h-full gap-3 p-4 rounded">
                 <div className="flex items-center gap-3">
                     <div className="font-serif text-xl">
