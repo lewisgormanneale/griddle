@@ -18,7 +18,7 @@ export default function Home() {
                     </Link>
                     <Link
                         className={buttonVariants({variant: "secondary", size: "lg"})}
-                        href="/play"
+                        href="/nonograms"
                     >
                         Packs & Creations
                     </Link>
