@@ -1,4 +1,9 @@
-export type NonogramGrid = CellState[][];
+import React from "react";
+
+export enum InputMode {
+    Free = "cursor",
+    Set = "touch",
+}
 
 export enum CellState {
     Null = "null",
@@ -7,7 +12,11 @@ export enum CellState {
     CrossedOut = "crossed-out",
 }
 
-export enum InputMode {
-    Free = "cursor",
-    Set = "touch",
-}
+export type NonogramGrid = CellState[][];
+
+export type MenuItem = {
+    label: string;
+    name: string;
+    icon: React.ReactNode;
+    url: string;
+};

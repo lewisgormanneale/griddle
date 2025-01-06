@@ -4,8 +4,9 @@ import "@/styles/globals.css";
 import {Inter, Unna, Zen_Dots} from "next/font/google";
 import {cn} from "@/utils/utils";
 import {ThemeProvider} from "@/components/theme-provider";
-import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
+import {SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
+import {cookies} from "next/headers";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -34,6 +35,9 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const cookieStore = cookies()
+    const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
+
     return (
         <html lang="en" suppressHydrationWarning>
         <body
@@ -48,10 +52,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <SidebarProvider>
+            <SidebarProvider defaultOpen={defaultOpen}>
                 <AppSidebar/>
                 <main>
-                    <SidebarTrigger/>
                     {children}
                 </main>
             </SidebarProvider>
