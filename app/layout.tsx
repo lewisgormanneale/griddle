@@ -4,7 +4,8 @@ import "@/styles/globals.css";
 import {Inter, Unna, Zen_Dots} from "next/font/google";
 import {cn} from "@/utils/utils";
 import {ThemeProvider} from "@/components/theme-provider";
-import {Sidebar} from "@/components/sidebar";
+import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
+import {AppSidebar} from "@/components/app-sidebar";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -47,10 +48,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <div className="flex">
-                <Sidebar/>
-                <main className="w-full">{children}</main>
-            </div>
+            <SidebarProvider>
+                <AppSidebar/>
+                <main>
+                    <SidebarTrigger/>
+                    {children}
+                </main>
+            </SidebarProvider>
         </ThemeProvider>
         </body>
         </html>
