@@ -1,8 +1,11 @@
+'use client';
+
 import {BarChart3, Boxes, CircleHelp, Home, PencilRuler, Puzzle} from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarHeader,
@@ -10,10 +13,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
+    useSidebar,
 } from "@/components/ui/sidebar"
 import React from "react";
 import {MenuItem} from "@/types/types";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
+import {ModeToggle} from "@/components/mode-toggle";
 
 // Menu items.
 const items: MenuItem[] = [
@@ -56,6 +62,8 @@ const items: MenuItem[] = [
 ]
 
 export function AppSidebar() {
+    const pathname = usePathname();
+    const {state, isMobile} = useSidebar();
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -67,7 +75,10 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.name}>
-                                    <SidebarMenuButton asChild>
+                                    <SidebarMenuButton
+                                        asChild
+                                        isActive={pathname === item.url}
+                                    >
                                         <Link href={item.url}>
                                             {item.icon}
                                             <span>{item.name}</span>
@@ -79,6 +90,9 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <ModeToggle/>
+            </SidebarFooter>
 
             <SidebarRail/>
         </Sidebar>
