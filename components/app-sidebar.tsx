@@ -67,7 +67,11 @@ export function AppSidebar() {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <span className={"font-zen-dots text-xl"}>GRIDDLE</span>
+                <div className="flex items-center gap-2 px-3">
+                    <SidebarMenuButton asChild>
+                        <Home></Home>
+                    </SidebarMenuButton>
+                </div>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>

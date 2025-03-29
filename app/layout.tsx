@@ -7,6 +7,7 @@ import {ThemeProvider} from "@/components/theme-provider";
 import {SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
 import {cookies} from "next/headers";
+import {AppSidebarInset} from "@/components/app-sidebar-inset";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -54,9 +55,9 @@ export default function RootLayout({
         >
             <SidebarProvider defaultOpen={defaultOpen}>
                 <AppSidebar/>
-                <main>
+                <AppSidebarInset>
                     {children}
-                </main>
+                </AppSidebarInset>
             </SidebarProvider>
         </ThemeProvider>
         </body>

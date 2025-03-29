@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
     return (
-        <div className="h-screen w-full flex flex-col justify-center items-center p-4">
+        <div className="w-full flex flex-col justify-center items-center">
             <div className="h-2/3 w-2/3 flex flex-col justify-center items-center text-center py-4 px-12 gap-8">
                 <h2 className="font-zen-dots uppercase text-6xl">Griddle</h2>
                 <p className="font-serif text-2xl">
