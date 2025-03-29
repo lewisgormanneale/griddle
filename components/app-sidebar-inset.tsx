@@ -17,7 +17,7 @@ export function AppSidebarInset({
           <SidebarTrigger />
         </div>
       </header>
-      <main className="pt-12 px-12">{children}</main>
+      <main>{children}</main>
     </SidebarInset>
   );
 }
