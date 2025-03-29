@@ -13,12 +13,12 @@ export function AppSidebarInset({
     const pathname = usePathname();
     return (
         <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 fixed">
+            <header className="flex h-12 shrink-0 items-center gap-2 fixed">
                 <div className="flex items-center gap-2 px-3">
                     <SidebarTrigger/>
                 </div>
             </header>
-            <main className="pt-16 px-12">
+            <main className="pt-12 px-12">
                 {children}
             </main>
         </SidebarInset>

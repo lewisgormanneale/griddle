@@ -3,7 +3,7 @@
 import {Card} from "@/components/ui/card";
 import {useEffect, useState} from "react";
 
-export default function Nonograms() {
+export default function PacksPage() {
     const [nonograms, setNonograms] = useState<any[]>([]);
 
     useEffect(() => {

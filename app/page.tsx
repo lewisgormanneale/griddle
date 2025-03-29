@@ -20,7 +20,7 @@ export default function Home() {
                         className={buttonVariants({variant: "secondary", size: "lg"})}
                         href="/nonograms"
                     >
-                        Packs & Creations
+                        Packs
                     </Link>
                 </div>
             </div>

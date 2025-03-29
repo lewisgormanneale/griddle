@@ -1,6 +1,6 @@
 'use client';
 
-import {BarChart3, Boxes, CircleHelp, Home, PencilRuler, Puzzle} from "lucide-react"
+import {BarChart3, Boxes, CircleHelp, Home, Puzzle} from "lucide-react"
 
 import {
     Sidebar,
@@ -8,7 +8,7 @@ import {
     SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
-    SidebarHeader,
+    SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -21,7 +21,6 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {ModeToggle} from "@/components/mode-toggle";
 
-// Menu items.
 const items: MenuItem[] = [
     {
         label: "home",
@@ -30,22 +29,16 @@ const items: MenuItem[] = [
         url: "/",
     },
     {
-        label: "play",
-        name: "Play",
+        label: "nonogram",
+        name: "Today's Puzzle",
         icon: <Puzzle size={15}/>,
-        url: "/play",
+        url: "/daily",
     },
     {
-        label: "nonograms",
-        name: "Packs & Creations",
+        label: "packs",
+        name: "Packs",
         icon: <Boxes size={15}/>,
-        url: "/nonograms",
-    },
-    {
-        label: "creator",
-        name: "Creator",
-        icon: <PencilRuler size={15}/>,
-        url: "/creator",
+        url: "/packs",
     },
     {
         label: "statistics",
@@ -66,15 +59,9 @@ export function AppSidebar() {
     const {state, isMobile} = useSidebar();
     return (
         <Sidebar collapsible="icon">
-            <SidebarHeader>
-                <div className="flex items-center gap-2 px-3">
-                    <SidebarMenuButton asChild>
-                        <Home></Home>
-                    </SidebarMenuButton>
-                </div>
-            </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
+                    <SidebarGroupLabel className={'font-zen-dots uppercase'}>Griddle</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -97,7 +84,6 @@ export function AppSidebar() {
             <SidebarFooter>
                 <ModeToggle/>
             </SidebarFooter>
-
             <SidebarRail/>
         </Sidebar>
     )
