@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Cell } from "@/components/nonogram/cell";
-import { CellState, InputMode } from "@/types/types";
+import { CellState } from "@/types/types";
 import { Tables } from "@/types/database.types";
 import { generateGrid } from "@/utils/nonogram/generate-grid";
 
@@ -15,44 +15,73 @@ type GridItem = {
 export function Grid({
   nonogram,
   winConditionMet,
-  selectedInputMode,
-  selectedFillState,
-  onSelectedFillState,
+  onWinConditionMet,
 }: {
   nonogram: Tables<"nonograms">;
   winConditionMet: boolean;
-  selectedInputMode: InputMode;
-  selectedFillState: CellState;
-  onSelectedFillState: (cellState: CellState) => void;
+  onWinConditionMet: Function;
 }) {
   const [grid, setGrid] = useState<GridItem[]>([]);
   const [maxRowClues, setMaxRowClues] = useState(0);
-  const [maxColClues, setMaxColClues] = useState(0);
-
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [dragActionState, setDragActionState] = useState<CellState | null>(
+    null,
+  );
 
-  // Populate the grid and calculate row/column clues on mount
+  useEffect(() => {
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, []);
 
   useEffect(() => {
     if (nonogram) {
       const solutionArray = nonogram.solution.split("").map(Number);
-
       const rows = Array.from({ length: nonogram.rows }, (_, i) =>
         solutionArray.slice(i * nonogram.columns, (i + 1) * nonogram.columns),
       );
-
       const rowClues = generateClues(rows);
       const colClues = generateClues(transpose(rows));
 
       setMaxRowClues(Math.max(...rowClues.map((clue) => clue.length)));
-      setMaxColClues(Math.max(...colClues.map((clue) => clue.length)));
-
-      // Generate the flat grid
       setGrid(generateGrid(rows, rowClues, colClues));
     }
   }, [nonogram]);
 
-  // Helper to generate clues (groupings of 1s)
+  useEffect(() => {
+    const validateWinCondition = (currentGrid: GridItem[]) => {
+      const playableCells = currentGrid.filter((item) => item.type === "cell");
+
+      if (playableCells.length !== nonogram.rows * nonogram.columns) {
+        return;
+      }
+
+      const solutionArray = nonogram.solution.split("").map(Number);
+      const isWin = playableCells.every((cell, index) => {
+        const solutionValue = solutionArray[index];
+        if (solutionValue === 1) {
+          return cell.cellState === CellState.Filled;
+        } else {
+          return (
+            cell.cellState === CellState.Blank ||
+            cell.cellState === CellState.CrossedOut
+          );
+        }
+      });
+
+      if (isWin) {
+        setTimeout(() => onWinConditionMet(), 0);
+      }
+    };
+
+    const playableCells = grid.filter((item) => item.type === "cell");
+    if (
+      !winConditionMet &&
+      playableCells.length === nonogram.rows * nonogram.columns
+    ) {
+      validateWinCondition(grid);
+    }
+  }, [grid, nonogram.columns, nonogram.rows, winConditionMet]);
+
   const generateClues = (lines: number[][]): number[][] => {
     return lines.map((line) => {
       const clues: number[] = [];
@@ -65,8 +94,8 @@ export function Grid({
           count = 0;
         }
       });
-      if (count > 0) clues.push(count); // Push any remaining count
-      return clues.length ? clues : [0]; // Return [0] for empty rows/columns
+      if (count > 0) clues.push(count);
+      return clues.length ? clues : [0];
     });
   };
 
@@ -74,36 +103,50 @@ export function Grid({
     return matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
   };
 
-  const handleMouseDown = (index: number) => {
+  const handleMouseDown = (event: React.MouseEvent, index: number) => {
+    event.preventDefault();
     setIsMouseDown(true);
-    updateCellState(index, selectedFillState);
-    onSelectedFillState(selectedFillState); // Update the parent component if needed
+
+    const currentCellState = grid[index].cellState;
+    let newFillState: CellState;
+
+    if (event.button === 2) {
+      newFillState =
+        currentCellState === CellState.Blank
+          ? CellState.CrossedOut
+          : CellState.Blank;
+    } else {
+      newFillState =
+        currentCellState === CellState.Blank
+          ? CellState.Filled
+          : CellState.Blank;
+    }
+    setDragActionState(newFillState);
+    updateCellState(index, newFillState);
   };
 
   const handleMouseEnter = (index: number) => {
-    if (isMouseDown) {
-      updateCellState(index, selectedFillState);
+    if (isMouseDown && dragActionState !== null) {
+      updateCellState(index, dragActionState);
     }
   };
 
-  const handleMouseUp = () => setIsMouseDown(false);
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
+    setDragActionState(null);
+  };
 
   const updateCellState = (index: number, newFillState: CellState) => {
     if (!winConditionMet) {
-      setGrid((prev) =>
-        prev.map((item, i) =>
+      setGrid((prev) => {
+        return prev.map((item, i) =>
           i === index && item.type === "cell"
             ? { ...item, cellState: newFillState }
             : item,
-        ),
-      );
+        );
+      });
     }
   };
-
-  useEffect(() => {
-    window.addEventListener("mouseup", handleMouseUp);
-    return () => window.removeEventListener("mouseup", handleMouseUp);
-  }, []);
 
   if (!grid.length) {
     return <div>Loading...</div>;
@@ -115,13 +158,15 @@ export function Grid({
         display: "grid",
         gridTemplateColumns: `repeat(${maxRowClues}, auto) repeat(${nonogram.columns}, 2rem)`,
       }}
+      onMouseDown={(e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
     >
       {grid.map((item, index) => (
         <div
           key={index}
           className="w-8 h-8 flex justify-center items-center"
-          onMouseDown={() =>
-            item.type === "cell" ? handleMouseDown(index) : undefined
+          onMouseDown={(event) =>
+            item.type === "cell" ? handleMouseDown(event, index) : undefined
           }
           onMouseEnter={() =>
             item.type === "cell" ? handleMouseEnter(index) : undefined
