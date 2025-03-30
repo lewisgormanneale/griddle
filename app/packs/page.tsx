@@ -2,22 +2,15 @@
 
 import { Card } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { getAllNonograms } from "@/lib/queries";
 
 export default function PacksPage() {
   const [nonograms, setNonograms] = useState<any[]>([]);
 
   useEffect(() => {
-    async function getNonograms() {
-      try {
-        const response = await fetch(`/api/nonograms`);
-        return await response.json();
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    getAllNonograms().then((data) => setNonograms(data));
+  }, []);
 
-    getNonograms().then((data) => setNonograms(data));
-  }, [nonograms]);
   return (
     <div className="h-screen w-full flex flex-col items-center p-4 gap-4">
       <h1 className="text-3xl">Nonograms</h1>
