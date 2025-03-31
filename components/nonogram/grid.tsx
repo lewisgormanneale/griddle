@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Cell } from "@/components/nonogram/cell";
-import { CellState } from "@/types/types";
+import { CellState, GridItem, GridItemType } from "@/types/types";
 import { Tables } from "@/types/database.types";
 import { generateGrid } from "@/utils/nonogram/generate-grid";
-
-type GridItem = {
-  type: "clue" | "cell" | "empty"; // Types of items
-  rowIndex?: number;
-  colIndex?: number;
-  clueValue?: number;
-  cellState?: CellState;
-};
 
 export function Grid({
   nonogram,
@@ -49,7 +41,9 @@ export function Grid({
 
   useEffect(() => {
     const validateWinCondition = (currentGrid: GridItem[]) => {
-      const playableCells = currentGrid.filter((item) => item.type === "cell");
+      const playableCells = currentGrid.filter(
+        (item) => item.type === GridItemType.Cell,
+      );
 
       if (playableCells.length !== nonogram.rows * nonogram.columns) {
         return;
@@ -73,7 +67,9 @@ export function Grid({
       }
     };
 
-    const playableCells = grid.filter((item) => item.type === "cell");
+    const playableCells = grid.filter(
+      (item) => item.type === GridItemType.Cell,
+    );
     if (
       !winConditionMet &&
       playableCells.length === nonogram.rows * nonogram.columns
@@ -148,10 +144,6 @@ export function Grid({
     }
   };
 
-  if (!grid.length) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div
       style={{
@@ -166,14 +158,20 @@ export function Grid({
           key={index}
           className="w-8 h-8 flex justify-center items-center"
           onMouseDown={(event) =>
-            item.type === "cell" ? handleMouseDown(event, index) : undefined
+            item.type === GridItemType.Cell
+              ? handleMouseDown(event, index)
+              : undefined
           }
           onMouseEnter={() =>
-            item.type === "cell" ? handleMouseEnter(index) : undefined
+            item.type === GridItemType.Cell
+              ? handleMouseEnter(index)
+              : undefined
           }
         >
-          {item.type === "clue" && item.clueValue}
-          {item.type === "cell" && <Cell cellState={item.cellState!} />}
+          {item.type === GridItemType.Clue && item.clueValue}
+          {item.type === GridItemType.Cell && (
+            <Cell cellState={item.cellState!} />
+          )}
         </div>
       ))}
     </div>
