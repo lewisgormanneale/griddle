@@ -26,5 +26,11 @@ export function Timer({
     };
   }, [timerActive, setTime]);
 
-  return <div className="font-serif text-2xl">{formatTime(time)}</div>;
+  return (
+    <div
+      className={`font-serif text-2xl ${!timerActive ? "text-green-500" : ""} `}
+    >
+      {formatTime(time)}
+    </div>
+  );
 }
