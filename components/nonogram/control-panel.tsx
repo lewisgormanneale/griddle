@@ -17,50 +17,10 @@ export function ControlPanel({
   }, [winConditionMet]);
 
   return (
-    <Card className="w-full flex justify-between items-center gap-3 p-3">
+    <Card className="w-64 flex justify-center items-center gap-3 p-3">
       <div className="flex items-center gap-3">
         <Timer time={time} setTime={setTime} timerActive={timerActive} />
       </div>
-      {/*<div className="flex items-center gap-3">*/}
-      {/*  <Select*/}
-      {/*    value={selectedInputMode}*/}
-      {/*    onValueChange={(value: InputMode) => {*/}
-      {/*      onSelectedInputMode(value);*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <SelectTrigger className="w-[180px]">*/}
-      {/*      <SelectValue />*/}
-      {/*    </SelectTrigger>*/}
-      {/*    <SelectContent>*/}
-      {/*      <SelectItem value="cursor">Cursor</SelectItem>*/}
-      {/*      <SelectItem value="touch">Touch</SelectItem>*/}
-      {/*    </SelectContent>*/}
-      {/*  </Select>*/}
-      {/*  {selectedInputMode === "touch" && (*/}
-      {/*    <ToggleGroup*/}
-      {/*      type="single"*/}
-      {/*      disabled={!(selectedInputMode === "touch")}*/}
-      {/*      onValueChange={(value: CellState) => {*/}
-      {/*        onSelectedFillState(value);*/}
-      {/*      }}*/}
-      {/*      value={selectedFillState}*/}
-      {/*      aria-label="Toggle fill state"*/}
-      {/*    >*/}
-      {/*      <ToggleGroupItem value={CellState.Filled} aria-label="Toggle fill">*/}
-      {/*        <Pencil className="w-6 h-6" />*/}
-      {/*      </ToggleGroupItem>*/}
-      {/*      <ToggleGroupItem value={CellState.Blank} aria-label="Toggle erase">*/}
-      {/*        <Eraser className="w-6 h-6" />*/}
-      {/*      </ToggleGroupItem>*/}
-      {/*      <ToggleGroupItem*/}
-      {/*        value={CellState.CrossedOut}*/}
-      {/*        aria-label="Toggle cross"*/}
-      {/*      >*/}
-      {/*        <LucideX className="w-6 h-6" />*/}
-      {/*      </ToggleGroupItem>*/}
-      {/*    </ToggleGroup>*/}
-      {/*  )}*/}
-      {/*</div>*/}
     </Card>
   );
 }

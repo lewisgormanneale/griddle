@@ -36,7 +36,6 @@ export default async function NonogramPage({
   return (
     <div className="h-screen w-full flex flex-col items-center p-4 gap-4 @container">
       <Nonogram id={id} />
-      <h1 className="text-3xl">Leaderboard</h1>
     </div>
   );
 }
