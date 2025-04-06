@@ -6,15 +6,19 @@ import { generateGrid } from "@/utils/nonogram/generate-grid";
 
 export function Grid({
   nonogram,
+  rowHints,
+  columnHints,
   winConditionMet,
   onWinConditionMet,
 }: {
   nonogram: Tables<"nonograms">;
+  rowHints: number[][];
+  columnHints: number[][];
   winConditionMet: boolean;
   onWinConditionMet: Function;
 }) {
   const [grid, setGrid] = useState<GridItem[]>([]);
-  const [maxRowClues, setMaxRowClues] = useState(0);
+  const [maxRowHints, setMaxRowHints] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragActionState, setDragActionState] = useState<CellState | null>(
     null,
@@ -26,18 +30,15 @@ export function Grid({
   }, []);
 
   useEffect(() => {
-    if (nonogram) {
+    if (nonogram && rowHints.length > 0 && columnHints.length > 0) {
       const solutionArray = nonogram.solution.split("").map(Number);
-      const rows = Array.from({ length: nonogram.rows }, (_, i) =>
-        solutionArray.slice(i * nonogram.columns, (i + 1) * nonogram.columns),
+      const rows = Array.from({ length: nonogram.width }, (_, i) =>
+        solutionArray.slice(i * nonogram.height, (i + 1) * nonogram.height),
       );
-      const rowClues = generateClues(rows);
-      const colClues = generateClues(transpose(rows));
-
-      setMaxRowClues(Math.max(...rowClues.map((clue) => clue.length)));
-      setGrid(generateGrid(rows, rowClues, colClues));
+      setMaxRowHints(Math.max(...rowHints.map((hint) => hint.length)));
+      setGrid(generateGrid(rows, rowHints, columnHints));
     }
-  }, [nonogram]);
+  }, [nonogram, rowHints, columnHints]);
 
   useEffect(() => {
     const validateWinCondition = (currentGrid: GridItem[]) => {
@@ -45,7 +46,7 @@ export function Grid({
         (item) => item.type === GridItemType.Cell,
       );
 
-      if (playableCells.length !== nonogram.rows * nonogram.columns) {
+      if (playableCells.length !== nonogram.width * nonogram.height) {
         return;
       }
 
@@ -72,32 +73,11 @@ export function Grid({
     );
     if (
       !winConditionMet &&
-      playableCells.length === nonogram.rows * nonogram.columns
+      playableCells.length === nonogram.width * nonogram.height
     ) {
       validateWinCondition(grid);
     }
-  }, [grid, nonogram.columns, nonogram.rows, winConditionMet]);
-
-  const generateClues = (lines: number[][]): number[][] => {
-    return lines.map((line) => {
-      const clues: number[] = [];
-      let count = 0;
-      line.forEach((cell) => {
-        if (cell === 1) {
-          count++;
-        } else if (count > 0) {
-          clues.push(count);
-          count = 0;
-        }
-      });
-      if (count > 0) clues.push(count);
-      return clues.length ? clues : [0];
-    });
-  };
-
-  const transpose = (matrix: number[][]): number[][] => {
-    return matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
-  };
+  }, [grid, nonogram.height, nonogram.width, winConditionMet]);
 
   const handleMouseDown = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
@@ -148,7 +128,7 @@ export function Grid({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: `repeat(${maxRowClues}, auto) repeat(${nonogram.columns}, 2rem)`,
+        gridTemplateColumns: `repeat(${maxRowHints}, auto) repeat(${nonogram.width}, 2rem)`,
       }}
       onMouseDown={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}

@@ -34,3 +34,33 @@ export async function getAllNonograms(): Promise<Tables<"nonograms">[]> {
     return [];
   }
 }
+
+export async function getNonogramHints(
+  id: string,
+): Promise<{ rows: number[][]; columns: number[][] }> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from("nonogram_hints")
+      .select("*")
+      .eq("puzzle_id", id);
+    if (error) {
+      throw new Error(error.message);
+      return { rows: [], columns: [] };
+    }
+    const rows = data
+      .filter((item) => item.direction === "row")
+      .sort((a, b) => a.index - b.index)
+      .map((item) => item.hints);
+
+    const columns = data
+      .filter((item) => item.direction === "column")
+      .sort((a, b) => a.index - b.index)
+      .map((item) => item.hints);
+
+    return { rows, columns };
+  } catch (error) {
+    console.error(error);
+    return { rows: [], columns: [] };
+  }
+}
