@@ -13,7 +13,7 @@ export default function Home() {
         <div className="flex gap-3 flex-col">
           <Link
             className={buttonVariants({ variant: "default", size: "lg" })}
-            href="/nonogram/2"
+            href="/nonogram/4"
           >
             Today&apos;s Puzzle
           </Link>

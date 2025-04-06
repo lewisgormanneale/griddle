@@ -13,7 +13,7 @@ const menuItems: MenuItem[] = [
     label: "nonogram",
     name: "Today's Puzzle",
     icon: <Puzzle size={15} />,
-    url: "/nonogram/2",
+    url: "/nonogram/4",
   },
   {
     label: "packs",

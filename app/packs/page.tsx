@@ -31,9 +31,7 @@ export default function PacksPage() {
               <li key={nonogram.id}>
                 <Card className="flex flex-col justify-between items-center bg-background p-2 h-[340px] w-[340px]">
                   <CardHeader className="p-3 justify-center text-center">
-                    <CardTitle>
-                      #{nonogram.id}: {nonogram.title}
-                    </CardTitle>
+                    <CardTitle>{nonogram.title}</CardTitle>
                     <CardDescription>
                       {nonogram.height} x {nonogram.width}
                     </CardDescription>
@@ -45,7 +43,7 @@ export default function PacksPage() {
                   <CardFooter className="justify-center p-3">
                     <Link
                       className={buttonVariants({ variant: "outline" })}
-                      href={`/nonogram?${nonogram.id}`}
+                      href={`/nonogram/${nonogram.id}`}
                     >
                       Play
                     </Link>
