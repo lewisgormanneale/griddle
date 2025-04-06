@@ -129,27 +129,35 @@ export function Grid({
       onMouseDown={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {grid.map((item, index) => (
-        <div
-          key={index}
-          className="w-8 h-8 flex justify-center items-center"
-          onMouseDown={(event) =>
-            item.type === GridItemType.Cell
-              ? handleMouseDown(event, index)
-              : undefined
-          }
-          onMouseEnter={() =>
-            item.type === GridItemType.Cell
-              ? handleMouseEnter(index)
-              : undefined
-          }
-        >
-          {item.type === GridItemType.Clue && item.hintValue}
-          {item.type === GridItemType.Cell && (
-            <Cell cellState={item.cellState!} />
-          )}
-        </div>
-      ))}
+      {grid.map((item, index) => {
+        const isCell = item.type === GridItemType.Cell;
+        // I check for these two to ensure the whole grid still has a border around the outside of it.
+        const isLastRow = item.rowIndex === nonogram.height - 1;
+        const isLastColumn = item.colIndex === nonogram.width - 1;
+
+        const borderStyle = isCell
+          ? {
+              borderTop: item.rowIndex! % 5 === 0 ? "2px solid black" : "",
+              borderLeft: item.colIndex! % 5 === 0 ? "2px solid black" : "",
+              borderBottom: isLastRow ? "2px solid black" : "",
+              borderRight: isLastColumn ? "2px solid black" : "",
+            }
+          : {};
+        return (
+          <div
+            key={index}
+            className="w-8 h-8 flex justify-center items-center border-box"
+            style={borderStyle}
+            onMouseDown={(event) =>
+              isCell ? handleMouseDown(event, index) : undefined
+            }
+            onMouseEnter={() => (isCell ? handleMouseEnter(index) : undefined)}
+          >
+            {item.type === GridItemType.Clue && item.hintValue}
+            {isCell && <Cell cellState={item.cellState!} />}
+          </div>
+        );
+      })}
     </div>
   );
 }
