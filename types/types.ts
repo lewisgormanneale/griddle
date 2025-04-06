@@ -23,6 +23,6 @@ export type GridItem = {
   type: GridItemType;
   rowIndex?: number;
   colIndex?: number;
-  clueValue?: number;
+  hintValue?: number;
   cellState?: CellState;
 };

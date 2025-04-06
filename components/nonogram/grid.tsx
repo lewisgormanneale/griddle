@@ -36,7 +36,7 @@ export function Grid({
         solutionArray.slice(i * nonogram.height, (i + 1) * nonogram.height),
       );
       setMaxRowHints(Math.max(...rowHints.map((hint) => hint.length)));
-      setGrid(generateGrid(rows, rowHints, columnHints));
+      setGrid(generateGrid(nonogram, rowHints, columnHints));
     }
   }, [nonogram, rowHints, columnHints]);
 
@@ -148,7 +148,7 @@ export function Grid({
               : undefined
           }
         >
-          {item.type === GridItemType.Clue && item.clueValue}
+          {item.type === GridItemType.Clue && item.hintValue}
           {item.type === GridItemType.Cell && (
             <Cell cellState={item.cellState!} />
           )}
