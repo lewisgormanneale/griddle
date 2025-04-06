@@ -31,10 +31,6 @@ export function Grid({
 
   useEffect(() => {
     if (nonogram && rowHints.length > 0 && columnHints.length > 0) {
-      const solutionArray = nonogram.solution.split("").map(Number);
-      const rows = Array.from({ length: nonogram.width }, (_, i) =>
-        solutionArray.slice(i * nonogram.height, (i + 1) * nonogram.height),
-      );
       setMaxRowHints(Math.max(...rowHints.map((hint) => hint.length)));
       setGrid(generateGrid(nonogram, rowHints, columnHints));
     }

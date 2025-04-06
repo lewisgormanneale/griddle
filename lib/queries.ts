@@ -43,7 +43,7 @@ export async function getNonogramHints(
     const { data, error } = await supabase
       .from("nonogram_hints")
       .select("*")
-      .eq("puzzle_id", id);
+      .eq("nonogram_id", id);
     if (error) {
       throw new Error(error.message);
       return { rows: [], columns: [] };
@@ -62,5 +62,38 @@ export async function getNonogramHints(
   } catch (error) {
     console.error(error);
     return { rows: [], columns: [] };
+  }
+}
+
+export async function getAllPacks(): Promise<Tables<"packs">[]> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase.from("packs").select("*");
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+export async function getNonogramsForPack(
+  id: number,
+): Promise<Tables<"nonograms">[]> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from("nonograms")
+      .select("*")
+      .eq("pack_id", id);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }

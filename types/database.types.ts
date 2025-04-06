@@ -15,23 +15,31 @@ export type Database = {
           hints: number[]
           id: number
           index: number
-          puzzle_id: number
+          nonogram_id: number
         }
         Insert: {
           direction: string
           hints: number[]
           id?: number
           index: number
-          puzzle_id: number
+          nonogram_id: number
         }
         Update: {
           direction?: string
           hints?: number[]
           id?: number
           index?: number
-          puzzle_id?: number
+          nonogram_id?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "nonogram_hints_nonogram_id_fkey"
+            columns: ["nonogram_id"]
+            isOneToOne: false
+            referencedRelation: "nonograms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       nonograms: {
         Row: {
@@ -41,6 +49,7 @@ export type Database = {
           height: number
           id: number
           license: string | null
+          pack_id: number | null
           solution: string
           title: string
           width: number
@@ -52,6 +61,7 @@ export type Database = {
           height: number
           id: number
           license?: string | null
+          pack_id?: number | null
           solution: string
           title: string
           width: number
@@ -63,9 +73,39 @@ export type Database = {
           height?: number
           id?: number
           license?: string | null
+          pack_id?: number | null
           solution?: string
           title?: string
           width?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nonograms_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packs: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
         }
         Relationships: []
       }
