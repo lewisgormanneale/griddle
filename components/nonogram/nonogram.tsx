@@ -3,15 +3,24 @@
 import React, { useEffect, useState } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel";
 import { Tables } from "@/types/database.types";
-import { getNonogram } from "@/lib/queries";
+import { getNonogram, getNonogramHints } from "@/lib/queries";
 import { Grid } from "@/components/nonogram/grid";
 
 export function Nonogram({ id }: { id: string }) {
   const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
+  const [rowHints, setRowHints] = useState<number[][]>([]);
+  const [columnHints, setColumnHints] = useState<number[][]>([]);
   const [winConditionMet, setWinConditionMet] = useState(false);
 
   useEffect(() => {
     getNonogram(id).then((data) => setNonogram(data));
+    getNonogramHints(id).then(
+      (data) => {
+        setRowHints(data.rows);
+        setColumnHints(data.columns);
+      },
+      (error) => console.error(error),
+    );
   }, []);
 
   const onWinConditionMet = () => {
@@ -29,6 +38,8 @@ export function Nonogram({ id }: { id: string }) {
           <ControlPanel winConditionMet={winConditionMet}></ControlPanel>
           <Grid
             nonogram={nonogram}
+            rowHints={rowHints}
+            columnHints={columnHints}
             winConditionMet={winConditionMet}
             onWinConditionMet={onWinConditionMet}
           ></Grid>
