@@ -5,7 +5,7 @@ const NonogramGridPreview = ({
   rows: number;
   columns: number;
 }) => {
-  const maxGridSize = 200;
+  const maxGridSize = 120;
   const cellSize = Math.min(20, maxGridSize / Math.max(rows, columns));
 
   const grid = Array.from({ length: rows }, () =>

@@ -5,6 +5,13 @@ import { ControlPanel } from "@/components/nonogram/control-panel";
 import { Tables } from "@/types/database.types";
 import { getNonogram, getNonogramHints } from "@/lib/queries";
 import { Grid } from "@/components/nonogram/grid";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function Nonogram({ id }: { id: string }) {
   const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
@@ -28,28 +35,35 @@ export function Nonogram({ id }: { id: string }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full">
+    <>
       {nonogram && (
-        <>
-          <h1 className="text-3xl">
-            Nonogram #{nonogram.id}:{" "}
-            <span className="italic">&quot;{nonogram.title}&quot;</span>
-          </h1>
-          <ControlPanel winConditionMet={winConditionMet}></ControlPanel>
-          <Grid
-            nonogram={nonogram}
-            rowHints={rowHints}
-            columnHints={columnHints}
-            winConditionMet={winConditionMet}
-            onWinConditionMet={onWinConditionMet}
-          ></Grid>
-        </>
+        <Card className="flex flex-col items-center gap-4 p-4">
+          <CardHeader>
+            <CardTitle>
+              Nonogram #{nonogram.id}:{" "}
+              <span className="italic">&quot;{nonogram.title}&quot;</span>
+            </CardTitle>
+            <CardDescription>
+              {nonogram.height} x {nonogram.width}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4 items-center">
+            <ControlPanel winConditionMet={winConditionMet} />
+            <Grid
+              nonogram={nonogram}
+              rowHints={rowHints}
+              columnHints={columnHints}
+              winConditionMet={winConditionMet}
+              onWinConditionMet={onWinConditionMet}
+            />
+          </CardContent>
+        </Card>
       )}
       {winConditionMet && (
         <div className="text-green-500 text-xl font-bold">
           🎉 Congratulations! You solved the puzzle! 🎉
         </div>
       )}
-    </div>
+    </>
   );
 }
