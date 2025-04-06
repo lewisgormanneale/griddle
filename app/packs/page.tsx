@@ -35,12 +35,12 @@ export default function PacksPage() {
                       #{nonogram.id}: {nonogram.title}
                     </CardTitle>
                     <CardDescription>
-                      {nonogram.rows} x {nonogram.columns}
+                      {nonogram.height} x {nonogram.width}
                     </CardDescription>
                   </CardHeader>
                   <NonogramGridPreview
-                    rows={nonogram.rows}
-                    columns={nonogram.columns}
+                    rows={nonogram.height}
+                    columns={nonogram.width}
                   ></NonogramGridPreview>
                   <CardFooter className="justify-center p-3">
                     <Link
