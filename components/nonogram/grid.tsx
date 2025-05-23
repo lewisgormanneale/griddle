@@ -124,7 +124,7 @@ export function Grid({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: `repeat(${maxRowHints}, auto) repeat(${nonogram.width}, 2rem)`,
+        gridTemplateColumns: `repeat(${maxRowHints}, auto) repeat(${nonogram.width}, 1.5rem)`,
       }}
       onMouseDown={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
@@ -146,7 +146,7 @@ export function Grid({
         return (
           <div
             key={index}
-            className="w-8 h-8 flex justify-center items-center border-box"
+            className="w-6 h-6 flex justify-center items-center border-box"
             style={borderStyle}
             onMouseDown={(event) =>
               isCell ? handleMouseDown(event, index) : undefined

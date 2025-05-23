@@ -26,13 +26,13 @@ const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
     getNonogramsForPack(pack.id).then((data) => setNonograms(data));
   }, [pack]);
   return (
-    <Card className="p-3 max-w-screen-lg" key={pack.id}>
+    <Card className="p-3 max-w-screen-md" key={pack.id}>
       <CardHeader>
         <CardTitle>{pack.name}</CardTitle>
         <CardDescription>{pack.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Carousel>
+        <Carousel className="mx-6">
           <CarouselContent>
             {nonograms.map((nonogram: any) => (
               <CarouselItem className="basis-1/3" key={nonogram.id}>

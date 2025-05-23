@@ -37,14 +37,17 @@ export function Nonogram({ id }: { id: string }) {
   return (
     <>
       {nonogram && (
-        <Card className="flex flex-col items-center gap-4 p-4">
+        <Card>
           <CardHeader>
             <CardTitle>
-              Nonogram #{nonogram.id}:{" "}
+              #{nonogram.id}:{" "}
               <span className="italic">&quot;{nonogram.title}&quot;</span>
             </CardTitle>
             <CardDescription>
-              {nonogram.height} x {nonogram.width}
+              <span>
+                {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
+                {nonogram.license} | {nonogram.copyright}
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 items-center">
