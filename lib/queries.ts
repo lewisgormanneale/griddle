@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "./supabase/client";
 import { Tables } from "@/types/database.types";
 
 export async function getNonogram(
