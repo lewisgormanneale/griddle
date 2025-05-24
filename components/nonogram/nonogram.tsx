@@ -20,15 +20,15 @@ export function Nonogram({ id }: { id: string }) {
   const [winConditionMet, setWinConditionMet] = useState(false);
 
   useEffect(() => {
-    getNonogram(id).then((data) => setNonogram(data));
-    getNonogramHints(id).then(
+    getNonogram(Number(id)).then((data) => setNonogram(data));
+    getNonogramHints(Number(id)).then(
       (data) => {
         setRowHints(data.rows);
         setColumnHints(data.columns);
       },
       (error) => console.error(error),
     );
-  }, []);
+  }, [id]);
 
   const onWinConditionMet = () => {
     setWinConditionMet(true);

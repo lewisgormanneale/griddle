@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata | null> {
-  const nonogram = await getNonogram(params.id);
+  const nonogram = await getNonogram(Number(params.id));
   if (!nonogram) {
     return {};
   }
