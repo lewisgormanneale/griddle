@@ -1,8 +1,8 @@
-import { createClient } from "./supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { Tables } from "@/types/database.types";
 
 export async function getNonogram(
-  id: string,
+  id: number,
 ): Promise<Tables<"nonograms"> | undefined> {
   const supabase = createClient();
   try {
@@ -36,7 +36,7 @@ export async function getAllNonograms(): Promise<Tables<"nonograms">[]> {
 }
 
 export async function getNonogramHints(
-  id: string,
+  id: number,
 ): Promise<{ rows: number[][]; columns: number[][] }> {
   const supabase = createClient();
   try {

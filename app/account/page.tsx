@@ -1,14 +1,22 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { LogoutButton } from "@/components/auth/logout-button";
 
-export default async function PrivatePage() {
+export default async function AccountPage() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) {
-    redirect("/login");
+    redirect("/auth/login");
   }
 
-  return <p>Hello {data.user.email}</p>;
+  return (
+    <div className="flex h-svh w-full items-center justify-center gap-2">
+      <p>
+        Hello <span>{data.user.email}</span>
+      </p>
+      <LogoutButton />
+    </div>
+  );
 }

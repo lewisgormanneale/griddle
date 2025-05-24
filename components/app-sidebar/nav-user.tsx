@@ -17,20 +17,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
+  SlidersHorizontal,
 } from "lucide-react";
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
+import { CurrentUserAvatar } from "@/components/auth/current-user-avatar";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/auth-js";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  const logout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -72,41 +79,40 @@ export function NavUser() {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <CurrentUserAvatar></CurrentUserAvatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {user?.user_metadata?.name}
-                  </span>
-                  <span className="truncate text-xs">{user?.email}</span>
+            <DropdownMenuLabel asChild className="p-0 font-normal">
+              <Link href="/account">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <CurrentUserAvatar></CurrentUserAvatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      {user?.user_metadata?.name}
+                    </span>
+                    <span className="truncate text-xs">{user?.email}</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/account"
+                  className="flex items-center gap-1 cursor-pointer"
+                >
+                  <BadgeCheck />
+                  Account
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex items-center gap-1 cursor-pointer">
+                <SlidersHorizontal />
+                Preferences
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={logout}
+              className="flex items-center gap-1 cursor-pointer"
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

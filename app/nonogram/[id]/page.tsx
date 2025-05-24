@@ -1,5 +1,5 @@
 import { Nonogram } from "@/components/nonogram/nonogram";
-import { getAllNonograms, getNonogram } from "@/lib/queries";
+import { getAllNonograms, getNonogram } from "@/lib/supabase/queries";
 import { Metadata } from "next";
 import { Tables } from "@/types/database.types"; //
 

@@ -5,9 +5,9 @@ import { Inter, Unna, Zen_Dots } from "next/font/google";
 import { cn } from "@/utils/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { cookies } from "next/headers";
-import { AppSidebarInset } from "@/components/app-sidebar-inset";
+import { AppSidebarInset } from "@/components/app-sidebar/app-sidebar-inset";
 
 const inter = Inter({
   subsets: ["latin"],
