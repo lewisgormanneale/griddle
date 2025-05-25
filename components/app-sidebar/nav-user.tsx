@@ -15,12 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  LogOut,
-  SlidersHorizontal,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, SlidersHorizontal, User2 } from "lucide-react";
 import { CurrentUserAvatar } from "@/components/auth/current-user-avatar";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -97,7 +92,7 @@ export function NavUser() {
                   href="/account"
                   className="flex items-center gap-1 cursor-pointer"
                 >
-                  <BadgeCheck />
+                  <User2 />
                   Account
                 </Link>
               </DropdownMenuItem>

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
-import { useCurrentUserImage } from "@/hooks/use-current-user-image";
+import { cn } from "@/utils/utils";
+import { Button } from "@/components/ui/button";
 
 export default function Avatar({
   uid,
+  url,
   size,
   onUpload,
 }: {
@@ -13,9 +15,34 @@ export default function Avatar({
   size: number;
   onUpload: (url: string) => void;
 }) {
-  const profileImage = useCurrentUserImage();
   const supabase = createClient();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(url);
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const downloadImage = async (path: string) => {
+      try {
+        const { data, error } = await supabase.storage
+          .from("avatars")
+          .download(path);
+
+        if (error) throw error;
+
+        const bucketUrl = URL.createObjectURL(data);
+        setAvatarUrl(bucketUrl);
+      } catch (error) {
+        console.log("Error downloading image: ", error);
+      }
+    };
+    if (url) {
+      downloadImage(url);
+    }
+  }, [url]);
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
 
   const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (
     event,
@@ -48,38 +75,41 @@ export default function Avatar({
   };
 
   return (
-    <div>
-      {profileImage.avatarUrl ? (
+    <div className="space-y-2" style={{ width: size }}>
+      {avatarUrl ? (
         <Image
           width={size}
           height={size}
-          src={profileImage.avatarUrl}
+          src={avatarUrl}
           alt="Avatar"
-          className="avatar image"
+          className="rounded-full border"
           style={{ height: size, width: size }}
         />
       ) : (
         <div
-          className="avatar no-image"
+          className="rounded-full bg-muted border"
           style={{ height: size, width: size }}
         />
       )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? "Uploading ..." : "Upload"}
-        </label>
-        <input
-          style={{
-            visibility: "hidden",
-            position: "absolute",
-          }}
-          type="file"
-          id="single"
-          accept="image/*"
-          onChange={uploadAvatar}
-          disabled={uploading}
-        />
-      </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={uploadAvatar}
+        disabled={uploading}
+        className="hidden"
+      />
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={triggerFileInput}
+        className={cn("w-full", uploading && "cursor-not-allowed opacity-50")}
+        disabled={uploading}
+      >
+        {uploading ? "Uploading..." : "Upload Avatar"}
+      </Button>
     </div>
   );
 }
