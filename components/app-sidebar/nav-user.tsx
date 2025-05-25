@@ -84,9 +84,7 @@ export function NavUser() {
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <CurrentUserAvatar></CurrentUserAvatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {user?.user_metadata?.name}
-                    </span>
+                    <span className="truncate font-semibold">{"fullname"}</span>
                     <span className="truncate text-xs">{user?.email}</span>
                   </div>
                 </div>
