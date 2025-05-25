@@ -25,6 +25,7 @@ import {
 } from "../ui/card";
 import { Button } from "@/components/ui/button";
 import Avatar from "@/components/account/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 const accountFormSchema = z.object({
   email: z.string().email(),
@@ -37,6 +38,7 @@ type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export default function AccountForm({ user }: { user: User }) {
   const supabase = createClient();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
 
   const form = useForm<AccountFormValues>({
@@ -92,8 +94,16 @@ export default function AccountForm({ user }: { user: User }) {
         updated_at: new Date().toISOString(),
       });
       if (error) throw error;
-      alert("Profile updated!");
+      toast({
+        title: "Profile Updated",
+        description: "Updated profile details may not appear immediately.",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong.",
+        description: "There was a problem updating your profile.",
+      });
       alert("Error updating the data!");
     } finally {
       setLoading(false);
