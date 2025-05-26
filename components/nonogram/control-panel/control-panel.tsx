@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Timer } from "@/components/nonogram/timer";
+import { Timer } from "@/components/nonogram/control-panel/timer";
 
 export function ControlPanel({
   winConditionMet,

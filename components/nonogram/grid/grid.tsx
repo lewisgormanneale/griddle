@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Cell } from "@/components/nonogram/cell";
+import { Cell } from "@/components/nonogram/grid/cell";
 import { CellState, GridItem, GridItemType } from "@/types/types";
 import { Tables } from "@/types/database.types";
 import { generateGrid } from "@/utils/nonogram/generate-grid";

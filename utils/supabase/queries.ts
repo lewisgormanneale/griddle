@@ -64,6 +64,28 @@ export async function getNonogramHints(
   }
 }
 
+export async function getUserCompletionOfNonogram(
+  user_id: number,
+  nonogram_id: number,
+): Promise<Tables<"completed_nonograms"> | undefined> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from("completed_nonograms")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("nonogram_id", nonogram_id)
+      .single();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+}
+
 export async function getAllPacks(): Promise<Tables<"packs">[]> {
   const supabase = createClient();
   try {
