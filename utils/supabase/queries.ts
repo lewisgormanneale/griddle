@@ -65,7 +65,7 @@ export async function getNonogramHints(
 }
 
 export async function getUserCompletionOfNonogram(
-  user_id: number,
+  user_id: string,
   nonogram_id: number,
 ): Promise<Tables<"completed_nonograms"> | undefined> {
   const supabase = createClient();
@@ -75,7 +75,7 @@ export async function getUserCompletionOfNonogram(
       .select("*")
       .eq("user_id", user_id)
       .eq("nonogram_id", nonogram_id)
-      .single();
+      .maybeSingle();
     if (error) {
       throw new Error(error.message);
     }
@@ -83,6 +83,59 @@ export async function getUserCompletionOfNonogram(
   } catch (error) {
     console.error(error);
     return undefined;
+  }
+}
+
+export type CompletedNonogramWithProfile = Tables<"completed_nonograms"> & {
+  profiles: Tables<"profiles">;
+};
+
+export async function getTopNonogramCompletions(
+  nonogram_id: number,
+): Promise<CompletedNonogramWithProfile[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("completed_nonograms")
+    .select("*, profiles(*)")
+    .eq("nonogram_id", nonogram_id)
+    .order("completion_time", { ascending: true })
+    .limit(10);
+
+  if (error || !data) {
+    console.error(error);
+    return [];
+  }
+
+  return data as CompletedNonogramWithProfile[];
+}
+
+export async function saveNonogramCompletion({
+  user_id,
+  nonogram_id,
+  completion_time,
+}: {
+  user_id: string;
+  nonogram_id: number;
+  completion_time: number; // in seconds
+}) {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase.from("completed_nonograms").upsert(
+      {
+        user_id,
+        nonogram_id,
+        completion_time,
+      },
+      {
+        onConflict: "user_id,nonogram_id",
+      },
+    );
+
+    if (error) throw new Error(error.message);
+    return data;
+  } catch (error) {
+    console.error("Failed to save completion", error);
   }
 }
 

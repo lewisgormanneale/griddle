@@ -1,6 +1,11 @@
 "use client";
 
-import { getNonogram, getNonogramHints } from "@/utils/supabase/queries";
+import {
+  getNonogram,
+  getNonogramHints,
+  getUserCompletionOfNonogram,
+  saveNonogramCompletion,
+} from "@/utils/supabase/queries";
 import { Tables } from "@/types/database.types";
 import React, { useEffect, useState } from "react";
 import {
@@ -13,6 +18,8 @@ import {
 import { ControlPanel } from "@/components/nonogram/control-panel/control-panel"; //
 import { Grid } from "@/components/nonogram/grid/grid";
 import { Leaderboard } from "@/components/nonogram/leaderboard";
+import { Separator } from "@/components/ui/separator";
+import { createClient } from "@/utils/supabase/client";
 
 export default function NonogramPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -20,6 +27,50 @@ export default function NonogramPage({ params }: { params: { id: string } }) {
   const [rowHints, setRowHints] = useState<number[][]>([]);
   const [columnHints, setColumnHints] = useState<number[][]>([]);
   const [winConditionMet, setWinConditionMet] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [completion, setCompletion] =
+    useState<Tables<"completed_nonograms"> | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const fetchData = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (!user) return;
+
+      const completed = await getUserCompletionOfNonogram(user.id, Number(id));
+      if (completed) {
+        setCompletion(completed);
+        setWinConditionMet(true); // disable further editing if already completed
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  useEffect(() => {
+    if (!completion) {
+      setStartTime(Date.now());
+    }
+  }, [completion]);
+
+  const onWinConditionMet = async () => {
+    setWinConditionMet(true);
+    const supabase = createClient();
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData.session?.user;
+    if (!user || startTime === null) return;
+
+    const endTime = Date.now();
+    const durationInSeconds = Math.floor((endTime - startTime) / 1000);
+
+    await saveNonogramCompletion({
+      user_id: user.id,
+      nonogram_id: Number(id),
+      completion_time: durationInSeconds,
+    });
+  };
 
   useEffect(() => {
     getNonogram(Number(id)).then((data) => setNonogram(data));
@@ -31,10 +82,6 @@ export default function NonogramPage({ params }: { params: { id: string } }) {
       (error) => console.error(error),
     );
   }, [id]);
-
-  const onWinConditionMet = () => {
-    setWinConditionMet(true);
-  };
 
   return (
     <div className="h-screen w-full flex flex-col items-center p-4 gap-4 @container">
@@ -54,15 +101,19 @@ export default function NonogramPage({ params }: { params: { id: string } }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4 items-center">
-              <ControlPanel winConditionMet={winConditionMet} />
-              <Grid
-                nonogram={nonogram}
-                rowHints={rowHints}
-                columnHints={columnHints}
-                winConditionMet={winConditionMet}
-                onWinConditionMet={onWinConditionMet}
-              />
-              <Leaderboard />
+              <Separator />
+              <div className="my-6">
+                <ControlPanel winConditionMet={winConditionMet} />
+                <Grid
+                  nonogram={nonogram}
+                  rowHints={rowHints}
+                  columnHints={columnHints}
+                  winConditionMet={winConditionMet}
+                  onWinConditionMet={onWinConditionMet}
+                />
+              </div>
+              <Separator />
+              <Leaderboard nonogram_id={nonogram.id} />
             </CardContent>
           </>
         ) : (
