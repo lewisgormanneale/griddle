@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel";
 import { Tables } from "@/types/database.types";
-import { getNonogram, getNonogramHints } from "@/lib/supabase/queries";
+import { getNonogram, getNonogramHints } from "@/utils/supabase/queries";
 import { Grid } from "@/components/nonogram/grid";
 import {
   Card,

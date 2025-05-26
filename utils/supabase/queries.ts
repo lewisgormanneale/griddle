@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/types/database.types";
 
 export async function getNonogram(
@@ -46,7 +46,6 @@ export async function getNonogramHints(
       .eq("nonogram_id", id);
     if (error) {
       throw new Error(error.message);
-      return { rows: [], columns: [] };
     }
     const rows = data
       .filter((item) => item.direction === "row")
