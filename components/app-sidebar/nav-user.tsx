@@ -30,26 +30,30 @@ export function NavUser() {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) console.error(error);
+      setUser(data.session?.user ?? null);
+    };
+    fetchUser();
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   const logout = async () => {
-    const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/");
     setOpenMobile(false);
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await createClient().auth.getSession();
-      if (error) {
-        console.error(error);
-      }
-
-      setUser(data.session?.user ?? null);
-    };
-
-    fetchUser();
-  }, []);
 
   return (
     <SidebarMenu>
@@ -121,7 +125,6 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          )
         </SidebarMenuItem>
       ) : (
         <>
