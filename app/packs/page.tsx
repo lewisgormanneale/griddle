@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllPacks } from "@/lib/queries";
+import { getAllPacks } from "@/lib/supabase/queries";
 import { Tables } from "@/types/database.types";
 import Pack from "@/components/packs/pack";
 

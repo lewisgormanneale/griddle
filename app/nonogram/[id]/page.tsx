@@ -1,5 +1,5 @@
 import { Nonogram } from "@/components/nonogram/nonogram";
-import { getAllNonograms, getNonogram } from "@/lib/queries";
+import { getAllNonograms, getNonogram } from "@/lib/supabase/queries";
 import { Metadata } from "next";
 import { Tables } from "@/types/database.types"; //
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata | null> {
-  const nonogram = await getNonogram(params.id);
+  const nonogram = await getNonogram(Number(params.id));
   if (!nonogram) {
     return {};
   }

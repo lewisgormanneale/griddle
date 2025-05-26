@@ -5,9 +5,10 @@ import { Inter, Unna, Zen_Dots } from "next/font/google";
 import { cn } from "@/utils/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { cookies } from "next/headers";
-import { AppSidebarInset } from "@/components/app-sidebar-inset";
+import { AppSidebarInset } from "@/components/app-sidebar/app-sidebar-inset";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({
             <AppSidebar />
             <AppSidebarInset>{children}</AppSidebarInset>
           </SidebarProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

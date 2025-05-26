@@ -8,7 +8,7 @@ import {
 } from "../ui/card";
 import { Tables } from "@/types/database.types";
 import { useEffect, useState } from "react";
-import { getNonogramsForPack } from "@/lib/queries";
+import { getNonogramsForPack } from "@/lib/supabase/queries";
 import {
   Carousel,
   CarouselContent,
@@ -26,13 +26,13 @@ const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
     getNonogramsForPack(pack.id).then((data) => setNonograms(data));
   }, [pack]);
   return (
-    <Card className="p-3 max-w-screen-lg" key={pack.id}>
+    <Card className="p-3 max-w-screen-md w-full" key={pack.id}>
       <CardHeader>
         <CardTitle>{pack.name}</CardTitle>
         <CardDescription>{pack.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Carousel>
+        <Carousel className="mx-6">
           <CarouselContent>
             {nonograms.map((nonogram: any) => (
               <CarouselItem className="basis-1/3" key={nonogram.id}>

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel";
 import { Tables } from "@/types/database.types";
-import { getNonogram, getNonogramHints } from "@/lib/queries";
+import { getNonogram, getNonogramHints } from "@/lib/supabase/queries";
 import { Grid } from "@/components/nonogram/grid";
 import {
   Card,
@@ -20,15 +20,15 @@ export function Nonogram({ id }: { id: string }) {
   const [winConditionMet, setWinConditionMet] = useState(false);
 
   useEffect(() => {
-    getNonogram(id).then((data) => setNonogram(data));
-    getNonogramHints(id).then(
+    getNonogram(Number(id)).then((data) => setNonogram(data));
+    getNonogramHints(Number(id)).then(
       (data) => {
         setRowHints(data.rows);
         setColumnHints(data.columns);
       },
       (error) => console.error(error),
     );
-  }, []);
+  }, [id]);
 
   const onWinConditionMet = () => {
     setWinConditionMet(true);
@@ -37,14 +37,17 @@ export function Nonogram({ id }: { id: string }) {
   return (
     <>
       {nonogram && (
-        <Card className="flex flex-col items-center gap-4 p-4">
+        <Card>
           <CardHeader>
             <CardTitle>
-              Nonogram #{nonogram.id}:{" "}
+              #{nonogram.id}:{" "}
               <span className="italic">&quot;{nonogram.title}&quot;</span>
             </CardTitle>
             <CardDescription>
-              {nonogram.height} x {nonogram.width}
+              <span>
+                {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
+                {nonogram.license} | {nonogram.copyright}
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 items-center">
