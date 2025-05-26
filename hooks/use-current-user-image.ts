@@ -29,7 +29,7 @@ export const useCurrentUserImage = () => {
       } = await supabase.auth.getSession();
 
       if (sessionError || !session?.user) {
-        console.error(sessionError);
+        sessionError ? console.error(sessionError) : null;
         setAvatarUrl(undefined);
         return;
       }
