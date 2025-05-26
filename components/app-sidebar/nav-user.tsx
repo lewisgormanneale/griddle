@@ -24,7 +24,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function NavUser() {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
@@ -71,7 +71,7 @@ export function NavUser() {
             sideOffset={4}
           >
             <DropdownMenuLabel asChild className="p-0 font-normal">
-              <Link href="/account">
+              <Link href="/account" onClick={() => setOpenMobile(false)}>
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <CurrentUserAvatar></CurrentUserAvatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -86,6 +86,7 @@ export function NavUser() {
               <DropdownMenuItem asChild>
                 <Link
                   href="/account"
+                  onClick={() => setOpenMobile(false)}
                   className="flex items-center gap-1 cursor-pointer"
                 >
                   <User2 />
@@ -95,6 +96,7 @@ export function NavUser() {
               <DropdownMenuItem className="flex items-center gap-1 cursor-pointer">
                 <Link
                   href="/preferences"
+                  onClick={() => setOpenMobile(false)}
                   className="flex items-center gap-1 cursor-pointer"
                 >
                   <SlidersHorizontal />
