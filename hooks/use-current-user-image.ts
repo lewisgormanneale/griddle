@@ -31,7 +31,6 @@ export const useCurrentUserImage = () => {
       if (sessionError || !session?.user) {
         console.error(sessionError);
         setAvatarUrl(undefined);
-        setInitials("?");
         return;
       }
 
@@ -39,33 +38,23 @@ export const useCurrentUserImage = () => {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("avatar_url, full_name")
+        .select("avatar_url, username")
         .eq("id", userId)
         .single();
 
       if (profileError) {
         console.error(profileError);
         setAvatarUrl(undefined);
-        setInitials("?");
         return;
       }
 
       if (profile.avatar_url) {
         downloadImage(profile.avatar_url);
-      } else if (profile.full_name) {
-        const nameParts = profile.full_name.split(" ");
-        const initials = nameParts
-          .slice(0, 2)
-          .map((part: string) => part[0]?.toUpperCase() || "")
-          .join("");
-        setInitials(initials || "?");
-      } else {
-        setInitials("?");
       }
     };
 
     fetchAvatar();
   }, [supabase]);
 
-  return { avatarUrl, initials };
+  return avatarUrl;
 };

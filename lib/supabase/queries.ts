@@ -68,7 +68,10 @@ export async function getNonogramHints(
 export async function getAllPacks(): Promise<Tables<"packs">[]> {
   const supabase = createClient();
   try {
-    const { data, error } = await supabase.from("packs").select("*");
+    const { data, error } = await supabase
+      .from("packs")
+      .select("*")
+      .order("id");
     if (error) {
       throw new Error(error.message);
     }

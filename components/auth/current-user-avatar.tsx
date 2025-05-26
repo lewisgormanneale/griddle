@@ -8,10 +8,8 @@ export const CurrentUserAvatar = () => {
 
   return (
     <Avatar>
-      {profileImage && (
-        <AvatarImage src={profileImage.avatarUrl} alt={profileImage.initials} />
-      )}
-      <AvatarFallback>{profileImage.initials}</AvatarFallback>
+      {profileImage && <AvatarImage src={profileImage} alt="profile picture" />}
+      <AvatarFallback></AvatarFallback>
     </Avatar>
   );
 };

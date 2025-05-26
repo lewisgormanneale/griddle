@@ -11,25 +11,25 @@ export type Database = {
     Tables: {
       nonogram_hints: {
         Row: {
-          direction: string
-          hints: number[]
+          direction: Database["public"]["Enums"]["direction"]
+          hints: number[] | null
           id: number
-          index: number
-          nonogram_id: number
+          index: number | null
+          nonogram_id: number | null
         }
         Insert: {
-          direction: string
-          hints: number[]
+          direction: Database["public"]["Enums"]["direction"]
+          hints?: number[] | null
           id?: number
-          index: number
-          nonogram_id: number
+          index?: number | null
+          nonogram_id?: number | null
         }
         Update: {
-          direction?: string
-          hints?: number[]
+          direction?: Database["public"]["Enums"]["direction"]
+          hints?: number[] | null
           id?: number
-          index?: number
-          nonogram_id?: number
+          index?: number | null
+          nonogram_id?: number | null
         }
         Relationships: [
           {
@@ -88,67 +88,7 @@ export type Database = {
           },
         ]
       }
-      nonograms_copy: {
-        Row: {
-          author: string | null
-          copyright: string | null
-          created_at: string | null
-          height: number
-          id: number
-          license: string | null
-          pack_id: number | null
-          solution: string
-          title: string
-          width: number
-        }
-        Insert: {
-          author?: string | null
-          copyright?: string | null
-          created_at?: string | null
-          height: number
-          id: number
-          license?: string | null
-          pack_id?: number | null
-          solution: string
-          title: string
-          width: number
-        }
-        Update: {
-          author?: string | null
-          copyright?: string | null
-          created_at?: string | null
-          height?: number
-          id?: number
-          license?: string | null
-          pack_id?: number | null
-          solution?: string
-          title?: string
-          width?: number
-        }
-        Relationships: []
-      }
       packs: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: number
-          name: string | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string | null
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string | null
-        }
-        Relationships: []
-      }
-      packs_copy: {
         Row: {
           created_at: string
           description: string | null
@@ -172,7 +112,6 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
-          full_name: string | null
           id: string
           updated_at: string | null
           username: string | null
@@ -180,7 +119,6 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
-          full_name?: string | null
           id: string
           updated_at?: string | null
           username?: string | null
@@ -188,7 +126,6 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
-          full_name?: string | null
           id?: string
           updated_at?: string | null
           username?: string | null
@@ -204,6 +141,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      direction: "row" | "column"
       size: "5" | "10" | "15" | "20"
     }
     CompositeTypes: {
@@ -320,6 +258,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      direction: ["row", "column"],
       size: ["5", "10", "15", "20"],
     },
   },
