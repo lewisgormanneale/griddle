@@ -97,8 +97,13 @@ export function NavUser() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="flex items-center gap-1 cursor-pointer">
-                <SlidersHorizontal />
-                Preferences
+                <Link
+                  href="/preferences"
+                  className="flex items-center gap-1 cursor-pointer"
+                >
+                  <SlidersHorizontal />
+                  Preferences
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

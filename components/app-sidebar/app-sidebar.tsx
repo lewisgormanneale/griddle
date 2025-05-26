@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import React from "react";
 import Link from "next/link";
-import { ModeToggle } from "@/components/mode-toggle";
 import menuItems from "@/lib/menu-items";
 import { NavUser } from "@/components/app-sidebar/nav-user";
 import { usePathname } from "next/navigation";
@@ -45,7 +44,6 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />
