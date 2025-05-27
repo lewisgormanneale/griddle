@@ -27,7 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCurrentUserProfile } from "@/hooks/use-current-user-profile";
 
 export function NavUser() {
-  const { isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile, open } = useSidebar();
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
@@ -130,7 +130,7 @@ export function NavUser() {
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
-      ) : (
+      ) : open ? (
         <>
           <SidebarMenuItem>
             <Button variant="outline" className="w-full" asChild>
@@ -157,6 +157,8 @@ export function NavUser() {
             </Button>
           </SidebarMenuItem>
         </>
+      ) : (
+        <></>
       )}
     </SidebarMenu>
   );
