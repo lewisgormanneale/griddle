@@ -1,7 +1,6 @@
 "use client";
 
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import React from "react";
 
 export function AppSidebarInset({
   children,

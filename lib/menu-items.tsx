@@ -1,6 +1,5 @@
 import { Boxes, Home, Puzzle } from "lucide-react";
 import { MenuItem } from "@/types/types";
-import React from "react";
 
 const menuItems: MenuItem[] = [
   {

@@ -18,19 +18,21 @@ import {
 import { ChevronsUpDown, LogOut, SlidersHorizontal, User2 } from "lucide-react";
 import { CurrentUserAvatar } from "@/components/auth/current-user-avatar";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/auth-js";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useCurrentUserProfile } from "@/hooks/use-current-user-profile";
 
 export function NavUser() {
-  const { isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile, open } = useSidebar();
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const supabase = createClient();
+  const userProfile = useCurrentUserProfile();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -67,7 +69,9 @@ export function NavUser() {
               >
                 <CurrentUserAvatar></CurrentUserAvatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{"Username"}</span>
+                  <span className="truncate font-semibold">
+                    {userProfile?.profile?.username}
+                  </span>
                   <span className="truncate text-xs">{user?.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
@@ -126,7 +130,7 @@ export function NavUser() {
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
-      ) : (
+      ) : open ? (
         <>
           <SidebarMenuItem>
             <Button variant="outline" className="w-full" asChild>
@@ -153,6 +157,8 @@ export function NavUser() {
             </Button>
           </SidebarMenuItem>
         </>
+      ) : (
+        <></>
       )}
     </SidebarMenu>
   );

@@ -8,7 +8,7 @@ import {
 } from "../ui/card";
 import { Tables } from "@/types/database.types";
 import { useEffect, useState } from "react";
-import { getNonogramsForPack } from "@/lib/supabase/queries";
+import { getNonogramsForPack } from "@/utils/supabase/queries";
 import {
   Carousel,
   CarouselContent,

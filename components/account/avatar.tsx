@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
 import { cn } from "@/utils/utils";
 import { Button } from "@/components/ui/button";

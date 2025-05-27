@@ -13,7 +13,6 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import React from "react";
 import Link from "next/link";
 import menuItems from "@/lib/menu-items";
 import { NavUser } from "@/components/app-sidebar/nav-user";

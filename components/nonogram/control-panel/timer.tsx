@@ -28,7 +28,7 @@ export function Timer({
 
   return (
     <div
-      className={`font-serif text-2xl ${!timerActive ? "text-green-500" : ""} `}
+      className={`text-center font-serif text-2xl font-bold min-w-28  select-none ${!timerActive ? "text-green-200" : "text-white"} `}
     >
       {formatTime(time)}
     </div>

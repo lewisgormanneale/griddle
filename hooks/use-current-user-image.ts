@@ -1,9 +1,8 @@
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
 export const useCurrentUserImage = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
-  const [initials, setInitials] = useState<string | undefined>(undefined);
   const supabase = createClient();
 
   const downloadImage = async (path: string) => {

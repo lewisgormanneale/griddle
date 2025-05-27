@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      completed_nonograms: {
+        Row: {
+          completion_time: number
+          id: number
+          nonogram_id: number
+          user_id: string
+        }
+        Insert: {
+          completion_time: number
+          id?: number
+          nonogram_id: number
+          user_id: string
+        }
+        Update: {
+          completion_time?: number
+          id?: number
+          nonogram_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "completed_nonograms_nonogram_id_fkey"
+            columns: ["nonogram_id"]
+            isOneToOne: false
+            referencedRelation: "nonograms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "completed_nonograms_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nonogram_hints: {
         Row: {
           direction: Database["public"]["Enums"]["direction"]
