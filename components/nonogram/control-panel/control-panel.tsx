@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Timer } from "@/components/nonogram/control-panel/timer";
+import { Card } from "@/components/ui/card";
 
 export function ControlPanel({
   winConditionMet,
@@ -16,8 +17,8 @@ export function ControlPanel({
   }, [winConditionMet]);
 
   return (
-    <div className="flex items-center gap-3">
+    <Card className="bg-secondary flex justify-center px-6">
       <Timer time={time} setTime={setTime} timerActive={timerActive} />
-    </div>
+    </Card>
   );
 }

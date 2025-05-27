@@ -146,7 +146,7 @@ export function Grid({
         return (
           <div
             key={index}
-            className="w-6 h-6 flex justify-center items-center border-box"
+            className="w-6 h-6 flex justify-center items-center border-box select-none"
             style={borderStyle}
             onMouseDown={(event) =>
               isCell ? handleMouseDown(event, index) : undefined

@@ -102,7 +102,7 @@ export default function NonogramPage({ params }: { params: { id: string } }) {
             </CardHeader>
             <CardContent className="flex flex-col gap-4 items-center">
               <Separator />
-              <div className="my-6">
+              <div className="flex flex-col gap-2 items-center">
                 <ControlPanel winConditionMet={winConditionMet} />
                 <Grid
                   nonogram={nonogram}
