@@ -1,5 +1,5 @@
 import { CellState } from "@/types/types";
-import { LucideX } from "lucide-react";
+import { IconX } from "@tabler/icons-react";
 
 export function Cell({ cellState }: { cellState: CellState }) {
   return (
@@ -10,7 +10,7 @@ export function Cell({ cellState }: { cellState: CellState }) {
     >
       {cellState === CellState.CrossedOut ? (
         <div className="flex justify-center items-center">
-          <LucideX className="text-black w-full h-full" />
+          <IconX className="text-black w-full h-full" />
         </div>
       ) : null}
     </div>

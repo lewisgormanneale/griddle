@@ -1,20 +1,11 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import {
   CompletedNonogramWithProfile,
   getTopNonogramCompletions,
 } from "@/utils/supabase/queries";
+import { Card } from "@mantine/core";
 
 export function Leaderboard({ nonogram_id }: { nonogram_id: number }) {
   const [topCompletions, setTopCompletions] = useState<

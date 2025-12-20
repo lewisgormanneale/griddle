@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@mantine/core";
 import Link from "next/link";
 
 export default function Home() {
@@ -11,17 +11,16 @@ export default function Home() {
           edges of the grid.
         </p>
         <div className="flex gap-3 flex-col">
-          <Link
-            className={buttonVariants({ variant: "default", size: "lg" })}
-            href="/nonogram/4"
-          >
-            Today&apos;s Puzzle
+          <Link href="/nonogram/4" passHref>
+            <Button component="a" variant="default">
+              Today's Puzzle
+            </Button>
           </Link>
-          <Link
-            className={buttonVariants({ variant: "secondary", size: "lg" })}
-            href="/packs"
-          >
-            Packs
+
+          <Link href="/packs" passHref>
+            <Button component="a" variant="outline">
+              Packs
+            </Button>
           </Link>
         </div>
       </div>

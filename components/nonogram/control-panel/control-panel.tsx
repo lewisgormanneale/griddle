@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Timer } from "@/components/nonogram/control-panel/timer";
-import { Card } from "@/components/ui/card";
+import { Card } from "@mantine/core";
 
 export function ControlPanel({
   winConditionMet,

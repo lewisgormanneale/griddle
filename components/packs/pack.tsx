@@ -1,24 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { Tables } from "@/types/database.types";
 import { useEffect, useState } from "react";
 import { getNonogramsForPack } from "@/utils/supabase/queries";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import NonogramGridPreview from "./nonogram-grid-preview";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@mantine/core";
 
 const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
   const [nonograms, setNonograms] = useState<Tables<"nonograms">[]>([]);

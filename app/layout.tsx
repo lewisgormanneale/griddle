@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { Inter, Unna, Zen_Dots } from "next/font/google";
 import { cn } from "@/utils/utils";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { cookies } from "next/headers";
-import { AppSidebarInset } from "@/components/app-sidebar/app-sidebar-inset";
-import { Toaster } from "@/components/ui/toaster";
+import { Notifications } from "@mantine/notifications";
+import {
+  ColorSchemeScript,
+  mantineHtmlProps,
+  MantineProvider,
+} from "@mantine/core";
+import { theme } from "../styles/theme";
+import { Navbar } from "@/components/navbar/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,38 +34,42 @@ export const metadata: Metadata = {
   description: "Solve and generate nonogram puzzles online",
 };
 
-export default async function RootLayout(
-  {
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>
-) {
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" {...mantineHtmlProps}>
+      <head>
+        <ColorSchemeScript />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-serif antialiased",
           inter.variable,
           zenDots.variable,
-          unna.variable,
+          unna.variable
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <MantineProvider
+          theme={theme}
+          withGlobalClasses
+          withCssVariables
+          defaultColorScheme="auto"
         >
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <AppSidebarInset>{children}</AppSidebarInset>
-          </SidebarProvider>
-          <Toaster />
-        </ThemeProvider>
+          <Notifications />
+          <Navbar />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );

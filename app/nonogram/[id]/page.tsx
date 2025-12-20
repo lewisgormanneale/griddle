@@ -7,21 +7,16 @@ import {
   saveNonogramCompletion,
 } from "@/utils/supabase/queries";
 import { Tables } from "@/types/database.types";
-import React, { useEffect, useState, use } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useEffect, useState, use } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel/control-panel"; //
 import { Grid } from "@/components/nonogram/grid/grid";
 import { Leaderboard } from "@/components/nonogram/leaderboard";
-import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
+import { Card, Divider, Group, Text } from "@mantine/core";
 
-export default function NonogramPage(props: { params: Promise<{ id: string }> }) {
+export default function NonogramPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = use(props.params);
   const { id } = params;
   const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
@@ -89,20 +84,21 @@ export default function NonogramPage(props: { params: Promise<{ id: string }> })
       <Card className="w-full">
         {nonogram ? (
           <>
-            <CardHeader>
-              <CardTitle>
-                #{nonogram.id}:{" "}
-                <span className="italic">&quot;{nonogram.title}&quot;</span>
-              </CardTitle>
-              <CardDescription>
-                <span>
-                  {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
-                  {nonogram.license} | {nonogram.copyright}
-                </span>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4 items-center">
-              <Separator />
+            <Card.Section withBorder inheritPadding py="xs">
+              <Group justify="space-between">
+                <Text fw={500}>
+                  #{nonogram.id}:{" "}
+                  <span className="italic">&quot;{nonogram.title}&quot;</span>
+                </Text>
+                <Text>
+                  <span>
+                    {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
+                    {nonogram.license} | {nonogram.copyright}
+                  </span>
+                </Text>
+              </Group>
+            </Card.Section>
+            <Card.Section>
               <div className="flex flex-col gap-2 items-center">
                 <ControlPanel winConditionMet={winConditionMet} />
                 <Grid
@@ -113,9 +109,11 @@ export default function NonogramPage(props: { params: Promise<{ id: string }> })
                   onWinConditionMet={onWinConditionMet}
                 />
               </div>
-              <Separator />
+            </Card.Section>
+            <Card.Section>
+              <Divider className="my-4" />
               <Leaderboard nonogram_id={nonogram.id} />
-            </CardContent>
+            </Card.Section>
           </>
         ) : (
           <></>
