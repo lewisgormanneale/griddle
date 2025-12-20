@@ -26,7 +26,7 @@ const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
     getNonogramsForPack(pack.id).then((data) => setNonograms(data));
   }, [pack]);
   return (
-    <Card className="p-3 max-w-screen-md w-full" key={pack.id}>
+    <Card className="p-3 max-w-(--breakpoint-md) w-full" key={pack.id}>
       <CardHeader>
         <CardTitle>{pack.name}</CardTitle>
         <CardDescription>{pack.description}</CardDescription>
