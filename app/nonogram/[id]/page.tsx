@@ -7,7 +7,7 @@ import {
   saveNonogramCompletion,
 } from "@/utils/supabase/queries";
 import { Tables } from "@/types/database.types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
 import {
   Card,
   CardContent,
@@ -21,7 +21,8 @@ import { Leaderboard } from "@/components/nonogram/leaderboard";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
 
-export default function NonogramPage({ params }: { params: { id: string } }) {
+export default function NonogramPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const { id } = params;
   const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
   const [rowHints, setRowHints] = useState<number[][]>([]);
@@ -79,7 +80,7 @@ export default function NonogramPage({ params }: { params: { id: string } }) {
         setRowHints(data.rows);
         setColumnHints(data.columns);
       },
-      (error) => console.error(error),
+      (error) => console.error(error)
     );
   }, [id]);
 
