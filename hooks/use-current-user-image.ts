@@ -53,7 +53,7 @@ export const useCurrentUserImage = () => {
     };
 
     fetchAvatar();
-  }, [supabase]);
+  }, [supabase, downloadImage]);
 
   return avatarUrl;
 };
