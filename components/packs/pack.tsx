@@ -11,48 +11,44 @@ const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
     getNonogramsForPack(pack.id).then((data) => setNonograms(data));
   }, [pack]);
   return (
-    <Card className="p-3 max-w-(--breakpoint-md) w-full" key={pack.id}>
-      <CardHeader>
-        <CardTitle>{pack.name}</CardTitle>
-        <CardDescription>{pack.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Carousel className="mx-6">
-          <CarouselContent>
-            {nonograms.map((nonogram: any) => (
-              <CarouselItem className="basis-1/3" key={nonogram.id}>
-                <Card
-                  className="bg-background h-full flex flex-col justify-between"
-                  key={nonogram.id}
+    <Card>
+      <Card.Section withBorder style={{ padding: 12 }}>
+        <h2 className="text-lg font-medium">{pack.name}</h2>
+      </Card.Section>
+      <Card.Section>
+        <p className="p-4">{pack.description}</p>
+      </Card.Section>
+      <Card.Section>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {nonograms.map((nonogram) => (
+            <Card
+              className="bg-background h-full flex flex-col justify-between"
+              key={nonogram.id}
+            >
+              <Card.Section className="justify-center p-6 pb-0">
+                <h3 className="text-md font-medium">{nonogram.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {nonogram.height} x {nonogram.width}
+                </p>
+              </Card.Section>
+              <Card.Section className="flex flex-col items-center p-3">
+                <NonogramGridPreview
+                  rows={nonogram.height}
+                  columns={nonogram.width}
+                ></NonogramGridPreview>
+              </Card.Section>
+              <Card.Section className="justify-end p-4">
+                <Link
+                  className="text-sm font-medium text-primary hover:underline"
+                  href={`/nonogram/${nonogram.id}`}
                 >
-                  <CardHeader className="justify-center p-6 pb-0">
-                    <CardTitle>{nonogram.title}</CardTitle>
-                    <CardDescription>
-                      {nonogram.height} x {nonogram.width}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col items-center p-3">
-                    <NonogramGridPreview
-                      rows={nonogram.height}
-                      columns={nonogram.width}
-                    ></NonogramGridPreview>
-                  </CardContent>
-                  <CardFooter className="justify-end">
-                    <Link
-                      className={buttonVariants({ variant: "outline" })}
-                      href={`/nonogram/${nonogram.id}`}
-                    >
-                      Play
-                    </Link>
-                  </CardFooter>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </CardContent>
+                  Play
+                </Link>
+              </Card.Section>
+            </Card>
+          ))}
+        </div>
+      </Card.Section>
     </Card>
   );
 };

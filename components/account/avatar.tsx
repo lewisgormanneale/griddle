@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import Image from "next/image";
-import { cn } from "@/utils/utils";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { Button } from '@mantine/core';
+import { createClient } from '@/utils/supabase/client';
 
 export default function Avatar({
   uid,
@@ -23,16 +22,14 @@ export default function Avatar({
   useEffect(() => {
     const downloadImage = async (path: string) => {
       try {
-        const { data, error } = await supabase.storage
-          .from("avatars")
-          .download(path);
+        const { data, error } = await supabase.storage.from('avatars').download(path);
 
         if (error) throw error;
 
         const bucketUrl = URL.createObjectURL(data);
         setAvatarUrl(bucketUrl);
       } catch (error) {
-        console.log("Error downloading image: ", error);
+        console.log('Error downloading image: ', error);
       }
     };
     if (url) {
@@ -44,23 +41,19 @@ export default function Avatar({
     fileInputRef.current?.click();
   };
 
-  const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (
-    event,
-  ) => {
+  const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     try {
       setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
+        throw new Error('You must select an image to upload.');
       }
 
       const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
+      const fileExt = file.name.split('.').pop();
       const filePath = `${uid}-${Math.random()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
 
       if (uploadError) {
         throw uploadError;
@@ -68,7 +61,7 @@ export default function Avatar({
 
       onUpload(filePath);
     } catch (error) {
-      alert("Error uploading avatar!");
+      alert('Error uploading avatar!');
     } finally {
       setUploading(false);
     }
@@ -86,10 +79,7 @@ export default function Avatar({
           style={{ height: size, width: size }}
         />
       ) : (
-        <div
-          className="rounded-full bg-muted border"
-          style={{ height: size, width: size }}
-        />
+        <div className="rounded-full bg-muted border" style={{ height: size, width: size }} />
       )}
 
       <input
@@ -101,14 +91,8 @@ export default function Avatar({
         className="hidden"
       />
 
-      <Button
-        type="button"
-        variant="outline"
-        onClick={triggerFileInput}
-        className={cn("w-full", uploading && "cursor-not-allowed opacity-50")}
-        disabled={uploading}
-      >
-        {uploading ? "Uploading..." : "Upload Avatar"}
+      <Button type="button" variant="outline" onClick={triggerFileInput} disabled={uploading}>
+        {uploading ? 'Uploading...' : 'Upload Avatar'}
       </Button>
     </div>
   );

@@ -5,15 +5,20 @@ import {
   CompletedNonogramWithProfile,
   getTopNonogramCompletions,
 } from "@/utils/supabase/queries";
-import { Card } from "@mantine/core";
+import { Card, Table, Title, ScrollArea, Loader, Text } from "@mantine/core";
 
 export function Leaderboard({ nonogram_id }: { nonogram_id: number }) {
   const [topCompletions, setTopCompletions] = useState<
     CompletedNonogramWithProfile[]
   >([]);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getTopNonogramCompletions(nonogram_id).then(setTopCompletions);
+    setLoading(true);
+    getTopNonogramCompletions(nonogram_id)
+      .then((data) => setTopCompletions(data))
+      .finally(() => setLoading(false));
   }, [nonogram_id]);
 
   const formatTime = (seconds: number) => {
@@ -26,43 +31,50 @@ export function Leaderboard({ nonogram_id }: { nonogram_id: number }) {
 
   return (
     <Card className="w-full bg-background">
-      <CardHeader>
-        <CardTitle>Leaderboard</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableCaption>The top times for this puzzle.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Username</TableHead>
-              <TableHead className="text-right">Time</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {topCompletions.length > 0 ? (
-              topCompletions.map((entry, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    {entry.profiles?.username || "Unknown"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatTime(entry.completion_time)}
-                  </TableCell>
-                </TableRow>
-              ))
+      <Card.Section withBorder style={{ padding: 12 }}>
+        <Title order={3}>Leaderboard</Title>
+      </Card.Section>
+
+      <Card.Section>
+        <ScrollArea>
+          <div className="p-4">
+            <Text size="sm" color="dimmed" className="mb-2">
+              The top times for this puzzle.
+            </Text>
+
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <Loader />
+              </div>
+            ) : topCompletions.length > 0 ? (
+              <Table striped highlightOnHover verticalSpacing="sm">
+                <thead>
+                  <tr>
+                    <th style={{ width: 100 }}>Username</th>
+                    <th className="text-right">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topCompletions.map((entry, index) => (
+                    <tr key={index}>
+                      <td className="font-medium">
+                        {entry.profiles?.username || "Unknown"}
+                      </td>
+                      <td className="text-right">
+                        {formatTime(entry.completion_time)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={2}
-                  className="text-center text-muted-foreground"
-                >
-                  No completions yet.
-                </TableCell>
-              </TableRow>
+              <div className="text-center text-muted-foreground py-4">
+                No completions yet.
+              </div>
             )}
-          </TableBody>
-        </Table>
-      </CardContent>
+          </div>
+        </ScrollArea>
+      </Card.Section>
     </Card>
   );
 }

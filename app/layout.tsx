@@ -1,74 +1,55 @@
-import type { Metadata } from "next";
-import "@/styles/globals.css";
-import { Inter, Unna, Zen_Dots } from "next/font/google";
-import { cn } from "@/utils/utils";
-import { cookies } from "next/headers";
-import { Notifications } from "@mantine/notifications";
+'use client';
+
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+
 import {
+  AppShell,
+  Burger,
   ColorSchemeScript,
   mantineHtmlProps,
   MantineProvider,
-} from "@mantine/core";
-import { theme } from "../styles/theme";
-import { Navbar } from "@/components/navbar/navbar";
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Notifications } from '@mantine/notifications';
+import { Navbar } from '@/components/navbar/navbar';
+import { theme } from '../theme';
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const zenDots = Zen_Dots({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-zen-dots",
-});
-
-const unna = Unna({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-unna",
-});
-
-export const metadata: Metadata = {
-  title: "Griddle",
-  description: "Solve and generate nonogram puzzles online",
-};
-
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+export default function RootLayout({ children }: { children: any }) {
+  const [opened, { toggle }] = useDisclosure();
 
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <title>Griddle</title>
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
+        <ColorSchemeScript />
       </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-serif antialiased",
-          inter.variable,
-          zenDots.variable,
-          unna.variable
-        )}
-      >
-        <MantineProvider
-          theme={theme}
-          withGlobalClasses
-          withCssVariables
-          defaultColorScheme="auto"
-        >
+      <body>
+        <MantineProvider theme={theme}>
           <Notifications />
-          <Navbar />
-          {children}
+          <AppShell
+            padding="md"
+            header={{ height: 60 }}
+            navbar={{
+              width: 300,
+              breakpoint: 'sm',
+              collapsed: { mobile: !opened },
+            }}
+          >
+            <AppShell.Header display="flex" px="md">
+              <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+              <div>Griddle</div>
+            </AppShell.Header>
+            <AppShell.Navbar>
+              <Navbar />
+            </AppShell.Navbar>
+            <AppShell.Main>{children}</AppShell.Main>
+          </AppShell>
         </MantineProvider>
       </body>
     </html>
