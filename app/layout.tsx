@@ -2,18 +2,21 @@
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '../styles/globals.css';
 
 import {
   AppShell,
   Burger,
   ColorSchemeScript,
+  Group,
   mantineHtmlProps,
   MantineProvider,
+  Text,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
 import { Navbar } from '@/components/navbar/navbar';
-import { theme } from '../theme';
+import { theme } from '../styles/theme';
 
 export default function RootLayout({ children }: { children: any }) {
   const [opened, { toggle }] = useDisclosure();
@@ -41,9 +44,13 @@ export default function RootLayout({ children }: { children: any }) {
               collapsed: { mobile: !opened },
             }}
           >
-            <AppShell.Header display="flex" px="md">
-              <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-              <div>Griddle</div>
+            <AppShell.Header>
+              <Group align="center" h="100%" px="sm" gap="sm">
+                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                <Text size="xl" lh={0} className="font-zen-dots uppercase">
+                  Griddle
+                </Text>
+              </Group>
             </AppShell.Header>
             <AppShell.Navbar>
               <Navbar />
