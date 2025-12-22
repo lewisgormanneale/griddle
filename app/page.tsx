@@ -1,23 +1,27 @@
 import Link from 'next/link';
-import { Button, Flex, Title } from '@mantine/core';
+import { Button, Flex, Text, Title } from '@mantine/core';
 
 export default function Home() {
   return (
-    <Flex m="lg" direction="column">
-      <Title className="font-zen-dots uppercase" order={1} ta="center" mt={100} size={60}>
+    <Flex mih="calc(100vh - 60px)" direction="column" align="center" justify="center">
+      <Title className="font-zen-dots uppercase" order={1} ta="center" size={60}>
         Griddle
       </Title>
-      <p className="font-serif text-2xl">
+      <Text ta="center" mb={50} size="xl" c="dimmed">
         Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
-      </p>
-      <div className="flex gap-3 flex-col">
+      </Text>
+      <Flex mb={50} justify="center" direction="column" gap={10}>
         <Link href="/nonogram/4">
-          <Button variant="default">Today's Puzzle</Button>
+          <Button variant="filled" w="100%" size="lg">
+            Today's Puzzle
+          </Button>
         </Link>
         <Link href="/packs">
-          <Button variant="outline">Packs</Button>
+          <Button variant="outline" w="100%" size="lg">
+            Packs
+          </Button>
         </Link>
-      </div>
+      </Flex>
     </Flex>
   );
 }

@@ -8,6 +8,7 @@ import {
   AppShell,
   Burger,
   ColorSchemeScript,
+  Flex,
   Group,
   mantineHtmlProps,
   MantineProvider,
@@ -15,6 +16,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
+import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
 import { Navbar } from '@/components/navbar/navbar';
 import { theme } from '../styles/theme';
 
@@ -36,7 +38,6 @@ export default function RootLayout({ children }: { children: any }) {
         <MantineProvider theme={theme}>
           <Notifications />
           <AppShell
-            padding="md"
             header={{ height: 60 }}
             navbar={{
               width: 300,
@@ -45,12 +46,17 @@ export default function RootLayout({ children }: { children: any }) {
             }}
           >
             <AppShell.Header>
-              <Group align="center" h="100%" px="sm" gap="sm">
-                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                <Text size="xl" lh={0} className="font-zen-dots uppercase">
-                  Griddle
-                </Text>
-              </Group>
+              <Flex justify="space-between" align="center" h="100%">
+                <Group align="center" h="100%" px="sm" gap="sm">
+                  <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                  <Text size="xl" lh={0} className="font-zen-dots uppercase">
+                    Griddle
+                  </Text>
+                </Group>
+                <Group align="center" h="100%" px="sm" gap="sm">
+                  <ColorSchemeToggle />
+                </Group>
+              </Flex>
             </AppShell.Header>
             <AppShell.Navbar>
               <Navbar />
