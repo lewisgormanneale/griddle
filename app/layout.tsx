@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: any }) {
               <Flex justify="space-between" align="center" h="100%">
                 <Group align="center" h="100%" px="sm" gap="sm">
                   <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                  <Text size="xl" lh={0} className="font-zen-dots uppercase">
+                  <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots">
                     Griddle
                   </Text>
                 </Group>

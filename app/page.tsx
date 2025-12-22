@@ -4,10 +4,10 @@ import { Button, Flex, Text, Title } from '@mantine/core';
 export default function Home() {
   return (
     <Flex mih="calc(100vh - 60px)" direction="column" align="center" justify="center">
-      <Title className="font-zen-dots uppercase" order={1} ta="center" size={60}>
+      <Title tt="uppercase" className="font-zen-dots" order={1} ta="center" size={60}>
         Griddle
       </Title>
-      <Text ta="center" mb={50} size="xl" c="dimmed">
+      <Text ta="center" mb={50} size="xl" c="dimmed" className="font-unna">
         Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
       </Text>
       <Flex mb={50} justify="center" direction="column" gap={10}>

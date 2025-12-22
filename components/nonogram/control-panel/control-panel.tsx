@@ -1,12 +1,7 @@
-import { useEffect, useState } from "react";
-import { Timer } from "@/components/nonogram/control-panel/timer";
-import { Card } from "@mantine/core";
+import { useEffect, useState } from 'react';
+import { Timer } from '@/components/nonogram/control-panel/timer';
 
-export function ControlPanel({
-  winConditionMet,
-}: {
-  winConditionMet: boolean;
-}) {
+export function ControlPanel({ winConditionMet }: { winConditionMet: boolean }) {
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
 
@@ -16,9 +11,5 @@ export function ControlPanel({
     }
   }, [winConditionMet]);
 
-  return (
-    <Card className="bg-secondary flex justify-center px-6">
-      <Timer time={time} setTime={setTime} timerActive={timerActive} />
-    </Card>
-  );
+  return <Timer time={time} setTime={setTime} timerActive={timerActive} />;
 }

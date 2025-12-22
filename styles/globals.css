@@ -2,6 +2,10 @@
   font-family: 'Zen Dots';
 }
 
-.uppercase {
-  text-transform: uppercase;
+.font-unna {
+  font-family: 'Unna';
+}
+
+.font-inter {
+  font-family: 'Inter';
 }

@@ -12,7 +12,7 @@ import { ControlPanel } from "@/components/nonogram/control-panel/control-panel"
 import { Grid } from "@/components/nonogram/grid/grid";
 import { Leaderboard } from "@/components/nonogram/leaderboard";
 import { createClient } from "@/utils/supabase/client";
-import { Card, Divider, Group, Text } from "@mantine/core";
+import { Box, Card, Divider, Flex, Group, LoadingOverlay, Text, Title } from "@mantine/core";
 
 export default function NonogramPage(props: {
   params: Promise<{ id: string }>;
@@ -79,28 +79,36 @@ export default function NonogramPage(props: {
     );
   }, [id]);
 
+  if (!nonogram) {
+    return (
+      <Box pos="relative" w="100%" h="calc(100vh - 60px)">
+        <LoadingOverlay visible={true}></LoadingOverlay>;
+      </Box>
+    );
+  }
+
   return (
-    <div className="h-screen w-full flex flex-col items-center p-4 gap-4 @container">
-      <Card className="w-full">
-        {nonogram ? (
-          <>
-            <Card.Section withBorder inheritPadding py="xs">
-              <Group justify="space-between">
-                <Text fw={500}>
-                  #{nonogram.id}:{" "}
-                  <span className="italic">&quot;{nonogram.title}&quot;</span>
-                </Text>
-                <Text>
-                  <span>
-                    {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
-                    {nonogram.license} | {nonogram.copyright}
-                  </span>
-                </Text>
-              </Group>
-            </Card.Section>
-            <Card.Section>
-              <div className="flex flex-col gap-2 items-center">
+      <Flex direction="column" align="center" p="md"> 
+        <Title mb="md" order={2} tt="uppercase">
+          #{id} <span className="italic">&quot;{nonogram.title}&quot;</span>
+        </Title>
+        <Card w="100%">
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group justify="space-between">
+              <Text c="dimmed" size="sm">
+                <span>
+                  {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
+                  {nonogram.license} | {nonogram.copyright}
+                </span>
+              </Text>
+            </Group>
+          </Card.Section>
+          <Card.Section p="md">
+            <Card withBorder>
+              <Card.Section withBorder inheritPadding py="xs">
                 <ControlPanel winConditionMet={winConditionMet} />
+              </Card.Section>
+              <Card.Section>
                 <Grid
                   nonogram={nonogram}
                   rowHints={rowHints}
@@ -108,17 +116,14 @@ export default function NonogramPage(props: {
                   winConditionMet={winConditionMet}
                   onWinConditionMet={onWinConditionMet}
                 />
-              </div>
-            </Card.Section>
-            <Card.Section>
-              <Divider className="my-4" />
-              <Leaderboard nonogram_id={nonogram.id} />
-            </Card.Section>
-          </>
-        ) : (
-          <></>
-        )}
-      </Card>
-    </div>
+              </Card.Section>
+            </Card>
+          </Card.Section>
+          <Card.Section>
+            <Divider className="my-4" />
+            <Leaderboard nonogram_id={nonogram.id} />
+          </Card.Section>
+        </Card>  
+    </Flex>
   );
 }
