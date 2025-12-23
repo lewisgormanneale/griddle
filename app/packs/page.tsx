@@ -5,7 +5,6 @@ import { Center, Loader, Stack, Title } from '@mantine/core';
 import Pack from '@/components/packs/pack';
 import { Tables } from '@/types/database.types';
 import { getAllPacks } from '@/utils/supabase/queries';
-import classes from './page.module.css';
 
 export default function PacksPage() {
   const [packs, setPacks] = useState<Tables<'packs'>[]>([]);
@@ -18,7 +17,7 @@ export default function PacksPage() {
   }, []);
 
   return (
-    <Stack className={classes.page} gap="md">
+    <Stack gap="md">
       <Title order={1} ta="center">
         Packs
       </Title>

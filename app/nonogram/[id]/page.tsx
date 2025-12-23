@@ -88,7 +88,7 @@ export default function NonogramPage(props: {
   }
 
   return (
-      <Flex direction="column" align="center" p="md"> 
+      <Flex direction="column" align="center"> 
         <Title mb="md" order={1} ta="center">
           #{id} <span>&quot;{nonogram.title}&quot;</span>
         </Title>

@@ -6,6 +6,7 @@ import '../styles/globals.css';
 
 import {
   AppShell,
+  Box,
   Burger,
   ColorSchemeScript,
   Flex,
@@ -19,6 +20,7 @@ import { Notifications } from '@mantine/notifications';
 import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
 import { Navbar } from '@/components/navbar/navbar';
 import { theme } from '../styles/theme';
+import classes from './layout.module.css';
 
 export default function RootLayout({ children }: { children: any }) {
   const [opened, { toggle }] = useDisclosure();
@@ -61,7 +63,11 @@ export default function RootLayout({ children }: { children: any }) {
             <AppShell.Navbar>
               <Navbar />
             </AppShell.Navbar>
-            <AppShell.Main>{children}</AppShell.Main>
+            <AppShell.Main>
+              <Box p="md" className={classes.page}>
+                {children}
+              </Box>
+            </AppShell.Main>
           </AppShell>
         </MantineProvider>
       </body>
