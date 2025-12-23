@@ -1,0 +1,19 @@
+.timer {
+  font-family: var(--mantine-font-family-serif);
+  font-size: var(--mantine-font-size-xl);
+  font-weight: 700;
+
+  min-width: 7rem;
+  text-align: center;
+  user-select: none;
+
+  color: var(--timer-color);
+
+  &[data-active='true'] {
+    --timer-color: var(--mantine-color-text);
+  }
+
+  &[data-active='false'] {
+    --timer-color: var(--mantine-color-green-2);
+  }
+}
