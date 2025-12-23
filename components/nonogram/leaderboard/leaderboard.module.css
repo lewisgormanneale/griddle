@@ -1,0 +1,59 @@
+:root {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.sectionHeader {
+  padding: 12px;
+}
+
+.description {
+  margin-bottom: 0.5rem;
+}
+
+.loaderWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.empty {
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+  padding: 1rem 0;
+}
+
+.username {
+  font-weight: 500;
+}
+
+.time {
+  text-align: right;
+}
+
+.table {
+  border-collapse: collapse;
+
+  & thead th {
+    text-align: left;
+    border-bottom: 1px solid var(--mantine-color-gray-4);
+  }
+
+  & thead th:last-child {
+    text-align: right;
+  }
+
+  &.row td {
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+  }
+
+  &.row:last-child td {
+    border-bottom: none;
+  }
+}
+
+/* Dark mode tuning */
+:root[data-mantine-color-scheme='dark'] .table thead th {
+  border-bottom-color: var(--mantine-color-dark-4);
+}

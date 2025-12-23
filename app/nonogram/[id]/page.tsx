@@ -10,7 +10,7 @@ import { Tables } from "@/types/database.types";
 import { useEffect, useState, use } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel/control-panel"; //
 import { Grid } from "@/components/nonogram/grid/grid";
-import { Leaderboard } from "@/components/nonogram/leaderboard";
+import { Leaderboard } from "@/components/nonogram/leaderboard/leaderboard";
 import { createClient } from "@/utils/supabase/client";
 import { Box, Card, Divider, Flex, Group, LoadingOverlay, Text, Title } from "@mantine/core";
 
