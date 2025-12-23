@@ -1,0 +1,17 @@
+.grid {
+  display: inline-grid;
+  user-select: none;
+}
+
+.gridItem {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.cell {
+  cursor: pointer;
+}

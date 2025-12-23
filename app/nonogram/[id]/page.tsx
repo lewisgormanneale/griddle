@@ -89,7 +89,7 @@ export default function NonogramPage(props: {
 
   return (
       <Flex direction="column" align="center" p="md"> 
-        <Title mb="md" order={2} tt="uppercase">
+        <Title mb="md" order={2}>
           #{id} <span className="italic">&quot;{nonogram.title}&quot;</span>
         </Title>
         <Card w="100%">
@@ -109,13 +109,15 @@ export default function NonogramPage(props: {
                 <ControlPanel winConditionMet={winConditionMet} />
               </Card.Section>
               <Card.Section>
-                <Grid
-                  nonogram={nonogram}
-                  rowHints={rowHints}
-                  columnHints={columnHints}
-                  winConditionMet={winConditionMet}
-                  onWinConditionMet={onWinConditionMet}
-                />
+                <Flex justify="center" p="md">
+                  <Grid
+                    nonogram={nonogram}
+                    rowHints={rowHints}
+                    columnHints={columnHints}
+                    winConditionMet={winConditionMet}
+                    onWinConditionMet={onWinConditionMet}
+                  />
+                </Flex>
               </Card.Section>
             </Card>
           </Card.Section>
