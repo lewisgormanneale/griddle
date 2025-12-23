@@ -23,7 +23,7 @@ import { theme } from '../styles/theme';
 import classes from './layout.module.css';
 
 export default function RootLayout({ children }: { children: any }) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <html lang="en" {...mantineHtmlProps}>
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: any }) {
               </Flex>
             </AppShell.Header>
             <AppShell.Navbar>
-              <Navbar />
+              <Navbar close={close} />
             </AppShell.Navbar>
             <AppShell.Main>
               <Box p="md" className={classes.page}>

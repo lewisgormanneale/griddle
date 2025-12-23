@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   IconHomeFilled,
   IconLibraryFilled,
@@ -17,16 +17,16 @@ const navbarItems = [
   { link: '/packs', label: 'Packs', icon: IconLibraryFilled },
 ];
 
-export function Navbar() {
-  const [active, setActive] = useState('Home');
+export function Navbar({ close }: { close: () => void }) {
+  const pathname = usePathname();
 
   const links = navbarItems.map((navbarItem) => (
     <Link
       className={classes.link}
-      data-active={navbarItem.label === active || undefined}
+      data-active={pathname === navbarItem.link || undefined}
       href={navbarItem.link}
       key={navbarItem.label}
-      onClick={() => setActive(navbarItem.label)}
+      onClick={() => close()}
     >
       <navbarItem.icon className={classes.linkIcon} stroke={1.5} />
       <span>{navbarItem.label}</span>
