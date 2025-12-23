@@ -1,53 +1,75 @@
-import { Tables } from "@/types/database.types";
-import { useEffect, useState } from "react";
-import { getNonogramsForPack } from "@/utils/supabase/queries";
-import NonogramGridPreview from "./nonogram-grid-preview";
-import Link from "next/link";
-import { Card } from "@mantine/core";
+'use client';
 
-const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
-  const [nonograms, setNonograms] = useState<Tables<"nonograms">[]>([]);
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Button, Card, Center, Loader, SimpleGrid, Text, Title } from '@mantine/core';
+import { Tables } from '@/types/database.types';
+import { getNonogramsForPack } from '@/utils/supabase/queries';
+import NonogramGridPreview from './nonogram-grid-preview';
+import classes from './pack.module.css';
+
+const Pack = ({ pack }: { pack: Tables<'packs'> }) => {
+  const [nonograms, setNonograms] = useState<Tables<'nonograms'>[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getNonogramsForPack(pack.id).then((data) => setNonograms(data));
-  }, [pack]);
+    setLoading(true);
+    getNonogramsForPack(pack.id)
+      .then((data) => setNonograms(data))
+      .finally(() => setLoading(false));
+  }, [pack.id]);
+
   return (
-    <Card>
-      <Card.Section withBorder style={{ padding: 12 }}>
-        <h2 className="text-lg font-medium">{pack.name}</h2>
+    <Card withBorder radius="md">
+      <Card.Section withBorder className={classes.header}>
+        <Title order={3}>{pack.name}</Title>
       </Card.Section>
-      <Card.Section>
-        <p className="p-4">{pack.description}</p>
-      </Card.Section>
-      <Card.Section>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {nonograms.map((nonogram) => (
-            <Card
-              className="bg-background h-full flex flex-col justify-between"
-              key={nonogram.id}
-            >
-              <Card.Section className="justify-center p-6 pb-0">
-                <h3 className="text-md font-medium">{nonogram.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {nonogram.height} x {nonogram.width}
-                </p>
-              </Card.Section>
-              <Card.Section className="flex flex-col items-center p-3">
-                <NonogramGridPreview
-                  rows={nonogram.height}
-                  columns={nonogram.width}
-                ></NonogramGridPreview>
-              </Card.Section>
-              <Card.Section className="justify-end p-4">
-                <Link
-                  className="text-sm font-medium text-primary hover:underline"
+
+      {pack.description && (
+        <Card.Section className={classes.description}>
+          <Text size="sm" color="dimmed">
+            {pack.description}
+          </Text>
+        </Card.Section>
+      )}
+
+      <Card.Section className={classes.content}>
+        {loading ? (
+          <Center py="md">
+            <Loader size="sm" />
+          </Center>
+        ) : nonograms.length > 0 ? (
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+            {nonograms.map((nonogram) => (
+              <Card key={nonogram.id} withBorder radius="md" className={classes.nonogramCard}>
+                <div className={classes.nonogramHeader}>
+                  <Text fw={500}>{nonogram.title}</Text>
+                  <Text size="xs" color="dimmed">
+                    {nonogram.height} × {nonogram.width}
+                  </Text>
+                </div>
+
+                <div className={classes.preview}>
+                  <NonogramGridPreview rows={nonogram.height} columns={nonogram.width} />
+                </div>
+
+                <Button
+                  component={Link}
                   href={`/nonogram/${nonogram.id}`}
+                  variant="light"
+                  fullWidth
+                  mt="sm"
                 >
                   Play
-                </Link>
-              </Card.Section>
-            </Card>
-          ))}
-        </div>
+                </Button>
+              </Card>
+            ))}
+          </SimpleGrid>
+        ) : (
+          <Text size="sm" color="dimmed" ta="center">
+            No puzzles in this pack yet.
+          </Text>
+        )}
       </Card.Section>
     </Card>
   );

@@ -1,0 +1,27 @@
+.header {
+  padding: var(--mantine-spacing-sm);
+}
+
+.description {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+}
+
+.content {
+  padding: var(--mantine-spacing-md);
+}
+
+.nonogramCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.nonogramHeader {
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+  margin: var(--mantine-spacing-sm) 0;
+}

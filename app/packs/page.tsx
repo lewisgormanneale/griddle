@@ -1,25 +1,35 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { getAllPacks } from "@/utils/supabase/queries";
-import { Tables } from "@/types/database.types";
-import Pack from "@/components/packs/pack";
+import { useEffect, useState } from 'react';
+import { Center, Loader, Stack, Title } from '@mantine/core';
+import Pack from '@/components/packs/pack';
+import { Tables } from '@/types/database.types';
+import { getAllPacks } from '@/utils/supabase/queries';
+import classes from './page.module.css';
 
 export default function PacksPage() {
-  const [packs, setPacks] = useState<Tables<"packs">[]>([]);
+  const [packs, setPacks] = useState<Tables<'packs'>[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAllPacks().then((data) => setPacks(data));
+    getAllPacks()
+      .then((data) => setPacks(data))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="h-screen w-full flex flex-col items-center p-4 gap-4">
-      <h1 className="text-3xl">Packs</h1>
-      {packs &&
-        packs.length > 0 &&
-        packs.map((pack: Tables<"packs">) => (
-          <Pack key={pack.id} pack={pack} />
-        ))}
-    </div>
+    <Stack className={classes.page} gap="md">
+      <Title order={1} ta="center">
+        Packs
+      </Title>
+
+      {loading ? (
+        <Center>
+          <Loader />
+        </Center>
+      ) : (
+        packs.map((pack) => <Pack key={pack.id} pack={pack} />)
+      )}
+    </Stack>
   );
 }

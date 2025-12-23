@@ -89,8 +89,8 @@ export default function NonogramPage(props: {
 
   return (
       <Flex direction="column" align="center" p="md"> 
-        <Title mb="md" order={2}>
-          #{id} <span className="italic">&quot;{nonogram.title}&quot;</span>
+        <Title mb="md" order={1} ta="center">
+          #{id} <span>&quot;{nonogram.title}&quot;</span>
         </Title>
         <Card w="100%">
           <Card.Section withBorder inheritPadding py="xs">

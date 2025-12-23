@@ -1,0 +1,6 @@
+.page {
+  max-width: 1200px;
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+  margin: 0 auto;
+}
