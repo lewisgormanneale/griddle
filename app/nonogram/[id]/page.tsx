@@ -82,7 +82,7 @@ export default function NonogramPage(props: {
   if (!nonogram) {
     return (
       <Box pos="relative" w="100%" h="calc(100vh - 60px)">
-        <LoadingOverlay visible={true}></LoadingOverlay>;
+        <LoadingOverlay visible={true}></LoadingOverlay>
       </Box>
     );
   }

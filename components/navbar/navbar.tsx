@@ -2,13 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  IconHomeFilled,
-  IconLibraryFilled,
-  IconLogout,
-  IconPuzzleFilled,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconHomeFilled, IconLibraryFilled, IconPuzzleFilled } from '@tabler/icons-react';
+import { NavbarUser } from './navbar-user';
 import classes from './navbar.module.css';
 
 const navbarItems = [
@@ -38,14 +33,7 @@ export function Navbar({ close }: { close: () => void }) {
       <div className={classes.navbarMain}>{links}</div>
 
       <div className={classes.footer}>
-        <Link href="/account" className={classes.link}>
-          <IconUser className={classes.linkIcon} stroke={1.5} />
-          <span>Account</span>
-        </Link>
-        <Link href="/logout" className={classes.link}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </Link>
+        <NavbarUser close={close} />
       </div>
     </nav>
   );
