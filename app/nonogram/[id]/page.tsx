@@ -7,21 +7,16 @@ import {
   saveNonogramCompletion,
 } from "@/utils/supabase/queries";
 import { Tables } from "@/types/database.types";
-import React, { useEffect, useState, use } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useEffect, useState, use } from "react";
 import { ControlPanel } from "@/components/nonogram/control-panel/control-panel"; //
 import { Grid } from "@/components/nonogram/grid/grid";
-import { Leaderboard } from "@/components/nonogram/leaderboard";
-import { Separator } from "@/components/ui/separator";
+import { Leaderboard } from "@/components/nonogram/leaderboard/leaderboard";
 import { createClient } from "@/utils/supabase/client";
+import { Box, Card, Divider, Flex, Group, LoadingOverlay, Text, Title } from "@mantine/core";
 
-export default function NonogramPage(props: { params: Promise<{ id: string }> }) {
+export default function NonogramPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = use(props.params);
   const { id } = params;
   const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
@@ -84,43 +79,53 @@ export default function NonogramPage(props: { params: Promise<{ id: string }> })
     );
   }, [id]);
 
+  if (!nonogram) {
+    return (
+      <Box pos="relative" w="100%" h="calc(100vh - 60px)">
+        <LoadingOverlay visible={true}></LoadingOverlay>
+      </Box>
+    );
+  }
+
   return (
-    <div className="h-screen w-full flex flex-col items-center p-4 gap-4 @container">
-      <Card className="w-full">
-        {nonogram ? (
-          <>
-            <CardHeader>
-              <CardTitle>
-                #{nonogram.id}:{" "}
-                <span className="italic">&quot;{nonogram.title}&quot;</span>
-              </CardTitle>
-              <CardDescription>
+      <Flex direction="column" align="center"> 
+        <Title mb="md" order={1} ta="center">
+          #{id} <span>&quot;{nonogram.title}&quot;</span>
+        </Title>
+        <Card w="100%">
+          <Card.Section withBorder inheritPadding py="xs">
+            <Group justify="space-between">
+              <Text c="dimmed" size="sm">
                 <span>
                   {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
                   {nonogram.license} | {nonogram.copyright}
                 </span>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4 items-center">
-              <Separator />
-              <div className="flex flex-col gap-2 items-center">
+              </Text>
+            </Group>
+          </Card.Section>
+          <Card.Section p="md">
+            <Card withBorder>
+              <Card.Section withBorder inheritPadding py="xs">
                 <ControlPanel winConditionMet={winConditionMet} />
-                <Grid
-                  nonogram={nonogram}
-                  rowHints={rowHints}
-                  columnHints={columnHints}
-                  winConditionMet={winConditionMet}
-                  onWinConditionMet={onWinConditionMet}
-                />
-              </div>
-              <Separator />
-              <Leaderboard nonogram_id={nonogram.id} />
-            </CardContent>
-          </>
-        ) : (
-          <></>
-        )}
-      </Card>
-    </div>
+              </Card.Section>
+              <Card.Section>
+                <Flex justify="center" p="md">
+                  <Grid
+                    nonogram={nonogram}
+                    rowHints={rowHints}
+                    columnHints={columnHints}
+                    winConditionMet={winConditionMet}
+                    onWinConditionMet={onWinConditionMet}
+                  />
+                </Flex>
+              </Card.Section>
+            </Card>
+          </Card.Section>
+          <Card.Section>
+            <Divider className="my-4" />
+            <Leaderboard nonogram_id={nonogram.id} />
+          </Card.Section>
+        </Card>  
+    </Flex>
   );
 }

@@ -1,30 +1,27 @@
-import { buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
+import Link from 'next/link';
+import { Button, Flex, Text, Title } from '@mantine/core';
 
 export default function Home() {
   return (
-    <div className="w-full h-[calc(100vh-48px)] flex flex-col justify-center items-center">
-      <div className="flex flex-col justify-center items-center text-center gap-8">
-        <h2 className="font-zen-dots uppercase text-6xl">Griddle</h2>
-        <p className="font-serif text-2xl">
-          Solve logic puzzles by filling in squares according to numbers at the
-          edges of the grid.
-        </p>
-        <div className="flex gap-3 flex-col">
-          <Link
-            className={buttonVariants({ variant: "default", size: "lg" })}
-            href="/nonogram/4"
-          >
-            Today&apos;s Puzzle
-          </Link>
-          <Link
-            className={buttonVariants({ variant: "secondary", size: "lg" })}
-            href="/packs"
-          >
+    <Flex mih="calc(100vh - 60px)" direction="column" align="center" justify="center">
+      <Title tt="uppercase" className="font-zen-dots" order={1} ta="center" size={60}>
+        Griddle
+      </Title>
+      <Text ta="center" mb={50} size="xl" c="dimmed" className="font-unna">
+        Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
+      </Text>
+      <Flex mb={50} justify="center" direction="column" gap={10}>
+        <Link href="/nonogram/4">
+          <Button variant="filled" w="100%" size="lg">
+            Today's Puzzle
+          </Button>
+        </Link>
+        <Link href="/packs">
+          <Button variant="outline" w="100%" size="lg">
             Packs
-          </Link>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Link>
+      </Flex>
+    </Flex>
   );
 }

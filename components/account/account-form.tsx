@@ -1,31 +1,14 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { type User } from "@supabase/supabase-js";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Button } from "@/components/ui/button";
-import Avatar from "@/components/account/avatar";
-import { useToast } from "@/hooks/use-toast";
+import { useCallback, useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type User } from '@supabase/supabase-js';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button, Card, Group, Stack, Text, TextInput } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import Avatar from '@/components/account/avatar';
+import { createClient } from '@/utils/supabase/client';
 
 const accountFormSchema = z.object({
   email: z.string().email(),
@@ -37,15 +20,20 @@ type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export default function AccountForm({ user }: { user: User }) {
   const supabase = createClient();
-  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
 
-  const form = useForm<AccountFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
-      email: user.email || "",
-      username: "",
-      avatar_url: "",
+      email: user.email ?? '',
+      username: '',
+      avatar_url: '',
     },
   });
 
@@ -54,130 +42,109 @@ export default function AccountForm({ user }: { user: User }) {
       setLoading(true);
 
       const { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, avatar_url`)
-        .eq("id", user?.id)
+        .from('profiles')
+        .select('username, avatar_url')
+        .eq('id', user.id)
         .single();
 
-      if (error && status !== 406) {
-        console.log(error);
-        throw error;
-      }
+      if (error && status !== 406) throw error;
 
       if (data) {
-        form.setValue("username", data.username ?? "");
-        form.setValue("avatar_url", data.avatar_url ?? "");
+        setValue('username', data.username ?? '');
+        setValue('avatar_url', data.avatar_url ?? '');
       }
-    } catch (error) {
-      alert("Error loading user data!");
+    } catch {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Failed to load profile data',
+      });
     } finally {
       setLoading(false);
     }
-  }, [user, supabase, form]);
+  }, [supabase, user.id, setValue]);
 
   useEffect(() => {
     getProfile();
-  }, [user, getProfile]);
+  }, [getProfile]);
 
-  async function onSubmit(values: z.infer<typeof accountFormSchema>) {
+  const onSubmit = async (values: AccountFormValues) => {
     try {
       setLoading(true);
 
-      const { error } = await supabase.from("profiles").upsert({
+      const { error } = await supabase.from('profiles').upsert({
         id: user.id,
         username: values.username,
         avatar_url: values.avatar_url,
         updated_at: new Date().toISOString(),
       });
+
       if (error) throw error;
-      toast({
-        title: "Profile Updated",
-        description: "Updated profile details may not appear immediately.",
+
+      notifications.show({
+        color: 'green',
+        title: 'Profile updated',
+        message: 'Changes may take a moment to appear',
       });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Something went wrong.",
-        description: "There was a problem updating your profile.",
+    } catch {
+      notifications.show({
+        color: 'red',
+        title: 'Update failed',
+        message: 'There was a problem updating your profile',
       });
-      alert("Error updating the data!");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Account</CardTitle>
-        <CardDescription>
-          Make changes to your account information here
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-2 w-full"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <Card withBorder radius="md" p="lg" maw={480} mx="auto">
+      <Stack gap="md">
+        <div>
+          <Text fw={600} size="lg">
+            Account
+          </Text>
+          <Text size="sm" c="dimmed">
+            Make changes to your account information
+          </Text>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack gap="sm">
+            <TextInput label="Email" disabled {...register('email')} />
+
+            <TextInput
+              label="Username"
+              {...register('username')}
+              error={errors.username?.message}
+              description="This name will appear publicly"
             />
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The name that will be associated with any content you upload
-                    to the site.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="avatar_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Avatar</FormLabel>
-                  <Avatar
-                    uid={user?.id ?? null}
-                    url={form.watch("avatar_url") ?? ""}
-                    size={150}
-                    onUpload={(url) => {
-                      form.setValue("avatar_url", url);
-                    }}
-                  />
-                  <FormDescription>
-                    This image will appear alongside your username around the
-                    site.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" disabled={loading}>
-              {loading ? "Loading ..." : "Update Profile"}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
+
+            <div>
+              <Text size="sm" fw={500} mb={4}>
+                Avatar
+              </Text>
+
+              <Avatar
+                uid={user.id}
+                url={watch('avatar_url') ?? ''}
+                size={150}
+                onUpload={(url) => setValue('avatar_url', url)}
+              />
+
+              <Text size="xs" c="dimmed" mt={4}>
+                This image will appear alongside your username
+              </Text>
+            </div>
+
+            <Group justify="flex-end" mt="md">
+              <Button type="submit" loading={loading}>
+                Update profile
+              </Button>
+            </Group>
+          </Stack>
+        </form>
+      </Stack>
     </Card>
   );
 }

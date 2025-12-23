@@ -1,81 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: 14 100% 95%;
-  --foreground: 14 5% 0%;
-  --card: 14 50% 90%;
-  --card-foreground: 14 5% 10%;
-  --popover: 14 100% 95%;
-  --popover-foreground: 14 100% 0%;
-  --primary: 14 49% 47%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 14 30% 70%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: -24 30% 85%;
-  --muted-foreground: 14 5% 35%;
-  --accent: -24 30% 80%;
-  --accent-foreground: 14 5% 10%;
-  --destructive: 0 100% 30%;
-  --destructive-foreground: 14 5% 90%;
-  --border: 14 30% 50%;
-  --input: 14 30% 18%;
-  --ring: 14 49% 47%;
-  --radius: 0.5rem;
+.font-zen-dots {
+  font-family: 'Zen Dots';
 }
 
-.dark {
-  --background: 14 50% 5%;
-  --foreground: 14 5% 90%;
-  --card: 14 50% 0%;
-  --card-foreground: 14 5% 90%;
-  --popover: 14 50% 5%;
-  --popover-foreground: 14 5% 90%;
-  --primary: 14 49% 47%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 14 30% 10%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: -24 30% 15%;
-  --muted-foreground: 14 5% 60%;
-  --accent: -24 30% 15%;
-  --accent-foreground: 14 5% 90%;
-  --destructive: 0 100% 30%;
-  --destructive-foreground: 14 5% 90%;
-  --border: 14 30% 18%;
-  --input: 14 30% 18%;
-  --ring: 14 49% 47%;
-  --radius: 0.5rem;
+.font-unna {
+  font-family: 'Unna';
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  :root {
-    --sidebar-background: -24 30% 85%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+.font-inter {
+  font-family: 'Inter';
 }

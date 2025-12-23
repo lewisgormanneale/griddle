@@ -1,68 +1,75 @@
-import type { Metadata } from "next";
-import "@/styles/globals.css";
-import { Inter, Unna, Zen_Dots } from "next/font/google";
-import { cn } from "@/utils/utils";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
-import { cookies } from "next/headers";
-import { AppSidebarInset } from "@/components/app-sidebar/app-sidebar-inset";
-import { Toaster } from "@/components/ui/toaster";
+'use client';
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import '../styles/globals.css';
 
-const zenDots = Zen_Dots({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-zen-dots",
-});
+import {
+  AppShell,
+  Box,
+  Burger,
+  ColorSchemeScript,
+  Flex,
+  Group,
+  mantineHtmlProps,
+  MantineProvider,
+  Text,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Notifications } from '@mantine/notifications';
+import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
+import { Navbar } from '@/components/navbar/navbar';
+import { theme } from '../styles/theme';
+import classes from './layout.module.css';
 
-const unna = Unna({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-unna",
-});
-
-export const metadata: Metadata = {
-  title: "Griddle",
-  description: "Solve and generate nonogram puzzles online",
-};
-
-export default async function RootLayout(
-  {
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>
-) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+export default function RootLayout({ children }: { children: any }) {
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-serif antialiased",
-          inter.variable,
-          zenDots.variable,
-          unna.variable,
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <AppSidebarInset>{children}</AppSidebarInset>
-          </SidebarProvider>
-          <Toaster />
-        </ThemeProvider>
+    <html lang="en" {...mantineHtmlProps}>
+      <head>
+        <title>Griddle</title>
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        />
+        <ColorSchemeScript />
+      </head>
+      <body>
+        <MantineProvider theme={theme}>
+          <Notifications />
+          <AppShell
+            header={{ height: 60 }}
+            navbar={{
+              width: 300,
+              breakpoint: 'sm',
+              collapsed: { mobile: !opened },
+            }}
+          >
+            <AppShell.Header>
+              <Flex justify="space-between" align="center" h="100%">
+                <Group align="center" h="100%" px="sm" gap="sm">
+                  <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                  <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots">
+                    Griddle
+                  </Text>
+                </Group>
+                <Group align="center" h="100%" px="sm" gap="sm">
+                  <ColorSchemeToggle />
+                </Group>
+              </Flex>
+            </AppShell.Header>
+            <AppShell.Navbar>
+              <Navbar close={close} />
+            </AppShell.Navbar>
+            <AppShell.Main>
+              <Box p="md" className={classes.page}>
+                {children}
+              </Box>
+            </AppShell.Main>
+          </AppShell>
+        </MantineProvider>
       </body>
     </html>
   );

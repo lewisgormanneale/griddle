@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { formatTime } from "@/utils/utils";
+import { useEffect } from 'react';
+import { Text } from '@mantine/core';
+import { formatTime } from '@/utils/utils';
+import classes from './timer.module.css';
 
 export function Timer({
   time,
@@ -27,10 +29,8 @@ export function Timer({
   }, [timerActive, setTime]);
 
   return (
-    <div
-      className={`text-center font-serif text-2xl font-bold min-w-28  select-none ${!timerActive ? "text-green-200" : "text-white"} `}
-    >
+    <Text className={classes.timer} data-active={timerActive}>
       {formatTime(time)}
-    </div>
+    </Text>
   );
 }

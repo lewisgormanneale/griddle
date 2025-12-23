@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
-
-import { createClient } from "@/utils/supabase/server";
-import AccountForm from "@/components/account/account-form";
+import { redirect } from 'next/navigation';
+import AccountForm from '@/components/account/account-form';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -12,12 +11,8 @@ export default async function AccountPage() {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    redirect("/auth/login");
+    redirect('/auth/login');
   }
 
-  return (
-    <div className="h-screen w-full flex flex-col items-center p-4 gap-4">
-      <AccountForm user={user} />
-    </div>
-  );
+  return <AccountForm user={user} />;
 }

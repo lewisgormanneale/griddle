@@ -1,73 +1,76 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Tables } from "@/types/database.types";
-import { useEffect, useState } from "react";
-import { getNonogramsForPack } from "@/utils/supabase/queries";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import NonogramGridPreview from "./nonogram-grid-preview";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+'use client';
 
-const Pack = ({ pack }: { pack: Tables<"packs"> }) => {
-  const [nonograms, setNonograms] = useState<Tables<"nonograms">[]>([]);
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Button, Card, Center, Loader, SimpleGrid, Text, Title } from '@mantine/core';
+import { Tables } from '@/types/database.types';
+import { getNonogramsForPack } from '@/utils/supabase/queries';
+import NonogramGridPreview from './nonogram-grid-preview';
+import classes from './pack.module.css';
+
+const Pack = ({ pack }: { pack: Tables<'packs'> }) => {
+  const [nonograms, setNonograms] = useState<Tables<'nonograms'>[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getNonogramsForPack(pack.id).then((data) => setNonograms(data));
-  }, [pack]);
+    setLoading(true);
+    getNonogramsForPack(pack.id)
+      .then((data) => setNonograms(data))
+      .finally(() => setLoading(false));
+  }, [pack.id]);
+
   return (
-    <Card className="p-3 max-w-screen-md w-full" key={pack.id}>
-      <CardHeader>
-        <CardTitle>{pack.name}</CardTitle>
-        <CardDescription>{pack.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Carousel className="mx-6">
-          <CarouselContent>
-            {nonograms.map((nonogram: any) => (
-              <CarouselItem className="basis-1/3" key={nonogram.id}>
-                <Card
-                  className="bg-background h-full flex flex-col justify-between"
-                  key={nonogram.id}
+    <Card withBorder radius="md">
+      <Card.Section withBorder className={classes.header}>
+        <Title order={3}>{pack.name}</Title>
+      </Card.Section>
+
+      {pack.description && (
+        <Card.Section className={classes.description}>
+          <Text size="sm" color="dimmed">
+            {pack.description}
+          </Text>
+        </Card.Section>
+      )}
+
+      <Card.Section className={classes.content}>
+        {loading ? (
+          <Center py="md">
+            <Loader size="sm" />
+          </Center>
+        ) : nonograms.length > 0 ? (
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+            {nonograms.map((nonogram) => (
+              <Card key={nonogram.id} withBorder radius="md" className={classes.nonogramCard}>
+                <div className={classes.nonogramHeader}>
+                  <Text fw={500}>{nonogram.title}</Text>
+                  <Text size="xs" color="dimmed">
+                    {nonogram.height} × {nonogram.width}
+                  </Text>
+                </div>
+
+                <div className={classes.preview}>
+                  <NonogramGridPreview rows={nonogram.height} columns={nonogram.width} />
+                </div>
+
+                <Button
+                  component={Link}
+                  href={`/nonogram/${nonogram.id}`}
+                  variant="light"
+                  fullWidth
+                  mt="sm"
                 >
-                  <CardHeader className="justify-center p-6 pb-0">
-                    <CardTitle>{nonogram.title}</CardTitle>
-                    <CardDescription>
-                      {nonogram.height} x {nonogram.width}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col items-center p-3">
-                    <NonogramGridPreview
-                      rows={nonogram.height}
-                      columns={nonogram.width}
-                    ></NonogramGridPreview>
-                  </CardContent>
-                  <CardFooter className="justify-end">
-                    <Link
-                      className={buttonVariants({ variant: "outline" })}
-                      href={`/nonogram/${nonogram.id}`}
-                    >
-                      Play
-                    </Link>
-                  </CardFooter>
-                </Card>
-              </CarouselItem>
+                  Play
+                </Button>
+              </Card>
             ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </CardContent>
+          </SimpleGrid>
+        ) : (
+          <Text size="sm" color="dimmed" ta="center">
+            No puzzles in this pack yet.
+          </Text>
+        )}
+      </Card.Section>
     </Card>
   );
 };
