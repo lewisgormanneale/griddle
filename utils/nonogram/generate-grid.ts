@@ -5,7 +5,7 @@ export const generateGrid = (
   nonogram: Tables<"nonograms">,
   rowHints: number[][],
   columnHints: number[][],
-  options?: { useSolution?: boolean },
+  options?: { useSolution?: boolean; maxRowHints?: number; maxColumnHints?: number },
 ): GridItem[] => {
   const grid: GridItem[] = [];
   const { width, height } = nonogram;
@@ -14,8 +14,10 @@ export const generateGrid = (
     ? nonogram.solution.split("").map((value) => Number(value))
     : [];
 
-  const maxRowHints = Math.max(...rowHints.map((hint) => hint.length));
-  const maxColumnHints = Math.max(...columnHints.map((hint) => hint.length));
+  const maxRowHints =
+    options?.maxRowHints ?? Math.max(...rowHints.map((hint) => hint.length));
+  const maxColumnHints =
+    options?.maxColumnHints ?? Math.max(...columnHints.map((hint) => hint.length));
 
   for (let r = 0; r < height + maxColumnHints; r++) {
     for (let c = 0; c < width + maxRowHints; c++) {

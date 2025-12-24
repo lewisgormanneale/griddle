@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mantine/core';
 import { Cell } from '@/components/nonogram/grid/cell';
 import { Tables } from '@/types/database.types';
@@ -29,18 +29,28 @@ export function Grid({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragActionState, setDragActionState] = useState<CellState | null>(null);
   const hasNotifiedRef = useRef(false);
+  const suppressNotifyRef = useRef(false);
+
+  const handleMouseUp = useCallback(() => {
+    setIsMouseDown(false);
+    setDragActionState(null);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp);
     return () => window.removeEventListener('mouseup', handleMouseUp);
-  }, []);
+  }, [handleMouseUp]);
 
   useEffect(() => {
     if (!nonogram || rowHints.length === 0 || columnHints.length === 0) {
       return;
     }
-    setMaxRowHints(Math.max(...rowHints.map((hint) => hint.length)));
-    setMaxColumnHints(Math.max(...columnHints.map((hint) => hint.length)));
+    const dynamicMaxRow = Math.max(...rowHints.map((hint) => hint.length));
+    const dynamicMaxColumn = Math.max(...columnHints.map((hint) => hint.length));
+    const fixedMaxRow = Math.ceil(nonogram.width / 2);
+    const fixedMaxColumn = Math.ceil(nonogram.height / 2);
+    setMaxRowHints(mode === 'edit' ? fixedMaxRow : dynamicMaxRow);
+    setMaxColumnHints(mode === 'edit' ? fixedMaxColumn : dynamicMaxColumn);
   }, [nonogram, rowHints, columnHints, mode]);
 
   useEffect(() => {
@@ -48,11 +58,20 @@ export function Grid({
       return;
     }
 
-    setGrid(generateGrid(nonogram, rowHints, columnHints, { useSolution: mode === 'edit' }));
-  }, [nonogram, rowHints, columnHints, mode]);
+    suppressNotifyRef.current = true;
+    setGrid(
+      generateGrid(nonogram, rowHints, columnHints, {
+        useSolution: mode === 'edit',
+        maxRowHints,
+        maxColumnHints,
+      })
+    );
+  }, [nonogram, rowHints, columnHints, mode, maxRowHints, maxColumnHints]);
 
   useEffect(() => {
-    if (mode === 'edit') return;
+    if (mode === 'edit') {
+      return;
+    }
 
     const validateWinCondition = (currentGrid: GridItem[]) => {
       const playableCells = currentGrid.filter((item) => item.type === GridItemType.Cell);
@@ -66,9 +85,8 @@ export function Grid({
         const solutionValue = solutionArray[index];
         if (solutionValue === 1) {
           return cell.cellState === CellState.Filled;
-        } else {
-          return cell.cellState === CellState.Blank || cell.cellState === CellState.CrossedOut;
         }
+        return cell.cellState === CellState.Blank || cell.cellState === CellState.CrossedOut;
       });
 
       if (isWin) {
@@ -83,9 +101,15 @@ export function Grid({
   }, [grid, nonogram.height, nonogram.width, winConditionMet, mode, onWinConditionMet]);
 
   useEffect(() => {
-    if (!onGridChange || mode !== 'edit') return;
+    if (!onGridChange || mode !== 'edit') {
+      return;
+    }
     if (!hasNotifiedRef.current) {
       hasNotifiedRef.current = true;
+      return;
+    }
+    if (suppressNotifyRef.current) {
+      suppressNotifyRef.current = false;
       return;
     }
     onGridChange(grid);
@@ -113,11 +137,6 @@ export function Grid({
     if (isMouseDown && dragActionState !== null) {
       updateCellState(index, dragActionState);
     }
-  };
-
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-    setDragActionState(null);
   };
 
   const updateCellState = (index: number, newFillState: CellState) => {

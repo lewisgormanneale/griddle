@@ -21,11 +21,12 @@ import {
   Title,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconCheck, IconInfoCircle } from '@tabler/icons-react';
+import { IconInfoCircle } from '@tabler/icons-react';
 import { Grid } from '@/components/nonogram/grid/grid';
 import { Tables } from '@/types/database.types';
 import { CellState, GridItem, GridItemType } from '@/types/types';
 import { createClient } from '@/utils/supabase/client';
+import { isLogicSolvable } from '@/utils/nonogram/logic-solver';
 import {
   createNonogram,
   createNonogramHints,
@@ -102,6 +103,7 @@ export default function CreatePage() {
   const [packDescription, setPackDescription] = useState('');
   const [selectedPackId, setSelectedPackId] = useState<string | null>(null);
   const [creatingPack, setCreatingPack] = useState(false);
+  const [showCreatePack, setShowCreatePack] = useState(false);
 
   const [title, setTitle] = useState('');
   const [width, setWidth] = useState(10);
@@ -111,6 +113,7 @@ export default function CreatePage() {
   const [testSolved, setTestSolved] = useState(false);
   const [testRunId, setTestRunId] = useState(0);
   const [publishing, setPublishing] = useState(false);
+  const [logicStatus, setLogicStatus] = useState<'unknown' | 'pass' | 'fail'>('unknown');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -148,6 +151,7 @@ export default function CreatePage() {
   useEffect(() => {
     setTestSolved(false);
     setTestRunId((value) => value + 1);
+    setLogicStatus('unknown');
   }, [solution, width, height]);
 
   const { rows, columns } = useMemo(
@@ -253,11 +257,14 @@ export default function CreatePage() {
       return;
     }
 
-    if (!testSolved) {
+    const logicSolvable =
+      logicStatus === 'pass' ? true : isLogicSolvable({ rows, columns, width, height });
+    setLogicStatus(logicSolvable ? 'pass' : 'fail');
+    if (!logicSolvable) {
       notifications.show({
         color: 'red',
-        title: 'Test required',
-        message: 'Solve the puzzle in Test mode before publishing.',
+        title: 'Logic check failed',
+        message: 'Puzzle is not solvable using basic logic alone.',
       });
       return;
     }
@@ -339,12 +346,6 @@ export default function CreatePage() {
           <Title order={1}>Create</Title>
           <Text c="dimmed">Build a pack, craft a puzzle, then test and publish.</Text>
         </div>
-        <Badge
-          color={testSolved ? 'green' : 'gray'}
-          leftSection={testSolved ? <IconCheck size={12} /> : undefined}
-        >
-          {testSolved ? 'Test passed' : 'Not tested'}
-        </Badge>
       </Group>
 
       <Card withBorder radius="md" p="lg">
@@ -370,26 +371,44 @@ export default function CreatePage() {
             disabled={packsLoading}
           />
 
-          <Divider label="Create new pack" labelPosition="center" />
+          {packs.length === 0 && !packsLoading && (
+            <Text size="sm" c="dimmed">
+              You do not have any packs yet. Create a pack to publish puzzles.
+            </Text>
+          )}
 
-          <TextInput
-            label="Pack name"
-            placeholder="Nature escapes"
-            value={packName}
-            onChange={(event) => setPackName(event.currentTarget.value)}
-          />
-          <Textarea
-            label="Description"
-            placeholder="Short theme or story for the pack"
-            minRows={2}
-            value={packDescription}
-            onChange={(event) => setPackDescription(event.currentTarget.value)}
-          />
-          <Group justify="flex-end">
-            <Button variant="light" onClick={handleCreatePack} loading={creatingPack}>
-              Create pack
+          <Group justify="space-between" align="center">
+            <Button
+              variant={showCreatePack ? 'light' : 'outline'}
+              onClick={() => setShowCreatePack((value) => !value)}
+            >
+              {showCreatePack ? 'Hide pack form' : 'Create new pack'}
             </Button>
           </Group>
+
+          {showCreatePack && (
+            <>
+              <Divider label="New pack details" labelPosition="center" />
+              <TextInput
+                label="Pack name"
+                placeholder="Nature escapes"
+                value={packName}
+                onChange={(event) => setPackName(event.currentTarget.value)}
+              />
+              <Textarea
+                label="Description"
+                placeholder="Short theme or story for the pack"
+                minRows={2}
+                value={packDescription}
+                onChange={(event) => setPackDescription(event.currentTarget.value)}
+              />
+              <Group justify="flex-end">
+                <Button variant="light" onClick={handleCreatePack} loading={creatingPack}>
+                  Create pack
+                </Button>
+              </Group>
+            </>
+          )}
         </Stack>
       </Card>
 
@@ -435,6 +454,20 @@ export default function CreatePage() {
               <Text size="sm" c="dimmed">
                 Draw your solution. Hints update as you go.
               </Text>
+              <Group justify="space-between" align="center">
+                <Text size="sm" c="dimmed">
+                  Run a logic check before publishing.
+                </Text>
+                <Button
+                  variant="light"
+                  onClick={() => {
+                    const logicSolvable = isLogicSolvable({ rows, columns, width, height });
+                    setLogicStatus(logicSolvable ? 'pass' : 'fail');
+                  }}
+                >
+                  Run logic check
+                </Button>
+              </Group>
               <Group justify="center">
                 <Grid
                   nonogram={nonogramDraft}
@@ -453,10 +486,11 @@ export default function CreatePage() {
             <Stack gap="md">
               <Alert
                 icon={<IconInfoCircle size={16} />}
-                title="Solve to publish"
+                title="Optional test run"
                 color="gray"
               >
-                Solve the puzzle using the generated hints. Once completed, publishing is enabled.
+                Try the puzzle if you want a feel for how difficult it is. Publishing depends on
+                the logic check instead.
               </Alert>
               <Group justify="center" pos="relative">
                 <LoadingOverlay visible={rows.length === 0 || columns.length === 0} />
@@ -474,7 +508,14 @@ export default function CreatePage() {
         </Tabs>
       </Card>
 
-      <Group justify="flex-end">
+      <Group justify="space-between" align="center">
+        <Badge color={logicStatus === 'pass' ? 'green' : logicStatus === 'fail' ? 'red' : 'gray'}>
+          {logicStatus === 'pass'
+            ? 'Logic check passed'
+            : logicStatus === 'fail'
+              ? 'Logic check failed'
+              : 'Logic check not run'}
+        </Badge>
         <Button onClick={handlePublish} loading={publishing}>
           Publish
         </Button>
