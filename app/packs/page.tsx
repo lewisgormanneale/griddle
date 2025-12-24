@@ -3,11 +3,10 @@
 import { useEffect, useState } from 'react';
 import { Center, Loader, Pagination, Stack, Title } from '@mantine/core';
 import Pack from '@/components/packs/pack';
-import { Tables } from '@/types/database.types';
-import { getPacks } from '@/utils/supabase/queries';
+import { PackWithProfile, getPacks } from '@/utils/supabase/queries';
 
 export default function PacksPage() {
-  const [packs, setPacks] = useState<Tables<'packs'>[]>([]);
+  const [packs, setPacks] = useState<PackWithProfile[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);

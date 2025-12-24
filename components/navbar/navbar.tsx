@@ -2,14 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconHomeFilled, IconLibraryFilled, IconPuzzleFilled } from '@tabler/icons-react';
+import {
+  IconHomeFilled,
+  IconLibraryFilled,
+  IconPuzzleFilled,
+  IconSquarePlus,
+} from '@tabler/icons-react';
 import { NavbarUser } from './navbar-user';
 import classes from './navbar.module.css';
 
 const navbarItems = [
   { link: '/', label: 'Home', icon: IconHomeFilled },
-  { link: '/nonogram/4', label: "Today's Puzzle", icon: IconPuzzleFilled },
+  { link: '/nonogram/1', label: "Today's Puzzle", icon: IconPuzzleFilled },
   { link: '/packs', label: 'Packs', icon: IconLibraryFilled },
+  { link: '/create', label: 'Create', icon: IconSquarePlus },
 ];
 
 export function Navbar({ close }: { close: () => void }) {

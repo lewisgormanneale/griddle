@@ -5,6 +5,7 @@ import {
   getNonogramHints,
   getUserCompletionOfNonogram,
   saveNonogramCompletion,
+  type NonogramWithProfile,
 } from "@/utils/supabase/queries";
 import { Tables } from "@/types/database.types";
 import { useEffect, useState, use } from "react";
@@ -19,7 +20,7 @@ export default function NonogramPage(props: {
 }) {
   const params = use(props.params);
   const { id } = params;
-  const [nonogram, setNonogram] = useState<Tables<"nonograms">>();
+  const [nonogram, setNonogram] = useState<NonogramWithProfile>();
   const [rowHints, setRowHints] = useState<number[][]>([]);
   const [columnHints, setColumnHints] = useState<number[][]>([]);
   const [winConditionMet, setWinConditionMet] = useState(false);
@@ -97,8 +98,8 @@ export default function NonogramPage(props: {
             <Group justify="space-between">
               <Text c="dimmed" size="sm">
                 <span>
-                  {nonogram.height} x {nonogram.width} | {nonogram.author} |{" "}
-                  {nonogram.license} | {nonogram.copyright}
+                  {nonogram.height} x {nonogram.width}
+                  {nonogram.profiles?.username ? ` | ${nonogram.profiles.username}` : ""}
                 </span>
               </Text>
             </Group>

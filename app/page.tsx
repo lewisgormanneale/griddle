@@ -11,7 +11,7 @@ export default function Home() {
         Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
       </Text>
       <Flex mb={50} justify="center" direction="column" gap={10}>
-        <Link href="/nonogram/4">
+        <Link href="/nonogram/1">
           <Button variant="filled" w="100%" size="lg">
             Today's Puzzle
           </Button>
