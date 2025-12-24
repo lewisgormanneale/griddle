@@ -118,10 +118,10 @@ export function Grid({
 
         const borderStyle = isCell
           ? {
-              borderTop: item.rowIndex! % 5 === 0 ? '2px solid black' : '1px solid black',
-              borderLeft: item.colIndex! % 5 === 0 ? '2px solid black' : '1px solid black',
-              borderBottom: isLastRow ? '2px solid black' : '1px solid black',
-              borderRight: isLastColumn ? '2px solid black' : '1px solid black',
+              borderTop: item.rowIndex! % 5 === 0 ? '3px solid black' : '1px solid black',
+              borderLeft: item.colIndex! % 5 === 0 ? '3px solid black' : '1px solid black',
+              borderBottom: isLastRow ? '3px solid black' : '1px solid black',
+              borderRight: isLastColumn ? '3px solid black' : '1px solid black',
             }
           : undefined;
 
