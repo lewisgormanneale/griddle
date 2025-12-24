@@ -31,8 +31,7 @@ export function Navbar({ close }: { close: () => void }) {
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>{links}</div>
-
-      <div className={classes.footer}>
+      <div className={classes.navbarFooter}>
         <NavbarUser close={close} />
       </div>
     </nav>
