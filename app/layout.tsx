@@ -1,30 +1,12 @@
-'use client';
-
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '../styles/globals.css';
 
-import {
-  AppShell,
-  Box,
-  Burger,
-  ColorSchemeScript,
-  Flex,
-  Group,
-  mantineHtmlProps,
-  MantineProvider,
-  Text,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { Notifications } from '@mantine/notifications';
-import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
-import { Navbar } from '@/components/navbar/navbar';
-import { theme } from '../styles/theme';
-import classes from './layout.module.css';
+import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+import { AppShellLayout } from '@/components/layout/app-shell-layout';
+import { Providers } from './providers';
 
-export default function RootLayout({ children }: { children: any }) {
-  const [opened, { toggle, close }] = useDisclosure();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -37,39 +19,9 @@ export default function RootLayout({ children }: { children: any }) {
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>
-          <Notifications />
-          <AppShell
-            header={{ height: 60 }}
-            navbar={{
-              width: 300,
-              breakpoint: 'sm',
-              collapsed: { mobile: !opened },
-            }}
-          >
-            <AppShell.Header>
-              <Flex justify="space-between" align="center" h="100%">
-                <Group align="center" h="100%" px="sm" gap="sm">
-                  <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                  <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots">
-                    Griddle
-                  </Text>
-                </Group>
-                <Group align="center" h="100%" px="sm" gap="sm">
-                  <ColorSchemeToggle />
-                </Group>
-              </Flex>
-            </AppShell.Header>
-            <AppShell.Navbar>
-              <Navbar close={close} />
-            </AppShell.Navbar>
-            <AppShell.Main>
-              <Box p="md" className={classes.page}>
-                {children}
-              </Box>
-            </AppShell.Main>
-          </AppShell>
-        </MantineProvider>
+        <Providers>
+          <AppShellLayout>{children}</AppShellLayout>
+        </Providers>
       </body>
     </html>
   );
