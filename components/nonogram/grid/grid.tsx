@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mantine/core';
 import { Cell } from '@/components/nonogram/grid/cell';
 import { Tables } from '@/types/database.types';
@@ -10,33 +10,69 @@ export function Grid({
   nonogram,
   rowHints,
   columnHints,
+  mode = 'play',
   winConditionMet,
   onWinConditionMet,
+  onGridChange,
 }: {
   nonogram: Tables<'nonograms'>;
   rowHints: number[][];
   columnHints: number[][];
+  mode?: 'play' | 'edit';
   winConditionMet: boolean;
-  onWinConditionMet: Function;
+  onWinConditionMet: () => void;
+  onGridChange?: (grid: GridItem[]) => void;
 }) {
   const [grid, setGrid] = useState<GridItem[]>([]);
   const [maxRowHints, setMaxRowHints] = useState(0);
+  const [maxColumnHints, setMaxColumnHints] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [dragActionState, setDragActionState] = useState<CellState | null>(null);
+  const hasNotifiedRef = useRef(false);
+  const suppressNotifyRef = useRef(false);
+
+  const handleMouseUp = useCallback(() => {
+    setIsMouseDown(false);
+    setDragActionState(null);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp);
     return () => window.removeEventListener('mouseup', handleMouseUp);
-  }, []);
+  }, [handleMouseUp]);
 
   useEffect(() => {
-    if (nonogram && rowHints.length > 0 && columnHints.length > 0) {
-      setMaxRowHints(Math.max(...rowHints.map((hint) => hint.length)));
-      setGrid(generateGrid(nonogram, rowHints, columnHints));
+    if (!nonogram || rowHints.length === 0 || columnHints.length === 0) {
+      return;
     }
-  }, [nonogram, rowHints, columnHints]);
+    const dynamicMaxRow = Math.max(...rowHints.map((hint) => hint.length));
+    const dynamicMaxColumn = Math.max(...columnHints.map((hint) => hint.length));
+    const fixedMaxRow = Math.ceil(nonogram.width / 2);
+    const fixedMaxColumn = Math.ceil(nonogram.height / 2);
+    setMaxRowHints(mode === 'edit' ? fixedMaxRow : dynamicMaxRow);
+    setMaxColumnHints(mode === 'edit' ? fixedMaxColumn : dynamicMaxColumn);
+  }, [nonogram, rowHints, columnHints, mode]);
 
   useEffect(() => {
+    if (!nonogram || rowHints.length === 0 || columnHints.length === 0) {
+      return;
+    }
+
+    suppressNotifyRef.current = true;
+    setGrid(
+      generateGrid(nonogram, rowHints, columnHints, {
+        useSolution: mode === 'edit',
+        maxRowHints,
+        maxColumnHints,
+      })
+    );
+  }, [nonogram, rowHints, columnHints, mode, maxRowHints, maxColumnHints]);
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      return;
+    }
+
     const validateWinCondition = (currentGrid: GridItem[]) => {
       const playableCells = currentGrid.filter((item) => item.type === GridItemType.Cell);
 
@@ -49,9 +85,8 @@ export function Grid({
         const solutionValue = solutionArray[index];
         if (solutionValue === 1) {
           return cell.cellState === CellState.Filled;
-        } else {
-          return cell.cellState === CellState.Blank || cell.cellState === CellState.CrossedOut;
         }
+        return cell.cellState === CellState.Blank || cell.cellState === CellState.CrossedOut;
       });
 
       if (isWin) {
@@ -63,7 +98,22 @@ export function Grid({
     if (!winConditionMet && playableCells.length === nonogram.width * nonogram.height) {
       validateWinCondition(grid);
     }
-  }, [grid, nonogram.height, nonogram.width, winConditionMet]);
+  }, [grid, nonogram.height, nonogram.width, winConditionMet, mode, onWinConditionMet]);
+
+  useEffect(() => {
+    if (!onGridChange || mode !== 'edit') {
+      return;
+    }
+    if (!hasNotifiedRef.current) {
+      hasNotifiedRef.current = true;
+      return;
+    }
+    if (suppressNotifyRef.current) {
+      suppressNotifyRef.current = false;
+      return;
+    }
+    onGridChange(grid);
+  }, [grid, mode, onGridChange]);
 
   const handleMouseDown = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
@@ -72,7 +122,9 @@ export function Grid({
     const currentCellState = grid[index].cellState;
     let newFillState: CellState;
 
-    if (event.button === 2) {
+    if (mode === 'edit') {
+      newFillState = currentCellState === CellState.Filled ? CellState.Blank : CellState.Filled;
+    } else if (event.button === 2) {
       newFillState = currentCellState === CellState.Blank ? CellState.CrossedOut : CellState.Blank;
     } else {
       newFillState = currentCellState === CellState.Blank ? CellState.Filled : CellState.Blank;
@@ -85,11 +137,6 @@ export function Grid({
     if (isMouseDown && dragActionState !== null) {
       updateCellState(index, dragActionState);
     }
-  };
-
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-    setDragActionState(null);
   };
 
   const updateCellState = (index: number, newFillState: CellState) => {
@@ -106,22 +153,30 @@ export function Grid({
     <Box
       className={classes.grid}
       style={{
-        gridTemplateColumns: `repeat(${maxRowHints}, auto) repeat(${nonogram.width}, 1.5rem)`,
+        gridTemplateColumns:
+          maxRowHints > 0
+            ? `repeat(${maxRowHints}, auto) repeat(${nonogram.width}, 1.5rem)`
+            : `repeat(${nonogram.width}, 1.5rem)`,
       }}
       onMouseDown={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
     >
       {grid.map((item, index) => {
+        const columnCount = nonogram.width + maxRowHints;
+        const gridRow = Math.floor(index / columnCount);
+        const gridColumn = index % columnCount;
+        const cellRowIndex = item.rowIndex ?? gridRow - maxColumnHints;
+        const cellColIndex = item.colIndex ?? gridColumn - maxRowHints;
         const isCell = item.type === GridItemType.Cell;
-        const isLastRow = item.rowIndex === nonogram.height - 1;
-        const isLastColumn = item.colIndex === nonogram.width - 1;
+        const isLastRow = cellRowIndex === nonogram.height - 1;
+        const isLastColumn = cellColIndex === nonogram.width - 1;
 
         const borderStyle = isCell
           ? {
-              borderTop: item.rowIndex! % 5 === 0 ? '2px solid black' : '1px solid black',
-              borderLeft: item.colIndex! % 5 === 0 ? '2px solid black' : '1px solid black',
-              borderBottom: isLastRow ? '2px solid black' : '1px solid black',
-              borderRight: isLastColumn ? '2px solid black' : '1px solid black',
+              borderTop: cellRowIndex % 5 === 0 ? '3px solid black' : '1px solid black',
+              borderLeft: cellColIndex % 5 === 0 ? '3px solid black' : '1px solid black',
+              borderBottom: isLastRow ? '3px solid black' : '1px solid black',
+              borderRight: isLastColumn ? '3px solid black' : '1px solid black',
             }
           : undefined;
 

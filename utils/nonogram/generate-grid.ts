@@ -5,12 +5,19 @@ export const generateGrid = (
   nonogram: Tables<"nonograms">,
   rowHints: number[][],
   columnHints: number[][],
+  options?: { useSolution?: boolean; maxRowHints?: number; maxColumnHints?: number },
 ): GridItem[] => {
   const grid: GridItem[] = [];
   const { width, height } = nonogram;
+  const useSolution = options?.useSolution ?? false;
+  const solutionArray = useSolution
+    ? nonogram.solution.split("").map((value) => Number(value))
+    : [];
 
-  const maxRowHints = Math.max(...rowHints.map((hint) => hint.length));
-  const maxColumnHints = Math.max(...columnHints.map((hint) => hint.length));
+  const maxRowHints =
+    options?.maxRowHints ?? Math.max(...rowHints.map((hint) => hint.length));
+  const maxColumnHints =
+    options?.maxColumnHints ?? Math.max(...columnHints.map((hint) => hint.length));
 
   for (let r = 0; r < height + maxColumnHints; r++) {
     for (let c = 0; c < width + maxRowHints; c++) {
@@ -45,12 +52,14 @@ export const generateGrid = (
       } else {
         const rowIndex = r - maxColumnHints;
         const columnIndex = c - maxRowHints;
+        const solutionIndex = rowIndex * width + columnIndex;
+        const isFilled = useSolution && solutionArray[solutionIndex] === 1;
 
         grid.push({
           type: GridItemType.Cell,
           rowIndex,
           colIndex: columnIndex,
-          cellState: CellState.Blank,
+          cellState: isFilled ? CellState.Filled : CellState.Blank,
         });
       }
     }

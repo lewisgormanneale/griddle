@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Button, Card, Center, Loader, SimpleGrid, Text, Title } from '@mantine/core';
-import { Tables } from '@/types/database.types';
-import { getNonogramsForPack } from '@/utils/supabase/queries';
+import { Badge, Button, Card, Center, Group, Loader, SimpleGrid, Text, Title } from '@mantine/core';
+import { getNonogramsForPack, NonogramWithProfile, PackWithProfile } from '@/utils/supabase/queries';
 import NonogramGridPreview from './nonogram-grid-preview';
 import classes from './pack.module.css';
 
-const Pack = ({ pack }: { pack: Tables<'packs'> }) => {
-  const [nonograms, setNonograms] = useState<Tables<'nonograms'>[]>([]);
+const Pack = ({ pack }: { pack: PackWithProfile }) => {
+  const [nonograms, setNonograms] = useState<NonogramWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const ownerName = pack.profiles?.username;
 
   useEffect(() => {
     setLoading(true);
@@ -22,7 +22,10 @@ const Pack = ({ pack }: { pack: Tables<'packs'> }) => {
   return (
     <Card withBorder radius="md">
       <Card.Section withBorder className={classes.header}>
-        <Title order={3}>{pack.name}</Title>
+        <Group justify="space-between" align="center" gap="sm">
+          <Title order={3}>{pack.name}</Title>
+          {ownerName && <Badge variant="light">by {ownerName}</Badge>}
+        </Group>
       </Card.Section>
 
       {pack.description && (

@@ -11,8 +11,9 @@ import {
   IconSettings,
   IconUser,
 } from '@tabler/icons-react';
-import { Avatar, Group, Menu, Stack, Text, UnstyledButton } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Avatar, Group, Menu, Skeleton, Stack, Text, UnstyledButton } from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useCurrentUserImage } from '@/hooks/use-current-user-image';
 import { useCurrentUserProfile } from '@/hooks/use-current-user-profile';
 import { createClient } from '@/utils/supabase/client';
 import classes from './navbar-user.module.css';
@@ -21,10 +22,13 @@ export function NavbarUser({ close }: { close: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const userProfile = useCurrentUserProfile();
-
   const [user, setUser] = useState<User | null>(null);
   const [opened, { toggle, close: closeMenu }] = useDisclosure(false);
+  const isMobile = useMediaQuery('(max-width: 48em)');
+  const userProfile = useCurrentUserProfile();
+  const profileImage = useCurrentUserImage();
+  const displayName = userProfile?.profile?.username ?? user?.email ?? '';
+  const userInitial = displayName?.[0]?.toUpperCase();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -72,15 +76,27 @@ export function NavbarUser({ close }: { close: () => void }) {
   }
 
   return (
-    <Menu opened={opened} onChange={toggle} position="right-end" width={220} shadow="md">
+    <Menu
+      opened={opened}
+      onChange={toggle}
+      position={isMobile ? 'bottom' : 'right-end'}
+      width={isMobile ? 'target' : 220}
+      shadow="md"
+    >
       <Menu.Target>
         <UnstyledButton className={classes.userButton}>
-          <Group gap="sm" wrap="nowrap">
-            <Avatar radius="xl">{userProfile?.profile?.username?.[0]?.toUpperCase()}</Avatar>
+          <Group gap="sm" wrap="nowrap" style={{ maxWidth: '100%' }}>
+            {userProfile.loading ? (
+              <Skeleton height={34} width={34} radius="xl" />
+            ) : (
+              <Avatar radius="xl" src={profileImage} alt="profile picture">
+                {userInitial}
+              </Avatar>
+            )}
 
-            <Stack gap={0} flex={1}>
+            <Stack gap={0} flex={1} style={{ minWidth: 0 }}>
               <Text size="sm" fw={500} truncate>
-                {userProfile?.profile?.username}
+                {displayName}
               </Text>
               <Text size="xs" c="dimmed" truncate>
                 {user.email}
@@ -93,6 +109,28 @@ export function NavbarUser({ close }: { close: () => void }) {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Label>
+          <Group gap="sm" wrap="nowrap" style={{ maxWidth: '100%' }}>
+            {userProfile.loading ? (
+              <Skeleton height={28} width={28} radius="xl" />
+            ) : (
+              <Avatar size="sm" radius="xl" src={profileImage} alt="profile picture">
+                {userInitial}
+              </Avatar>
+            )}
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="sm" fw={500} truncate>
+                {displayName}
+              </Text>
+              <Text size="xs" c="dimmed" truncate>
+                {user.email}
+              </Text>
+            </Stack>
+          </Group>
+        </Menu.Label>
+
+        <Menu.Divider />
+
         <Menu.Item
           leftSection={<IconUser size={16} />}
           component={Link}
