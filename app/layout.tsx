@@ -4,11 +4,12 @@ import '../styles/globals.css';
 
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import { AppShellLayout } from '@/components/layout/app-shell-layout';
+import { zenDots } from '@/styles/fonts';
 import { Providers } from './providers';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="en" className={zenDots.variable} {...mantineHtmlProps}>
       <head>
         <title>Griddle</title>
         <link rel="shortcut icon" href="/favicon.svg" />

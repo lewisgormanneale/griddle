@@ -1,5 +1,5 @@
 .font-zen-dots {
-  font-family: 'Zen Dots';
+  font-family: var(--font-zen-dots);
 }
 
 .font-unna {
