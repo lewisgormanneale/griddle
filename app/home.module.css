@@ -1,0 +1,48 @@
+.page {
+  min-height: calc(100vh - 60px);
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(140, 180, 120, 0.25), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(255, 210, 120, 0.2), transparent 55%),
+    linear-gradient(180deg, #f7f7f2 0%, #ffffff 45%, #f3f6ef 100%);
+}
+
+.hero {
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.heroCard {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.section {
+  animation: riseIn 500ms ease both;
+}
+
+.sectionDelay {
+  animation-delay: 120ms;
+}
+
+.sectionDelayMore {
+  animation-delay: 220ms;
+}
+
+.linkCard {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.linkCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
