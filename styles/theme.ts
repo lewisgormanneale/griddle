@@ -233,7 +233,6 @@ export const theme: MantineThemeOverride = {
     to: 'lime',
     deg: 45,
   },
-  fontFamily: 'Lato',
   fontFamilyMonospace: 'Source Code Pro',
   headings: {
     fontFamily: 'Playfair Display',
