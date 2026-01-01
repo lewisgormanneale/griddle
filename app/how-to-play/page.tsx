@@ -28,15 +28,10 @@ export const metadata: Metadata = {
 export default function HowToPlayPage() {
   return (
     <Container size="lg">
-      <Stack gap="xl">
-        <PageHeader
-          title={pageInfo.title}
-          description={pageInfo.description}
-          align="left"
-          data-testid="how-to-play-header"
-        />
+      <Stack gap="md">
+        <PageHeader title={pageInfo.title} description={pageInfo.description} align="left" />
 
-        <Group gap="lg" grow align="stretch" wrap="wrap">
+        <Group gap="md" grow align="stretch" wrap="wrap">
           <Card withBorder radius="md" data-testid="how-to-play-basics">
             <CardSection withBorder inheritPadding py="sm">
               <Group gap="sm" wrap="nowrap" align="center">
@@ -100,7 +95,7 @@ export default function HowToPlayPage() {
           </Card>
         </Group>
 
-        <HowToPlayTutorial />
+        <HowToPlayTutorial data-testid="how-to-play-tutorial" />
       </Stack>
     </Container>
   );

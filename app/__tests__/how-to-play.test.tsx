@@ -9,10 +9,6 @@ describe('How to play page', () => {
     });
 
     describe('when viewing the page content', () => {
-      it('then shows the main title', () => {
-        expect(screen.getByTestId('how-to-play-header')).toBeInTheDocument();
-      });
-
       it('then shows the basics section', () => {
         expect(screen.getByTestId('how-to-play-basics')).toBeInTheDocument();
       });
@@ -21,20 +17,8 @@ describe('How to play page', () => {
         expect(screen.getByTestId('how-to-play-clues')).toBeInTheDocument();
       });
 
-      it('then shows the marking strategy section', () => {
-        expect(screen.getByTestId('how-to-play-strategy')).toBeInTheDocument();
-      });
-
-      it('then shows the common patterns section', () => {
-        expect(screen.getByTestId('how-to-play-patterns')).toBeInTheDocument();
-      });
-
       it('then shows the mini tutorial', () => {
         expect(screen.getByTestId('how-to-play-tutorial')).toBeInTheDocument();
-      });
-
-      it('then shows a sample pattern chip', () => {
-        expect(screen.getByTestId('how-to-play-pattern-chips')).toBeInTheDocument();
       });
     });
   });

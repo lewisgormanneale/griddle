@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Card, Divider, Flex, Group, Text } from '@mantine/core';
+import { useEffect, useMemo, useState } from 'react';
+import { Box, Card, Divider, Flex, Group, LoadingOverlay, Skeleton, Text } from '@mantine/core';
 import { ControlPanel } from '@/components/nonogram/control-panel/control-panel';
 import { Grid } from '@/components/nonogram/grid/grid';
 import { Leaderboard } from '@/components/nonogram/leaderboard/leaderboard';
 import type { Tables } from '@/types/database.types';
+import { CellState } from '@/types/types';
 import { createClient } from '@/utils/supabase/client';
 import {
   getUserCompletionOfNonogram,
@@ -23,19 +24,30 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
   const [winConditionMet, setWinConditionMet] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [completion, setCompletion] = useState<Tables<'completed_nonograms'> | null>(null);
+  const [completionLoading, setCompletionLoading] = useState(true);
+  const solvedCellStates = useMemo(() => {
+    if (!completion) return undefined;
+    return nonogram.solution.split('').map((value) =>
+      value === '1' ? CellState.Filled : CellState.CrossedOut
+    );
+  }, [completion, nonogram.solution]);
 
   useEffect(() => {
     const supabase = createClient();
 
     const fetchData = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const user = sessionData.session?.user;
-      if (!user) return;
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const user = sessionData.session?.user;
+        if (!user) return;
 
-      const completed = await getUserCompletionOfNonogram(user.id, nonogram.id);
-      if (completed) {
-        setCompletion(completed);
-        setWinConditionMet(true);
+        const completed = await getUserCompletionOfNonogram(user.id, nonogram.id);
+        if (completed) {
+          setCompletion(completed);
+          setWinConditionMet(true);
+        }
+      } finally {
+        setCompletionLoading(false);
       }
     };
 
@@ -43,10 +55,10 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
   }, [nonogram.id]);
 
   useEffect(() => {
-    if (!completion) {
+    if (!completion && !completionLoading) {
       setStartTime(Date.now());
     }
-  }, [completion]);
+  }, [completion, completionLoading]);
 
   const onWinConditionMet = async () => {
     setWinConditionMet(true);
@@ -81,17 +93,31 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
         <Card.Section p="md">
           <Card withBorder>
             <Card.Section withBorder inheritPadding py="xs">
-              <ControlPanel winConditionMet={winConditionMet} />
+              {completionLoading ? (
+                <Skeleton height={20} width={80} />
+              ) : (
+                <ControlPanel
+                  winConditionMet={winConditionMet}
+                  initialTime={completion?.completion_time}
+                />
+              )}
             </Card.Section>
             <Card.Section>
               <Flex justify="center" p="md">
-                <Grid
-                  nonogram={nonogram}
-                  rowHints={rowHints}
-                  columnHints={columnHints}
-                  winConditionMet={winConditionMet}
-                  onWinConditionMet={onWinConditionMet}
-                />
+                <Box pos="relative" mih={220}>
+                  <LoadingOverlay visible={completionLoading} />
+                  {!completionLoading && (
+                    <Grid
+                      nonogram={nonogram}
+                      rowHints={rowHints}
+                      columnHints={columnHints}
+                      winConditionMet={winConditionMet}
+                      onWinConditionMet={onWinConditionMet}
+                      interactive={!completion}
+                      initialCellStates={solvedCellStates}
+                    />
+                  )}
+                </Box>
               </Flex>
             </Card.Section>
           </Card>
