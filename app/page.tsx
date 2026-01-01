@@ -1,16 +1,26 @@
 import Link from 'next/link';
-import { Button, Flex, Text, Title } from '@mantine/core';
+import { Button, Group, Stack, Text, Title } from '@mantine/core';
 
 export default function Home() {
   return (
-    <Flex mih="calc(100vh - 60px)" direction="column" align="center" justify="center">
-      <Title tt="uppercase" className="font-zen-dots" order={1} ta="center" size={60}>
-        Griddle
-      </Title>
-      <Text ta="center" mb={50} size="xl" c="dimmed" className="font-unna">
-        Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
-      </Text>
-      <Flex mb={50} justify="center" direction="column" gap={10}>
+    <Stack gap="xl" mt={80}>
+      <Stack mb={10}>
+        <Title
+          tt="uppercase"
+          mb={20}
+          lh={0}
+          size={60}
+          className="font-zen-dots"
+          order={1}
+          ta="center"
+        >
+          Griddle
+        </Title>
+        <Text ta="center" size="lg" c="dimmed">
+          Solve logic puzzles by filling in squares according to numbers at the edges of the grid.
+        </Text>
+      </Stack>
+      <Group justify="center">
         <Link href="/nonogram/1">
           <Button variant="filled" w="100%" size="lg">
             Today's Puzzle
@@ -21,7 +31,7 @@ export default function Home() {
             Packs
           </Button>
         </Link>
-      </Flex>
-    </Flex>
+      </Group>
+    </Stack>
   );
 }

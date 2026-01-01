@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Box, Card, Loader, ScrollArea, Table, Text, Title } from '@mantine/core';
+import { Box, Group, Loader, ScrollArea, Stack, Table, Text, Title } from '@mantine/core';
 import { CompletedNonogramWithProfile, getTopNonogramCompletions } from '@/utils/supabase/queries';
 import classes from './leaderboard.module.css';
 
@@ -25,14 +25,15 @@ export function Leaderboard({ nonogram_id }: { nonogram_id: number }) {
   };
 
   return (
-    <Card>
-      <Card.Section withBorder className={classes.sectionHeader}>
-        <Title order={3}>Leaderboard</Title>
-      </Card.Section>
-
-      <Card.Section>
+    <Stack p="md" gap="md">
+      <Group>
+        <Title order={3} m={0} mb={0} pb={0} lh={0} pt={8}>
+          Leaderboard
+        </Title>
+      </Group>
+      <Stack>
         <ScrollArea h={240}>
-          <Box p="sm">
+          <Box>
             <Text size="sm" c="dimmed" className={classes.description}>
               The top times for this puzzle.
             </Text>
@@ -65,7 +66,7 @@ export function Leaderboard({ nonogram_id }: { nonogram_id: number }) {
             )}
           </Box>
         </ScrollArea>
-      </Card.Section>
-    </Card>
+      </Stack>
+    </Stack>
   );
 }

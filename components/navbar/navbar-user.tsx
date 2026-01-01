@@ -23,6 +23,7 @@ export function NavbarUser({ close }: { close: () => void }) {
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [opened, { toggle, close: closeMenu }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 48em)');
   const userProfile = useCurrentUserProfile();
@@ -33,10 +34,12 @@ export function NavbarUser({ close }: { close: () => void }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
+      setAuthLoading(false);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null);
+      setAuthLoading(false);
     });
 
     return () => {
@@ -50,6 +53,15 @@ export function NavbarUser({ close }: { close: () => void }) {
     close();
     router.push('/');
   };
+
+  if (authLoading) {
+    return (
+      <Stack gap="xs">
+        <Skeleton height={36} radius="md" />
+        <Skeleton height={36} radius="md" />
+      </Stack>
+    );
+  }
 
   if (!user) {
     return (
