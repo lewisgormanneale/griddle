@@ -1,11 +1,12 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/carousel/styles.css';
 import '../styles/globals.css';
 
 import type { Metadata } from 'next';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import { AppShellLayout } from '@/components/layout/app-shell-layout';
-import { zenDots } from '@/styles/fonts';
+import { dmSerifDisplay, outfit, sourceCodePro, zenDots } from '@/styles/fonts';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -19,7 +20,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={zenDots.variable} {...mantineHtmlProps}>
+    <html
+      lang="en"
+      className={`${zenDots.variable} ${outfit.variable} ${dmSerifDisplay.variable} ${sourceCodePro.variable}`}
+      {...mantineHtmlProps}
+    >
       <head>
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta

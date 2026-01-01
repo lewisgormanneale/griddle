@@ -14,6 +14,8 @@ export function Grid({
   winConditionMet,
   onWinConditionMet,
   onGridChange,
+  interactive = true,
+  initialCellStates,
 }: {
   nonogram: Tables<'nonograms'>;
   rowHints: number[][];
@@ -22,6 +24,8 @@ export function Grid({
   winConditionMet: boolean;
   onWinConditionMet: () => void;
   onGridChange?: (grid: GridItem[]) => void;
+  interactive?: boolean;
+  initialCellStates?: CellState[];
 }) {
   const [grid, setGrid] = useState<GridItem[]>([]);
   const [maxRowHints, setMaxRowHints] = useState(0);
@@ -59,14 +63,26 @@ export function Grid({
     }
 
     suppressNotifyRef.current = true;
-    setGrid(
-      generateGrid(nonogram, rowHints, columnHints, {
+    const nextGrid = generateGrid(nonogram, rowHints, columnHints, {
         useSolution: mode === 'edit',
         maxRowHints,
         maxColumnHints,
-      })
-    );
-  }, [nonogram, rowHints, columnHints, mode, maxRowHints, maxColumnHints]);
+      });
+
+    if (initialCellStates && initialCellStates.length === nonogram.width * nonogram.height) {
+      setGrid(
+        nextGrid.map((item) => {
+          if (item.type !== GridItemType.Cell) return item;
+          const cellIndex = (item.rowIndex ?? 0) * nonogram.width + (item.colIndex ?? 0);
+          const overrideState = initialCellStates[cellIndex];
+          return overrideState !== undefined ? { ...item, cellState: overrideState } : item;
+        })
+      );
+      return;
+    }
+
+    setGrid(nextGrid);
+  }, [nonogram, rowHints, columnHints, mode, maxRowHints, maxColumnHints, initialCellStates]);
 
   useEffect(() => {
     if (mode === 'edit') {
@@ -116,6 +132,9 @@ export function Grid({
   }, [grid, mode, onGridChange]);
 
   const handleMouseDown = (event: React.MouseEvent, index: number) => {
+    if (!interactive) {
+      return;
+    }
     event.preventDefault();
     setIsMouseDown(true);
 
@@ -134,6 +153,9 @@ export function Grid({
   };
 
   const handleMouseEnter = (index: number) => {
+    if (!interactive) {
+      return;
+    }
     if (isMouseDown && dragActionState !== null) {
       updateCellState(index, dragActionState);
     }
@@ -183,10 +205,14 @@ export function Grid({
         return (
           <Box
             key={index}
-            className={`${classes.gridItem} ${isCell ? classes.cell : ''}`}
+            className={`${classes.gridItem} ${isCell ? classes.cell : ''} ${
+              isCell && !interactive ? classes.cellReadonly : ''
+            }`}
             style={borderStyle}
-            onMouseDown={isCell ? (event) => handleMouseDown(event, index) : undefined}
-            onMouseEnter={isCell ? () => handleMouseEnter(index) : undefined}
+            onMouseDown={
+              isCell && interactive ? (event) => handleMouseDown(event, index) : undefined
+            }
+            onMouseEnter={isCell && interactive ? () => handleMouseEnter(index) : undefined}
           >
             {item.type === GridItemType.Clue && item.hintValue}
             {isCell && <Cell cellState={item.cellState!} />}
