@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Badge, Button, Card, Center, Group, Loader, SimpleGrid, Text, Title } from '@mantine/core';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
+import { Badge, Button, Card, Center, Group, Loader, Text, Title } from '@mantine/core';
+import type { EmblaCarouselType } from 'embla-carousel-react';
 import { useAsyncData } from '@/hooks/use-async-data';
 import {
   getNonogramsForPack,
@@ -20,6 +22,28 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
     [loadNonograms],
     { initialData: [] }
   );
+  const pages = useMemo(() => {
+    const chunkSize = 3;
+    const result: NonogramWithProfile[][] = [];
+    for (let i = 0; i < nonograms.length; i += chunkSize) {
+      result.push(nonograms.slice(i, i + chunkSize));
+    }
+    return result;
+  }, [nonograms]);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [embla, setEmbla] = useState<EmblaCarouselType | null>(null);
+
+  useEffect(() => {
+    if (activeSlide >= pages.length) {
+      setActiveSlide(0);
+      embla?.scrollTo(0);
+    }
+  }, [activeSlide, embla, pages.length]);
+
+  const goToSlide = (index: number) => {
+    setActiveSlide(index);
+    embla?.scrollTo(index);
+  };
 
   return (
     <Card withBorder radius="md" data-testid="pack-card">
@@ -43,39 +67,66 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
           <Center py="md" data-testid="pack-loading">
             <Loader size="sm" />
           </Center>
-        ) : nonograms.length > 0 ? (
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-            {nonograms.map((nonogram) => (
-              <Card
-                key={nonogram.id}
-                withBorder
-                radius="md"
-                className={classes.nonogramCard}
-                data-testid="pack-nonogram-card"
-              >
-                <div className={classes.nonogramHeader}>
-                  <Text fw={500}>{nonogram.title}</Text>
-                  <Text size="xs" color="dimmed">
-                    {nonogram.height} × {nonogram.width}
-                  </Text>
-                </div>
+        ) : pages.length > 0 ? (
+          <>
+            <Carousel
+              withIndicators
+              slideSize="100%"
+              onSlideChange={setActiveSlide}
+              getEmblaApi={setEmbla}
+              controlsOffset="xs"
+              data-testid="pack-carousel"
+            >
+              {pages.map((page, pageIndex) => (
+                <CarouselSlide key={`page-${pageIndex}`}>
+                  <Group grow align="stretch">
+                    {page.map((nonogram) => (
+                      <Card
+                        key={nonogram.id}
+                        withBorder
+                        radius="md"
+                        className={classes.nonogramCard}
+                        data-testid="pack-nonogram-card"
+                      >
+                        <div className={classes.nonogramHeader}>
+                          <Text fw={500}>{nonogram.title}</Text>
+                          <Text size="xs" color="dimmed">
+                            {nonogram.height} × {nonogram.width}
+                          </Text>
+                        </div>
 
-                <div className={classes.preview}>
-                  <NonogramGridPreview rows={nonogram.height} columns={nonogram.width} />
-                </div>
+                        <div className={classes.preview}>
+                          <NonogramGridPreview rows={nonogram.height} columns={nonogram.width} />
+                        </div>
 
+                        <Button
+                          component={Link}
+                          href={`/nonogram/${nonogram.id}`}
+                          variant="light"
+                          fullWidth
+                          mt="sm"
+                        >
+                          Play
+                        </Button>
+                      </Card>
+                    ))}
+                  </Group>
+                </CarouselSlide>
+              ))}
+            </Carousel>
+            <Group justify="center" gap="xs" mt="sm">
+              {pages.map((_page, index) => (
                 <Button
-                  component={Link}
-                  href={`/nonogram/${nonogram.id}`}
-                  variant="light"
-                  fullWidth
-                  mt="sm"
+                  key={`page-${index}`}
+                  size="compact-xs"
+                  variant={index === activeSlide ? 'filled' : 'light'}
+                  onClick={() => goToSlide(index)}
                 >
-                  Play
+                  {index + 1}
                 </Button>
-              </Card>
-            ))}
-          </SimpleGrid>
+              ))}
+            </Group>
+          </>
         ) : (
           <Text size="sm" color="dimmed" ta="center" data-testid="pack-empty">
             No puzzles in this pack yet.
