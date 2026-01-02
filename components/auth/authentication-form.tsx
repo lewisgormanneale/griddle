@@ -75,6 +75,11 @@ export function AuthenticationForm(props: PaperProps) {
 
       <form onSubmit={handleLogin}>
         <Stack>
+          {error && (
+            <Text size="sm" c="red">
+              {error}
+            </Text>
+          )}
           {type === 'register' && (
             <TextInput
               label="Name"
@@ -120,7 +125,7 @@ export function AuthenticationForm(props: PaperProps) {
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit" radius="xl">
+          <Button type="submit" radius="xl" loading={isLoading}>
             {upperFirst(type)}
           </Button>
         </Group>

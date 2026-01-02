@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Tables } from '@/types/database.types';
+import { logError } from '@/utils/logger';
 
 export const useCurrentUserProfile = (userId?: string) => {
   const [profile, setProfile] = useState<Tables<'profiles'> | null>(null);
@@ -27,10 +28,12 @@ export const useCurrentUserProfile = (userId?: string) => {
         .eq('id', userId)
         .single();
 
-      if (cancelled) {return;}
+      if (cancelled) {
+        return;
+      }
 
       if (profileError) {
-        console.error('Error fetching profile:', profileError);
+        logError('Error fetching profile', profileError);
         setError(profileError.message);
         setProfile(null);
       } else {

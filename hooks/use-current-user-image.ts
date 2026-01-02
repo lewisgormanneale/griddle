@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { logError } from '@/utils/logger';
 
 export const useCurrentUserImage = (userId?: string) => {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
@@ -16,7 +17,7 @@ export const useCurrentUserImage = (userId?: string) => {
       const url = URL.createObjectURL(data);
       setAvatarUrl(url);
     } catch (error) {
-      console.log('Error downloading image: ', error);
+      logError('Error downloading image', error);
     }
   };
 
@@ -37,7 +38,7 @@ export const useCurrentUserImage = (userId?: string) => {
 
       if (profileError || cancelled) {
         if (profileError) {
-          console.error(profileError);
+          logError('Error fetching profile for avatar', profileError);
         }
         setAvatarUrl(undefined);
         return;

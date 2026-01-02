@@ -1,7 +1,10 @@
 import { act, screen, waitFor } from '@testing-library/react';
 import Pack from '@/components/packs/pack';
-import type { NonogramWithProfile, PackWithProfile } from '@/utils/supabase/queries';
-import { getNonogramsForPack } from '@/utils/supabase/queries';
+import {
+  type NonogramWithProfile,
+  type PackWithProfile,
+  getNonogramsForPack,
+} from '@/utils/supabase/queries';
 import { renderWithProviders } from '@/utils/test-utils';
 
 jest.mock('@/utils/supabase/queries', () => ({

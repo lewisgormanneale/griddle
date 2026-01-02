@@ -1,8 +1,11 @@
 import { screen, waitFor } from '@testing-library/react';
 import { NonogramClient } from '../nonogram/[id]/nonogram-client';
-import type { NonogramWithProfile } from '@/utils/supabase/queries';
-import { getUserCompletionOfNonogram, saveNonogramCompletion } from '@/utils/supabase/queries';
 import { useAuthUser } from '@/hooks/use-auth-user';
+import {
+  type NonogramWithProfile,
+  getUserCompletionOfNonogram,
+  saveNonogramCompletion,
+} from '@/utils/supabase/queries';
 import { renderWithProviders } from '@/utils/test-utils';
 
 jest.mock('@/hooks/use-auth-user');

@@ -1,5 +1,6 @@
 import type { NonogramWithProfile } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
+import { logError } from '@/utils/logger';
 
 export async function getNonogramServer(id: number): Promise<NonogramWithProfile | undefined> {
   const supabase = await createClient();
@@ -14,7 +15,7 @@ export async function getNonogramServer(id: number): Promise<NonogramWithProfile
     }
     return data as NonogramWithProfile;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram (server)', error);
     return undefined;
   }
 }
@@ -40,7 +41,7 @@ export async function getNonogramHintsServer(
 
     return { rows, columns };
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram hints (server)', error);
     return { rows: [], columns: [] };
   }
 }

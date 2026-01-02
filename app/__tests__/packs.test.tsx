@@ -2,8 +2,12 @@ import { act, screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/test-utils';
 import { PacksClient } from '../packs/packs-client';
 import PacksPage from '../packs/page';
-import type { NonogramWithProfile, PackWithProfile } from '@/utils/supabase/queries';
-import { getNonogramsForPack, getPacks } from '@/utils/supabase/queries';
+import {
+  type NonogramWithProfile,
+  type PackWithProfile,
+  getNonogramsForPack,
+  getPacks,
+} from '@/utils/supabase/queries';
 
 jest.mock('@/utils/supabase/queries', () => ({
   ...jest.requireActual('@/utils/supabase/queries'),

@@ -1,4 +1,5 @@
 import { DependencyList, useEffect, useState } from 'react';
+import { logError } from '@/utils/logger';
 
 type Options<T> = {
   initialData?: T;
@@ -32,7 +33,7 @@ export function useAsyncData<T>(
       })
       .catch((error) => {
         if (!cancelled) {
-          console.error(error);
+          logError('Failed to load async data', error);
         }
       })
       .finally(() => {
