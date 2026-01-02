@@ -129,13 +129,13 @@ export function NavbarUser({ close }: { close: () => void }) {
         <Menu.Item
           leftSection={<IconUser size={16} />}
           component={Link}
-          href="/account"
+          href="/account-settings"
           onClick={() => {
             closeMenu();
             close();
           }}
         >
-          Account
+          Account Settings
         </Menu.Item>
 
         <Menu.Item

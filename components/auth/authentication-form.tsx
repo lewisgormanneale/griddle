@@ -53,7 +53,7 @@ export function AuthenticationForm(props: PaperProps) {
       if (error) {
         throw error;
       }
-      router.push('/account');
+      router.push('/account-settings');
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
