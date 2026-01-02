@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { AppShell, Box, Burger, Flex, Group, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
@@ -47,7 +48,14 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
         <Flex justify="space-between" align="center" h="100%">
           <Group align="center" h="100%" px="sm" gap="sm">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots">
+            <Text
+              size="xl"
+              lh={0}
+              tt="uppercase"
+              className="font-zen-dots"
+              component={Link}
+              href="/"
+            >
               Griddle
             </Text>
           </Group>

@@ -21,7 +21,7 @@ export default function Home() {
         </Text>
       </Stack>
       <Group justify="center">
-        <Link href="/nonogram/1" data-testid="home-todays-puzzle">
+        <Link href="/nonogram/3" data-testid="home-todays-puzzle">
           <Button variant="filled" w="100%" size="lg">
             Today's Puzzle
           </Button>
