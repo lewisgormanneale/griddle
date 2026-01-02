@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { Text } from '@mantine/core';
 import { formatTime } from '@/utils/utils';
 import classes from './timer.module.css';
@@ -9,14 +9,14 @@ export function Timer({
   timerActive,
 }: {
   time: number;
-  setTime: Function;
+  setTime: Dispatch<SetStateAction<number>>;
   timerActive: boolean;
 }) {
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
     if (timerActive) {
       interval = setInterval(() => {
-        setTime((time: number) => time + 1);
+        setTime((time) => time + 1);
       }, 1000);
     } else if (interval) {
       clearInterval(interval);
@@ -29,7 +29,7 @@ export function Timer({
   }, [timerActive, setTime]);
 
   return (
-    <Text className={classes.timer} data-active={timerActive}>
+    <Text className={classes.timer} data-active={timerActive} data-testid="nonogram-timer">
       {formatTime(time)}
     </Text>
   );

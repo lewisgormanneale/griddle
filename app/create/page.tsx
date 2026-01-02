@@ -16,7 +16,12 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <Stack gap="lg">
-      <PageHeader title={pageInfo.title} description={pageInfo.description} align="left" />
+      <PageHeader
+        title={pageInfo.title}
+        description={pageInfo.description}
+        align="left"
+        testId="create-header"
+      />
       <CreateClient />
     </Stack>
   );

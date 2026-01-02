@@ -47,7 +47,9 @@ export default function AccountForm({ user }: { user: User }) {
         .eq('id', user.id)
         .single();
 
-      if (error && status !== 406) throw error;
+      if (error && status !== 406) {
+        throw error;
+      }
 
       if (data) {
         setValue('username', data.username ?? '');
@@ -79,7 +81,9 @@ export default function AccountForm({ user }: { user: User }) {
         updated_at: new Date().toISOString(),
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       notifications.show({
         color: 'green',

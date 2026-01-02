@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { createClient } from '@/utils/supabase/client';
+import { logError } from '@/utils/logger';
 
 export default function Avatar({
   uid,
@@ -24,18 +26,20 @@ export default function Avatar({
       try {
         const { data, error } = await supabase.storage.from('avatars').download(path);
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         const bucketUrl = URL.createObjectURL(data);
         setAvatarUrl(bucketUrl);
       } catch (error) {
-        console.log('Error downloading image: ', error);
+        logError('Error downloading image', error);
       }
     };
     if (url) {
       downloadImage(url);
     }
-  }, [url]);
+  }, [supabase, url]);
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
@@ -61,7 +65,12 @@ export default function Avatar({
 
       onUpload(filePath);
     } catch (error) {
-      alert('Error uploading avatar!');
+      logError('Error uploading avatar', error);
+      notifications.show({
+        color: 'red',
+        title: 'Upload failed',
+        message: 'Could not upload your avatar. Please try again.',
+      });
     } finally {
       setUploading(false);
     }

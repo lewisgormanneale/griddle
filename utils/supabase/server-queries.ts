@@ -1,5 +1,7 @@
-import type { NonogramWithProfile } from '@/utils/supabase/queries';
+import type { Tables } from '@/types/database.types';
+import type { NonogramWithProfile, PackWithProfile } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
+import { logError } from '@/utils/logger';
 
 export async function getNonogramServer(id: number): Promise<NonogramWithProfile | undefined> {
   const supabase = await createClient();
@@ -14,7 +16,7 @@ export async function getNonogramServer(id: number): Promise<NonogramWithProfile
     }
     return data as NonogramWithProfile;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram (server)', error);
     return undefined;
   }
 }
@@ -40,7 +42,93 @@ export async function getNonogramHintsServer(
 
     return { rows, columns };
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram hints (server)', error);
     return { rows: [], columns: [] };
+  }
+}
+
+export async function getProfileByUsername(
+  username: string
+): Promise<Tables<'profiles'> | undefined> {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .ilike('username', username)
+      .maybeSingle();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data as Tables<'profiles'> | undefined;
+  } catch (error) {
+    logError('Failed to load profile by username', error);
+    return undefined;
+  }
+}
+
+export async function getPacksForUserServer(userId: string): Promise<PackWithProfile[]> {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from('packs')
+      .select('*, profiles(username)')
+      .eq('user_id', userId)
+      .order('id');
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return (data ?? []) as PackWithProfile[];
+  } catch (error) {
+    logError('Failed to load packs for user', error);
+    return [];
+  }
+}
+
+type CompletionWithPack = Tables<'completed_nonograms'> & {
+  nonograms: { pack_id: number | null } | { pack_id: number | null }[] | null;
+};
+
+export async function getUserStats(userId: string): Promise<{
+  totalSolved: number;
+  completedPacks: number;
+}> {
+  const supabase = await createClient();
+  try {
+    const { data, count, error } = await supabase
+      .from('completed_nonograms')
+      .select('nonogram_id, nonograms(pack_id)', { count: 'exact' })
+      .eq('user_id', userId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const packIds = new Set<number>();
+    const completions = (data ?? []) as CompletionWithPack[];
+    completions.forEach((item) => {
+      const rel = item.nonograms;
+      if (Array.isArray(rel)) {
+        rel.forEach((n) => {
+          if (n?.pack_id !== null && n?.pack_id !== undefined) {
+            packIds.add(n.pack_id);
+          }
+        });
+      } else if (rel?.pack_id !== null && rel?.pack_id !== undefined) {
+        packIds.add(rel.pack_id);
+      }
+    });
+
+    return {
+      totalSolved: count ?? 0,
+      completedPacks: packIds.size,
+    };
+  } catch (error) {
+    logError('Failed to load user stats', error);
+    return { totalSolved: 0, completedPacks: 0 };
   }
 }

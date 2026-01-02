@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { type User } from '@supabase/auth-js';
 import { IconInfoCircle } from '@tabler/icons-react';
 import {
   Alert,
@@ -22,10 +21,10 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { Grid } from '@/components/nonogram/grid/grid';
+import { useAuthUser } from '@/hooks/use-auth-user';
 import { Tables } from '@/types/database.types';
 import { CellState, GridItem, GridItemType } from '@/types/types';
 import { isLogicSolvable } from '@/utils/nonogram/logic-solver';
-import { createClient } from '@/utils/supabase/client';
 import {
   createNonogram,
   createNonogramHints,
@@ -38,8 +37,8 @@ const createEmptySolution = (width: number, height: number) => '0'.repeat(width 
 const normalizeSolution = (solution: string, width: number, height: number) => {
   const total = width * height;
   const sanitized = solution.replace(/[^01]/g, '0');
-  if (sanitized.length === total) return sanitized;
-  if (sanitized.length < total) return sanitized.padEnd(total, '0');
+  if (sanitized.length === total) {return sanitized;}
+  if (sanitized.length < total) {return sanitized.padEnd(total, '0');}
   return sanitized.slice(0, total);
 };
 
@@ -60,7 +59,7 @@ const buildHintsFromSolution = (solution: string, width: number, height: number)
         run = 0;
       }
     }
-    if (run > 0) rowHints.push(run);
+    if (run > 0) {rowHints.push(run);}
     rows.push(rowHints);
   }
 
@@ -76,7 +75,7 @@ const buildHintsFromSolution = (solution: string, width: number, height: number)
         run = 0;
       }
     }
-    if (run > 0) columnHints.push(run);
+    if (run > 0) {columnHints.push(run);}
     columns[col] = columnHints;
   }
 
@@ -85,14 +84,12 @@ const buildHintsFromSolution = (solution: string, width: number, height: number)
 
 const buildSolutionFromGrid = (grid: GridItem[], width: number, height: number) => {
   const playableCells = grid.filter((item) => item.type === GridItemType.Cell);
-  if (playableCells.length !== width * height) return '';
+  if (playableCells.length !== width * height) {return '';}
   return playableCells.map((cell) => (cell.cellState === CellState.Filled ? '1' : '0')).join('');
 };
 
 export default function CreateClient() {
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const { user, loading: authLoading } = useAuthUser();
   const [packs, setPacks] = useState<Tables<'packs'>[]>([]);
   const [packsLoading, setPacksLoading] = useState(true);
 
@@ -111,21 +108,6 @@ export default function CreateClient() {
   const [testRunId, setTestRunId] = useState(0);
   const [publishing, setPublishing] = useState(false);
   const [logicStatus, setLogicStatus] = useState<'unknown' | 'pass' | 'fail'>('unknown');
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setAuthLoading(false);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, [supabase]);
 
   useEffect(() => {
     if (!user) {

@@ -1,6 +1,13 @@
 .grid {
   display: inline-grid;
   user-select: none;
+  --grid-base-border: #cfcfcf;
+  --grid-strong-border: #000000;
+}
+
+:root[data-mantine-color-scheme='dark'] .grid {
+  --grid-base-border: #777777;
+  --grid-strong-border: #646464;
 }
 
 .gridItem {

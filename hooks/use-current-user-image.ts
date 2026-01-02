@@ -1,59 +1,62 @@
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { logError } from '@/utils/logger';
 
-export const useCurrentUserImage = () => {
+export const useCurrentUserImage = (userId?: string) => {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const downloadImage = async (path: string) => {
     try {
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .download(path);
+      const { data, error } = await supabase.storage.from('avatars').download(path);
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       const url = URL.createObjectURL(data);
       setAvatarUrl(url);
     } catch (error) {
-      console.log("Error downloading image: ", error);
+      logError('Error downloading image', error);
     }
   };
 
   useEffect(() => {
+    if (!userId) {
+      setAvatarUrl(undefined);
+      return;
+    }
+
+    let cancelled = false;
+
     const fetchAvatar = async () => {
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-
-      if (sessionError || !session?.user) {
-        sessionError ? console.error(sessionError) : null;
-        setAvatarUrl(undefined);
-        return;
-      }
-
-      const userId = session.user.id;
-
       const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("avatar_url, username")
-        .eq("id", userId)
+        .from('profiles')
+        .select('avatar_url, username')
+        .eq('id', userId)
         .single();
 
-      if (profileError) {
-        console.error(profileError);
+      if (profileError || cancelled) {
+        if (profileError) {
+          logError('Error fetching profile for avatar', profileError);
+        }
         setAvatarUrl(undefined);
         return;
       }
 
-      if (profile.avatar_url) {
+      if (profile?.avatar_url) {
         downloadImage(profile.avatar_url);
+      } else {
+        setAvatarUrl(undefined);
       }
     };
 
     fetchAvatar();
-  }, [supabase]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase, userId]);
 
   return avatarUrl;
 };

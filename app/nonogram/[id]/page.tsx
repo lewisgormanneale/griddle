@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Stack } from '@mantine/core';
 import { PageHeader } from '@/components/layout/page-header';
 import type { NonogramWithProfile } from '@/utils/supabase/queries';
@@ -12,7 +12,7 @@ const buildDescription = (nonogram: NonogramWithProfile) =>
   }`;
 
 const buildTitle = (id: number, nonogram?: NonogramWithProfile) => {
-  if (!nonogram) return `Nonogram #${id}`;
+  if (!nonogram) {return `Nonogram #${id}`;}
   return `Nonogram #${id}: ${nonogram.title}`;
 };
 
@@ -46,12 +46,12 @@ export default async function NonogramPage({ params }: { params: Promise<{ id: s
   const { id: idParam } = await params;
   const id = Number(idParam);
   if (Number.isNaN(id)) {
-    notFound();
+    redirect('/?notice=nonogram-missing');
   }
 
   const nonogram = await getNonogramServer(id);
   if (!nonogram) {
-    notFound();
+    redirect('/?notice=nonogram-missing');
   }
 
   const { rows, columns } = await getNonogramHintsServer(id);
@@ -59,7 +59,7 @@ export default async function NonogramPage({ params }: { params: Promise<{ id: s
 
   return (
     <Stack gap="md">
-      <PageHeader title={title} align="left" />
+      <PageHeader title={title} align="left" testId="nonogram-header" />
       <NonogramClient nonogram={nonogram} rowHints={rows} columnHints={columns} />
     </Stack>
   );

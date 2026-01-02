@@ -13,8 +13,12 @@ export function ColorSchemeToggle() {
   }, []);
 
   // Avoid rendering on the server to prevent hydration mismatches
-  if (!mounted) return null;
-  if (!colorScheme) return null;
+  if (!mounted) {
+    return null;
+  }
+  if (!colorScheme) {
+    return null;
+  }
 
   const isLight = colorScheme === 'light';
 

@@ -1,5 +1,6 @@
 import { Tables } from '@/types/database.types';
 import { createClient } from '@/utils/supabase/client';
+import { logError } from '@/utils/logger';
 
 export type PackWithProfile = Tables<'packs'> & {
   profiles: Pick<Tables<'profiles'>, 'username'> | null;
@@ -9,9 +10,7 @@ export type NonogramWithProfile = Tables<'nonograms'> & {
   profiles: Pick<Tables<'profiles'>, 'username'> | null;
 };
 
-export async function getNonogram(
-  id: number
-): Promise<NonogramWithProfile | undefined> {
+export async function getNonogram(id: number): Promise<NonogramWithProfile | undefined> {
   const supabase = createClient();
   try {
     const { data, error } = await supabase
@@ -24,7 +23,7 @@ export async function getNonogram(
     }
     return data as NonogramWithProfile;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram', error);
     return undefined;
   }
 }
@@ -38,7 +37,7 @@ export async function getAllNonograms(): Promise<Tables<'nonograms'>[]> {
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load all nonograms', error);
     return [];
   }
 }
@@ -64,7 +63,7 @@ export async function getNonogramHints(
 
     return { rows, columns };
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonogram hints', error);
     return { rows: [], columns: [] };
   }
 }
@@ -86,7 +85,7 @@ export async function getUserCompletionOfNonogram(
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load user completion', error);
     return undefined;
   }
 }
@@ -108,7 +107,7 @@ export async function getTopNonogramCompletions(
     .limit(10);
 
   if (error || !data) {
-    console.error(error);
+    logError('Failed to load leaderboard', error);
     return [];
   }
 
@@ -137,10 +136,12 @@ export async function saveNonogramCompletion({
       }
     );
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
     return data;
   } catch (error) {
-    console.error('Failed to save completion', error);
+    logError('Failed to save completion', error);
   }
 }
 
@@ -153,7 +154,7 @@ export async function getAllPacks(): Promise<Tables<'packs'>[]> {
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load all packs', error);
     return [];
   }
 }
@@ -180,7 +181,7 @@ export async function getPacks({
     }
     return { data: (data ?? []) as PackWithProfile[], count: count ?? 0 };
   } catch (error) {
-    console.error(error);
+    logError('Failed to load packs', error);
     return { data: [], count: 0 };
   }
 }
@@ -197,7 +198,7 @@ export async function getNonogramsForPack(id: number): Promise<NonogramWithProfi
     }
     return data as NonogramWithProfile[];
   } catch (error) {
-    console.error(error);
+    logError('Failed to load nonograms for pack', error);
     return [];
   }
 }
@@ -227,7 +228,7 @@ export async function createPack({
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to create pack', error);
     return undefined;
   }
 }
@@ -266,7 +267,7 @@ export async function createNonogram({
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to create nonogram', error);
     return undefined;
   }
 }
@@ -295,15 +296,13 @@ export async function createNonogramHints({
   }));
 
   try {
-    const { error } = await supabase
-      .from('nonogram_hints')
-      .insert([...rowHints, ...columnHints]);
+    const { error } = await supabase.from('nonogram_hints').insert([...rowHints, ...columnHints]);
     if (error) {
       throw new Error(error.message);
     }
     return true;
   } catch (error) {
-    console.error(error);
+    logError('Failed to create nonogram hints', error);
     return false;
   }
 }
@@ -321,7 +320,7 @@ export async function getPacksForUser(userId: string): Promise<Tables<'packs'>[]
     }
     return data;
   } catch (error) {
-    console.error(error);
+    logError('Failed to load user packs', error);
     return [];
   }
 }

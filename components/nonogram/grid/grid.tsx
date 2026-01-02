@@ -16,6 +16,8 @@ export function Grid({
   onGridChange,
   interactive = true,
   initialCellStates,
+  interactionMode = 'cursor',
+  touchAction = 'fill',
 }: {
   nonogram: Tables<'nonograms'>;
   rowHints: number[][];
@@ -26,24 +28,26 @@ export function Grid({
   onGridChange?: (grid: GridItem[]) => void;
   interactive?: boolean;
   initialCellStates?: CellState[];
+  interactionMode?: 'cursor' | 'touch';
+  touchAction?: 'fill' | 'cross' | 'erase';
 }) {
   const [grid, setGrid] = useState<GridItem[]>([]);
   const [maxRowHints, setMaxRowHints] = useState(0);
   const [maxColumnHints, setMaxColumnHints] = useState(0);
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isPointerDown, setIsPointerDown] = useState(false);
   const [dragActionState, setDragActionState] = useState<CellState | null>(null);
   const hasNotifiedRef = useRef(false);
   const suppressNotifyRef = useRef(false);
 
-  const handleMouseUp = useCallback(() => {
-    setIsMouseDown(false);
+  const handlePointerUp = useCallback(() => {
+    setIsPointerDown(false);
     setDragActionState(null);
   }, []);
 
   useEffect(() => {
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => window.removeEventListener('mouseup', handleMouseUp);
-  }, [handleMouseUp]);
+    window.addEventListener('pointerup', handlePointerUp);
+    return () => window.removeEventListener('pointerup', handlePointerUp);
+  }, [handlePointerUp]);
 
   useEffect(() => {
     if (!nonogram || rowHints.length === 0 || columnHints.length === 0) {
@@ -64,15 +68,17 @@ export function Grid({
 
     suppressNotifyRef.current = true;
     const nextGrid = generateGrid(nonogram, rowHints, columnHints, {
-        useSolution: mode === 'edit',
-        maxRowHints,
-        maxColumnHints,
-      });
+      useSolution: mode === 'edit',
+      maxRowHints,
+      maxColumnHints,
+    });
 
     if (initialCellStates && initialCellStates.length === nonogram.width * nonogram.height) {
       setGrid(
         nextGrid.map((item) => {
-          if (item.type !== GridItemType.Cell) return item;
+          if (item.type !== GridItemType.Cell) {
+            return item;
+          }
           const cellIndex = (item.rowIndex ?? 0) * nonogram.width + (item.colIndex ?? 0);
           const overrideState = initialCellStates[cellIndex];
           return overrideState !== undefined ? { ...item, cellState: overrideState } : item;
@@ -131,41 +137,52 @@ export function Grid({
     onGridChange(grid);
   }, [grid, mode, onGridChange]);
 
-  const handleMouseDown = (event: React.MouseEvent, index: number) => {
+  const resolveActionState = (index: number, event?: React.PointerEvent) => {
+    const currentCellState = grid[index].cellState;
+    if (interactionMode === 'touch') {
+      if (touchAction === 'fill') {
+        return CellState.Filled;
+      }
+      if (touchAction === 'cross') {
+        return CellState.CrossedOut;
+      }
+      return CellState.Blank;
+    }
+
+    if (mode === 'edit') {
+      return currentCellState === CellState.Filled ? CellState.Blank : CellState.Filled;
+    }
+    if (event && event.button === 2) {
+      return currentCellState === CellState.Blank ? CellState.CrossedOut : CellState.Blank;
+    }
+    return currentCellState === CellState.Blank ? CellState.Filled : CellState.Blank;
+  };
+
+  const handlePointerDown = (event: React.PointerEvent, index: number) => {
     if (!interactive) {
       return;
     }
     event.preventDefault();
-    setIsMouseDown(true);
-
-    const currentCellState = grid[index].cellState;
-    let newFillState: CellState;
-
-    if (mode === 'edit') {
-      newFillState = currentCellState === CellState.Filled ? CellState.Blank : CellState.Filled;
-    } else if (event.button === 2) {
-      newFillState = currentCellState === CellState.Blank ? CellState.CrossedOut : CellState.Blank;
-    } else {
-      newFillState = currentCellState === CellState.Blank ? CellState.Filled : CellState.Blank;
-    }
-    setDragActionState(newFillState);
-    updateCellState(index, newFillState);
+    const newState = resolveActionState(index, event);
+    setIsPointerDown(true);
+    setDragActionState(newState);
+    updateCellState(index, newState);
   };
 
-  const handleMouseEnter = (index: number) => {
-    if (!interactive) {
+  const handlePointerMove = (index: number) => {
+    if (!interactive || !isPointerDown || dragActionState === null) {
       return;
     }
-    if (isMouseDown && dragActionState !== null) {
-      updateCellState(index, dragActionState);
-    }
+    updateCellState(index, dragActionState);
   };
 
   const updateCellState = (index: number, newFillState: CellState) => {
     if (!winConditionMet) {
       setGrid((prev) => {
         return prev.map((item, i) =>
-          i === index && item.type === 'cell' ? { ...item, cellState: newFillState } : item
+          i === index && item.type === GridItemType.Cell
+            ? { ...item, cellState: newFillState }
+            : item
         );
       });
     }
@@ -181,10 +198,11 @@ export function Grid({
             : `repeat(${nonogram.width}, 1.5rem)`,
       }}
       onMouseDown={(e) => e.preventDefault()}
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      {grid.map((item, index) => {
-        const columnCount = nonogram.width + maxRowHints;
+    onContextMenu={(e) => e.preventDefault()}
+    data-testid="nonogram-grid"
+  >
+    {grid.map((item, index) => {
+      const columnCount = nonogram.width + maxRowHints;
         const gridRow = Math.floor(index / columnCount);
         const gridColumn = index % columnCount;
         const cellRowIndex = item.rowIndex ?? gridRow - maxColumnHints;
@@ -193,14 +211,48 @@ export function Grid({
         const isLastRow = cellRowIndex === nonogram.height - 1;
         const isLastColumn = cellColIndex === nonogram.width - 1;
 
-        const borderStyle = isCell
-          ? {
-              borderTop: cellRowIndex % 5 === 0 ? '3px solid black' : '1px solid black',
-              borderLeft: cellColIndex % 5 === 0 ? '3px solid black' : '1px solid black',
-              borderBottom: isLastRow ? '3px solid black' : '1px solid black',
-              borderRight: isLastColumn ? '3px solid black' : '1px solid black',
-            }
-          : undefined;
+        const borderColor = 'var(--grid-base-border)';
+        const outerBorderColor = 'var(--grid-strong-border)';
+        const baseBorder = `1px solid ${borderColor}`;
+        const thickBorder = `3px solid ${outerBorderColor}`;
+        const borderStyle = (() => {
+          if (isCell) {
+            return {
+              borderTop: cellRowIndex % 5 === 0 ? thickBorder : baseBorder,
+              borderLeft: cellColIndex % 5 === 0 ? thickBorder : baseBorder,
+              borderRight: isLastColumn ? thickBorder : undefined,
+              borderBottom: isLastRow ? thickBorder : undefined,
+            };
+          }
+
+          const isColumnHintArea = gridRow < maxColumnHints && gridColumn >= maxRowHints;
+          const isRowHintArea = gridColumn < maxRowHints && gridRow >= maxColumnHints;
+
+          if (isColumnHintArea) {
+            const isTopHintRow = gridRow === 0;
+            const isBottomHintRow = gridRow === maxColumnHints - 1;
+            return {
+              borderLeft: baseBorder,
+              borderRight: baseBorder,
+              borderTop: isTopHintRow ? baseBorder : undefined,
+              borderBottom: isBottomHintRow ? baseBorder : undefined,
+            };
+          }
+
+          if (isRowHintArea) {
+            const isFirstHintColumn = gridColumn === 0;
+            const isLastHintColumn = gridColumn === maxRowHints - 1;
+            return {
+              borderTop: baseBorder,
+              borderBottom: baseBorder,
+              borderLeft: isFirstHintColumn ? baseBorder : undefined,
+              borderRight: isLastHintColumn ? baseBorder : undefined,
+            };
+          }
+
+          // top-left empty area: no borders
+          return undefined;
+        })();
 
         return (
           <Box
@@ -209,10 +261,14 @@ export function Grid({
               isCell && !interactive ? classes.cellReadonly : ''
             }`}
             style={borderStyle}
-            onMouseDown={
-              isCell && interactive ? (event) => handleMouseDown(event, index) : undefined
+            onPointerDown={
+              isCell && interactive ? (event) => handlePointerDown(event, index) : undefined
             }
-            onMouseEnter={isCell && interactive ? () => handleMouseEnter(index) : undefined}
+            onPointerMove={isCell && interactive ? () => handlePointerMove(index) : undefined}
+            onPointerEnter={
+              isCell && interactive ? () => handlePointerMove(index) : undefined
+            }
+            onContextMenu={(e) => e.preventDefault()}
           >
             {item.type === GridItemType.Clue && item.hintValue}
             {isCell && <Cell cellState={item.cellState!} />}

@@ -35,7 +35,9 @@ export const generateGrid = (
         grid.push(
           hintValue !== undefined
             ? { type: GridItemType.Clue, hintValue }
-            : { type: GridItemType.Empty },
+            : r === maxColumnHints - 1
+              ? { type: GridItemType.Clue, hintValue: 0 }
+              : { type: GridItemType.Empty },
         );
       } else if (c < maxRowHints) {
         const rowIndex = r - maxColumnHints;
@@ -47,7 +49,9 @@ export const generateGrid = (
         grid.push(
           hintValue !== undefined
             ? { type: GridItemType.Clue, hintValue }
-            : { type: GridItemType.Empty },
+            : c === maxRowHints - 1
+              ? { type: GridItemType.Clue, hintValue: 0 }
+              : { type: GridItemType.Empty },
         );
       } else {
         const rowIndex = r - maxColumnHints;
