@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { Avatar, Card, Group, Stack, Text, Title } from '@mantine/core';
 import Pack from '@/components/packs/pack';
 import { PageHeader } from '@/components/layout/page-header';

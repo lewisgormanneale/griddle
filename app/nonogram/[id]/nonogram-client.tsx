@@ -45,6 +45,11 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
   const [startTime, setStartTime] = useState<number | null>(null);
   const [interactionMode, setInteractionMode] = useState<'cursor' | 'touch'>('cursor');
   const [touchAction, setTouchAction] = useState<'fill' | 'cross' | 'erase'>('fill');
+  const touchActions = [
+    { value: 'fill', icon: <IconSquareFilled size={20} />, label: 'Fill' },
+    { value: 'cross', icon: <IconSquareX size={20} />, label: 'Cross' },
+    { value: 'erase', icon: <IconEraser size={20} />, label: 'Erase' },
+  ] as const;
   const {
     data: completion,
     loading: completionLoading,
@@ -155,27 +160,16 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
 
                 {interactionMode === 'touch' && (
                   <Button.Group>
-                    <Button
-                      variant={touchAction === 'fill' ? 'filled' : 'light'}
-                      onClick={() => setTouchAction('fill')}
-                      aria-label="Fill"
-                    >
-                      <IconSquareFilled size={20} />
-                    </Button>
-                    <Button
-                      variant={touchAction === 'cross' ? 'filled' : 'light'}
-                      onClick={() => setTouchAction('cross')}
-                      aria-label="Cross"
-                    >
-                      <IconSquareX size={20} />
-                    </Button>
-                    <Button
-                      variant={touchAction === 'erase' ? 'filled' : 'light'}
-                      onClick={() => setTouchAction('erase')}
-                      aria-label="Erase"
-                    >
-                      <IconEraser size={20} />
-                    </Button>
+                    {touchActions.map((action) => (
+                      <Button
+                        key={action.value}
+                        variant={touchAction === action.value ? 'filled' : 'light'}
+                        onClick={() => setTouchAction(action.value)}
+                        aria-label={action.label}
+                      >
+                        {action.icon}
+                      </Button>
+                    ))}
                   </Button.Group>
                 )}
               </Group>

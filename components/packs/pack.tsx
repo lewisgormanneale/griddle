@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Badge, Button, Card, Center, Group, Loader, Text, Title } from '@mantine/core';
-import type { EmblaCarouselType } from 'embla-carousel-react';
+import type { EmblaCarouselType } from 'embla-carousel';
 import { useAsyncData } from '@/hooks/use-async-data';
 import {
   getNonogramsForPack,

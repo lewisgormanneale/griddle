@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AppShell, Box, Burger, Flex, Group, Text } from '@mantine/core';
@@ -10,8 +10,7 @@ import classes from '@/app/layout.module.css';
 import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
 import { Navbar } from '@/components/navbar/navbar';
 
-export function AppShellLayout({ children }: { children: React.ReactNode }) {
-  const [opened, { toggle, close }] = useDisclosure();
+function NoticeListener() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -35,6 +34,12 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
     router.replace(pathname);
   }, [noticeShown, pathname, router, searchParams]);
 
+  return null;
+}
+
+export function AppShellLayout({ children }: { children: React.ReactNode }) {
+  const [opened, { toggle, close }] = useDisclosure();
+
   return (
     <AppShell
       header={{ height: 60 }}
@@ -48,14 +53,7 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
         <Flex justify="space-between" align="center" h="100%">
           <Group align="center" h="100%" px="sm" gap="sm">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Text
-              size="xl"
-              lh={0}
-              tt="uppercase"
-              className="font-zen-dots"
-              component={Link}
-              href="/"
-            >
+            <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots" component={Link} href="/">
               Griddle
             </Text>
           </Group>
@@ -69,6 +67,9 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
       </AppShell.Navbar>
       <AppShell.Main>
         <Box p="md" className={classes.page}>
+          <Suspense fallback={null}>
+            <NoticeListener />
+          </Suspense>
           {children}
         </Box>
       </AppShell.Main>

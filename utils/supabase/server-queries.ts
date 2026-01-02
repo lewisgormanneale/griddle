@@ -90,7 +90,7 @@ export async function getPacksForUserServer(userId: string): Promise<PackWithPro
 }
 
 type CompletionWithPack = Tables<'completed_nonograms'> & {
-  nonograms: { pack_id: number | null } | null;
+  nonograms: { pack_id: number | null } | { pack_id: number | null }[] | null;
 };
 
 export async function getUserStats(userId: string): Promise<{
@@ -108,9 +108,20 @@ export async function getUserStats(userId: string): Promise<{
       throw new Error(error.message);
     }
 
-    const packIds = new Set(
-      (data as CompletionWithPack[] | null)?.map((item) => item.nonograms?.pack_id).filter(Boolean)
-    );
+    const packIds = new Set<number>();
+    const completions = (data ?? []) as CompletionWithPack[];
+    completions.forEach((item) => {
+      const rel = item.nonograms;
+      if (Array.isArray(rel)) {
+        rel.forEach((n) => {
+          if (n?.pack_id !== null && n?.pack_id !== undefined) {
+            packIds.add(n.pack_id);
+          }
+        });
+      } else if (rel?.pack_id !== null && rel?.pack_id !== undefined) {
+        packIds.add(rel.pack_id);
+      }
+    });
 
     return {
       totalSolved: count ?? 0,
