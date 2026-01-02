@@ -185,11 +185,11 @@ export function Grid({
             : `repeat(${nonogram.width}, 1.5rem)`,
       }}
       onMouseDown={(e) => e.preventDefault()}
-      onContextMenu={(e) => e.preventDefault()}
-      data-testid="nonogram-grid"
-    >
-      {grid.map((item, index) => {
-        const columnCount = nonogram.width + maxRowHints;
+    onContextMenu={(e) => e.preventDefault()}
+    data-testid="nonogram-grid"
+  >
+    {grid.map((item, index) => {
+      const columnCount = nonogram.width + maxRowHints;
         const gridRow = Math.floor(index / columnCount);
         const gridColumn = index % columnCount;
         const cellRowIndex = item.rowIndex ?? gridRow - maxColumnHints;
@@ -198,14 +198,48 @@ export function Grid({
         const isLastRow = cellRowIndex === nonogram.height - 1;
         const isLastColumn = cellColIndex === nonogram.width - 1;
 
-        const borderStyle = isCell
-          ? {
-              borderTop: cellRowIndex % 5 === 0 ? '3px solid black' : '1px solid black',
-              borderLeft: cellColIndex % 5 === 0 ? '3px solid black' : '1px solid black',
-              borderBottom: isLastRow ? '3px solid black' : '1px solid black',
-              borderRight: isLastColumn ? '3px solid black' : '1px solid black',
-            }
-          : undefined;
+        const borderColor = 'var(--grid-base-border)';
+        const outerBorderColor = 'var(--grid-strong-border)';
+        const baseBorder = `1px solid ${borderColor}`;
+        const thickBorder = `3px solid ${outerBorderColor}`;
+        const borderStyle = (() => {
+          if (isCell) {
+            return {
+              borderTop: cellRowIndex % 5 === 0 ? thickBorder : baseBorder,
+              borderLeft: cellColIndex % 5 === 0 ? thickBorder : baseBorder,
+              borderRight: isLastColumn ? thickBorder : undefined,
+              borderBottom: isLastRow ? thickBorder : undefined,
+            };
+          }
+
+          const isColumnHintArea = gridRow < maxColumnHints && gridColumn >= maxRowHints;
+          const isRowHintArea = gridColumn < maxRowHints && gridRow >= maxColumnHints;
+
+          if (isColumnHintArea) {
+            const isTopHintRow = gridRow === 0;
+            const isBottomHintRow = gridRow === maxColumnHints - 1;
+            return {
+              borderLeft: baseBorder,
+              borderRight: baseBorder,
+              borderTop: isTopHintRow ? baseBorder : undefined,
+              borderBottom: isBottomHintRow ? baseBorder : undefined,
+            };
+          }
+
+          if (isRowHintArea) {
+            const isFirstHintColumn = gridColumn === 0;
+            const isLastHintColumn = gridColumn === maxRowHints - 1;
+            return {
+              borderTop: baseBorder,
+              borderBottom: baseBorder,
+              borderLeft: isFirstHintColumn ? baseBorder : undefined,
+              borderRight: isLastHintColumn ? baseBorder : undefined,
+            };
+          }
+
+          // top-left empty area: no borders
+          return undefined;
+        })();
 
         return (
           <Box

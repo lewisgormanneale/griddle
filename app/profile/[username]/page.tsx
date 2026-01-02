@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { Avatar, Card, Group, Stack, Text, Title } from '@mantine/core';
 import Pack from '@/components/packs/pack';
 import { PageHeader } from '@/components/layout/page-header';
@@ -17,7 +16,7 @@ export default async function ProfilePage({
   const profile = await getProfileByUsername(username);
 
   if (!profile) {
-    notFound();
+    redirect('/?notice=profile-missing');
   }
 
   const [packs, stats] = await Promise.all([
