@@ -4,13 +4,14 @@ const FILLED = 1;
 
 const patternCache = new Map<string, number[][]>();
 
-const getPatternKey = (length: number, hints: number[]) =>
-  `${length}:${hints.join(",")}`;
+const getPatternKey = (length: number, hints: number[]) => `${length}:${hints.join(',')}`;
 
 const generateLinePatterns = (length: number, hints: number[]) => {
   const key = getPatternKey(length, hints);
   const cached = patternCache.get(key);
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
 
   if (hints.length === 0) {
     const blank = new Array(length).fill(EMPTY);
@@ -75,7 +76,9 @@ const filterPatterns = (patterns: number[][], lineState: number[]) =>
   );
 
 const applyForcedCells = (patterns: number[][], lineState: number[]) => {
-  if (patterns.length === 0) return { updated: false, state: lineState };
+  if (patterns.length === 0) {
+    return { updated: false, state: lineState };
+  }
   const length = lineState.length;
   const nextState = lineState.slice();
   let updated = false;
@@ -103,7 +106,7 @@ export const isLogicSolvable = ({
   width: number;
   height: number;
 }) => {
-  let grid = Array.from({ length: height }, () => new Array(width).fill(UNKNOWN));
+  const grid = Array.from({ length: height }, () => new Array(width).fill(UNKNOWN));
   let changed = true;
 
   while (changed) {
@@ -112,7 +115,9 @@ export const isLogicSolvable = ({
     for (let row = 0; row < height; row += 1) {
       const patterns = generateLinePatterns(width, rows[row] ?? []);
       const filtered = filterPatterns(patterns, grid[row]);
-      if (filtered.length === 0) return false;
+      if (filtered.length === 0) {
+        return false;
+      }
       const result = applyForcedCells(filtered, grid[row]);
       if (result.updated) {
         grid[row] = result.state;
@@ -124,7 +129,9 @@ export const isLogicSolvable = ({
       const columnState = grid.map((row) => row[col]);
       const patterns = generateLinePatterns(height, columns[col] ?? []);
       const filtered = filterPatterns(patterns, columnState);
-      if (filtered.length === 0) return false;
+      if (filtered.length === 0) {
+        return false;
+      }
       const result = applyForcedCells(filtered, columnState);
       if (result.updated) {
         for (let row = 0; row < height; row += 1) {

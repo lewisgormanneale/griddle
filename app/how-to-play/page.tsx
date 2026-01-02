@@ -29,7 +29,12 @@ export default function HowToPlayPage() {
   return (
     <Container size="lg">
       <Stack gap="md">
-        <PageHeader title={pageInfo.title} description={pageInfo.description} align="left" />
+        <PageHeader
+          title={pageInfo.title}
+          description={pageInfo.description}
+          align="left"
+          testId="how-to-play-header"
+        />
 
         <Group gap="md" grow align="stretch" wrap="wrap">
           <Card withBorder radius="md" data-testid="how-to-play-basics">

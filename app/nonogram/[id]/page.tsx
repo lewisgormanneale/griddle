@@ -12,7 +12,7 @@ const buildDescription = (nonogram: NonogramWithProfile) =>
   }`;
 
 const buildTitle = (id: number, nonogram?: NonogramWithProfile) => {
-  if (!nonogram) return `Nonogram #${id}`;
+  if (!nonogram) {return `Nonogram #${id}`;}
   return `Nonogram #${id}: ${nonogram.title}`;
 };
 
@@ -59,7 +59,7 @@ export default async function NonogramPage({ params }: { params: Promise<{ id: s
 
   return (
     <Stack gap="md">
-      <PageHeader title={title} align="left" />
+      <PageHeader title={title} align="left" testId="nonogram-header" />
       <NonogramClient nonogram={nonogram} rowHints={rows} columnHints={columns} />
     </Stack>
   );

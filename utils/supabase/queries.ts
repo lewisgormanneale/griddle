@@ -9,9 +9,7 @@ export type NonogramWithProfile = Tables<'nonograms'> & {
   profiles: Pick<Tables<'profiles'>, 'username'> | null;
 };
 
-export async function getNonogram(
-  id: number
-): Promise<NonogramWithProfile | undefined> {
+export async function getNonogram(id: number): Promise<NonogramWithProfile | undefined> {
   const supabase = createClient();
   try {
     const { data, error } = await supabase
@@ -137,7 +135,9 @@ export async function saveNonogramCompletion({
       }
     );
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
     return data;
   } catch (error) {
     console.error('Failed to save completion', error);
@@ -295,9 +295,7 @@ export async function createNonogramHints({
   }));
 
   try {
-    const { error } = await supabase
-      .from('nonogram_hints')
-      .insert([...rowHints, ...columnHints]);
+    const { error } = await supabase.from('nonogram_hints').insert([...rowHints, ...columnHints]);
     if (error) {
       throw new Error(error.message);
     }

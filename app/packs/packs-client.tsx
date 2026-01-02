@@ -1,44 +1,44 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Center, Loader, Pagination } from '@mantine/core';
 import Pack from '@/components/packs/pack';
+import { useAsyncData } from '@/hooks/use-async-data';
 import { PackWithProfile, getPacks } from '@/utils/supabase/queries';
 
 export function PacksClient() {
-  const [packs, setPacks] = useState<PackWithProfile[]>([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
   const pageSize = 12;
 
-  useEffect(() => {
-    setLoading(true);
-    getPacks({ page, pageSize })
-      .then(({ data, count }) => {
-        setPacks(data);
-        setTotal(count);
-      })
-      .finally(() => setLoading(false));
-  }, [page]);
+  const loadPacks = useCallback(() => getPacks({ page, pageSize }), [page]);
+  const { data: packResult, loading } = useAsyncData<{ data: PackWithProfile[]; count: number }>(
+    loadPacks,
+    [loadPacks],
+    {
+      initialData: { data: [], count: 0 },
+    }
+  );
+  const packs = packResult?.data ?? [];
+  const total = packResult?.count ?? 0;
 
   return (
-    <>
+    <div data-testid="packs-client">
       {loading ? (
-        <Center>
+        <Center data-testid="packs-loading">
           <Loader />
         </Center>
       ) : (
         packs.map((pack) => <Pack key={pack.id} pack={pack} />)
       )}
 
-      <Center>
+      <Center mt="md">
         <Pagination
+          data-testid="packs-pagination"
           total={Math.max(1, Math.ceil(total / pageSize))}
           value={page}
           onChange={setPage}
         />
       </Center>
-    </>
+    </div>
   );
 }

@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { User } from '@supabase/auth-js';
 import {
   IconChevronDown,
   IconChevronUp,
@@ -13,6 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { Avatar, Group, Menu, Skeleton, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useAuthUser } from '@/hooks/use-auth-user';
 import { useCurrentUserImage } from '@/hooks/use-current-user-image';
 import { useCurrentUserProfile } from '@/hooks/use-current-user-profile';
 import { createClient } from '@/utils/supabase/client';
@@ -21,31 +21,14 @@ import classes from './navbar-user.module.css';
 export function NavbarUser({ close }: { close: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const supabase = useMemo(() => createClient(), []);
+  const { user, loading: authLoading } = useAuthUser();
   const [opened, { toggle, close: closeMenu }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 48em)');
-  const userProfile = useCurrentUserProfile();
-  const profileImage = useCurrentUserImage();
+  const userProfile = useCurrentUserProfile(user?.id);
+  const profileImage = useCurrentUserImage(user?.id);
   const displayName = userProfile?.profile?.username ?? user?.email ?? '';
   const userInitial = displayName?.[0]?.toUpperCase();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setAuthLoading(false);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-      setAuthLoading(false);
-    });
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, [supabase]);
 
   const logout = async () => {
     await supabase.auth.signOut();

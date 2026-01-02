@@ -24,7 +24,9 @@ export default function Avatar({
       try {
         const { data, error } = await supabase.storage.from('avatars').download(path);
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         const bucketUrl = URL.createObjectURL(data);
         setAvatarUrl(bucketUrl);

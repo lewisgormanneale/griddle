@@ -16,7 +16,12 @@ export const metadata: Metadata = {
 export default function PacksPage() {
   return (
     <Stack gap="md">
-      <PageHeader title={pageInfo.title} description={pageInfo.description} align="left" />
+      <PageHeader
+        title={pageInfo.title}
+        description={pageInfo.description}
+        align="left"
+        testId="packs-header"
+      />
       <PacksClient />
     </Stack>
   );

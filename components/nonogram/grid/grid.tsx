@@ -64,15 +64,17 @@ export function Grid({
 
     suppressNotifyRef.current = true;
     const nextGrid = generateGrid(nonogram, rowHints, columnHints, {
-        useSolution: mode === 'edit',
-        maxRowHints,
-        maxColumnHints,
-      });
+      useSolution: mode === 'edit',
+      maxRowHints,
+      maxColumnHints,
+    });
 
     if (initialCellStates && initialCellStates.length === nonogram.width * nonogram.height) {
       setGrid(
         nextGrid.map((item) => {
-          if (item.type !== GridItemType.Cell) return item;
+          if (item.type !== GridItemType.Cell) {
+            return item;
+          }
           const cellIndex = (item.rowIndex ?? 0) * nonogram.width + (item.colIndex ?? 0);
           const overrideState = initialCellStates[cellIndex];
           return overrideState !== undefined ? { ...item, cellState: overrideState } : item;
@@ -165,7 +167,9 @@ export function Grid({
     if (!winConditionMet) {
       setGrid((prev) => {
         return prev.map((item, i) =>
-          i === index && item.type === 'cell' ? { ...item, cellState: newFillState } : item
+          i === index && item.type === GridItemType.Cell
+            ? { ...item, cellState: newFillState }
+            : item
         );
       });
     }
@@ -182,6 +186,7 @@ export function Grid({
       }}
       onMouseDown={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
+      data-testid="nonogram-grid"
     >
       {grid.map((item, index) => {
         const columnCount = nonogram.width + maxRowHints;
