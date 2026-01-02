@@ -126,6 +126,20 @@ export function NavbarUser({ close }: { close: () => void }) {
 
         <Menu.Divider />
 
+        {userProfile.profile?.username && (
+          <Menu.Item
+            leftSection={<IconUser size={16} />}
+            component={Link}
+            href={`/profile/${userProfile.profile.username}`}
+            onClick={() => {
+              closeMenu();
+              close();
+            }}
+          >
+            Profile
+          </Menu.Item>
+        )}
+
         <Menu.Item
           leftSection={<IconUser size={16} />}
           component={Link}
