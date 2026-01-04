@@ -64,7 +64,7 @@ const steps: TutorialStep[] = (() => {
     id: 'step-3',
     title: 'Using filled cells to mark impossibilities',
     description:
-      'We have quite a few filled cells now - and we can use them to mark some impossibilities! We use X to mark cells that cannot possibly be filled.\nFor example, in the first row, we have a filled cell - and the "1, 1" clue tells us that no filled cell in the first row can be adjacent to it.\nIn the fourth row, the "3" clue means we can mark an X on in the first column - as it is too far away from the filled cell to be possible.',
+      'In the first row, we have a filled cell - and the "1, 1" clue tells us that no filled cell in the first row can be adjacent to it.\nIn the fourth row, the "3" clue means we can mark an X on in the first column - as it is too far away from the filled cell to be possible.',
     cellStates: [...grid],
   });
 
@@ -108,12 +108,7 @@ export function HowToPlayTutorial() {
         </Group>
       </CardSection>
       <CardSection inheritPadding py="md">
-        <Carousel
-          withIndicators
-          slideSize="100%"
-          controlsOffset="xs"
-          data-testid="how-to-play-carousel"
-        >
+        <Carousel slideSize="100%" controlsOffset="xs" data-testid="how-to-play-carousel">
           {steps.map((step) => {
             const isInteractive = Boolean(step.interactive);
             const isSolved = isInteractive && isInteractiveSolved;
