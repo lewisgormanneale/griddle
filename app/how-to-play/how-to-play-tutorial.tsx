@@ -78,7 +78,7 @@ export function HowToPlayTutorial() {
         <Group justify="space-between" align="center">
           <Title order={4}>Step-By-Step Tutorial</Title>
           <Text size="sm" c="dimmed">
-            Swipe through each step.
+            Follow along with this simple nonogram to see how to approach solving puzzles.
           </Text>
         </Group>
       </CardSection>
