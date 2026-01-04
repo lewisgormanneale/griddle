@@ -2,9 +2,19 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Carousel, CarouselSlide } from '@mantine/carousel';
-import { Badge, Button, Card, Center, Group, Loader, Text, Title } from '@mantine/core';
 import type { EmblaCarouselType } from 'embla-carousel';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
+import {
+  Badge,
+  Button,
+  Card,
+  CardSection,
+  Center,
+  Group,
+  Loader,
+  Text,
+  Title,
+} from '@mantine/core';
 import { useAsyncData } from '@/hooks/use-async-data';
 import {
   getNonogramsForPack,
@@ -46,25 +56,31 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
   };
 
   return (
-    <Card withBorder radius="md" data-testid="pack-card">
-      <Card.Section withBorder className={classes.header} data-testid="pack-header">
+    <Card withBorder radius="md" p="sm" data-testid="pack-card">
+      <CardSection withBorder pt="md" px="md" pb="xs" data-testid="pack-header">
         <Group justify="space-between" align="center" gap="sm">
-          <Title order={3}>{pack.name}</Title>
-          {ownerName && <Badge variant="light">by {ownerName}</Badge>}
+          <Title order={4} m={0}>
+            {pack.name}
+          </Title>
+          {ownerName && (
+            <Badge variant="light" size="sm">
+              by {ownerName}
+            </Badge>
+          )}
         </Group>
-      </Card.Section>
+      </CardSection>
 
       {pack.description && (
-        <Card.Section className={classes.description} data-testid="pack-description">
-          <Text size="sm" color="dimmed">
+        <CardSection px="sm" py="xs" data-testid="pack-description">
+          <Text size="xs" color="dimmed">
             {pack.description}
           </Text>
-        </Card.Section>
+        </CardSection>
       )}
 
-      <Card.Section className={classes.content} data-testid="pack-content">
+      <CardSection px="sm" pb="xs" data-testid="pack-content">
         {loading ? (
-          <Center py="md" data-testid="pack-loading">
+          <Center py="lg" data-testid="pack-loading">
             <Loader size="sm" />
           </Center>
         ) : pages.length > 0 ? (
@@ -79,18 +95,21 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
             >
               {pages.map((page, pageIndex) => (
                 <CarouselSlide key={`page-${pageIndex}`}>
-                  <Group grow align="stretch">
+                  <Group grow align="stretch" gap="sm">
                     {page.map((nonogram) => (
                       <Card
                         key={nonogram.id}
                         withBorder
                         radius="md"
+                        p="sm"
                         className={classes.nonogramCard}
                         data-testid="pack-nonogram-card"
                       >
-                        <div className={classes.nonogramHeader}>
-                          <Text fw={500}>{nonogram.title}</Text>
-                          <Text size="xs" color="dimmed">
+                        <div>
+                          <Text fw={600} size="sm">
+                            {nonogram.title}
+                          </Text>
+                          <Text size="xs" color="dimmed" fw={500}>
                             {nonogram.height} × {nonogram.width}
                           </Text>
                         </div>
@@ -103,8 +122,9 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
                           component={Link}
                           href={`/nonogram/${nonogram.id}`}
                           variant="light"
+                          size="xs"
                           fullWidth
-                          mt="sm"
+                          mt="xs"
                         >
                           Play
                         </Button>
@@ -114,7 +134,7 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
                 </CarouselSlide>
               ))}
             </Carousel>
-            <Group justify="center" gap="xs" mt="sm">
+            <Group justify="center" gap="xs" my="xs" data-testid="pack-pagination">
               {pages.map((_page, index) => (
                 <Button
                   key={`page-${index}`}
@@ -132,7 +152,7 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
             No puzzles in this pack yet.
           </Text>
         )}
-      </Card.Section>
+      </CardSection>
     </Card>
   );
 };

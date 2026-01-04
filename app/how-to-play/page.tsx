@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function HowToPlayPage() {
   return (
-    <Container size="lg">
+    <Container size="md">
       <Stack gap="md">
         <PageHeader
           title={pageInfo.title}

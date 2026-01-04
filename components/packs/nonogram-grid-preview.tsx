@@ -1,22 +1,14 @@
-const NonogramGridPreview = ({
-  rows,
-  columns,
-}: {
-  rows: number;
-  columns: number;
-}) => {
-  const maxGridSize = 120;
+const NonogramGridPreview = ({ rows, columns }: { rows: number; columns: number }) => {
+  const maxGridSize = 96;
   const cellSize = Math.min(20, maxGridSize / Math.max(rows, columns));
 
-  const grid = Array.from({ length: rows }, () =>
-    Array.from({ length: columns }, () => ""),
-  );
+  const grid = Array.from({ length: rows }, () => Array.from({ length: columns }, () => ''));
 
   return (
     <div
       className="justify-center"
       style={{
-        display: "grid",
+        display: 'grid',
         gridTemplateRows: `repeat(${rows}, ${cellSize}px)`,
         gridTemplateColumns: `repeat(${columns}, ${cellSize}px)`,
         maxWidth: `${maxGridSize}px`,
@@ -31,11 +23,11 @@ const NonogramGridPreview = ({
             style={{
               width: `${cellSize}px`,
               height: `${cellSize}px`,
-              border: "1px solid #ccc",
-              backgroundColor: "#f9f9f9",
+              border: '1px solid #ccc',
+              backgroundColor: '#f9f9f9',
             }}
           />
-        )),
+        ))
       )}
     </div>
   );
