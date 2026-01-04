@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
-import CreatePage from '../create/page';
+import CreatePage from './page';
 import { renderWithProviders } from '@/utils/test-utils';
 
-jest.mock('../create/create-client', () => () => <div data-testid="create-client-mock" />);
+jest.mock('./create-client', () => () => <div data-testid="create-client-mock" />);
 
 describe('Create page', () => {
   describe('given the page loads', () => {

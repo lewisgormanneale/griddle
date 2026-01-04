@@ -1,7 +1,7 @@
 import { act, screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/test-utils';
-import { PacksClient } from '../packs/packs-client';
-import PacksPage from '../packs/page';
+import { PacksClient } from './packs-client';
+import PacksPage from './page';
 import {
   type NonogramWithProfile,
   type PackWithProfile,

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/test-utils';
-import HowToPlayPage from '../how-to-play/page';
+import HowToPlayPage from './page';
 
 describe('How to play page', () => {
   describe('given that the page loads', () => {

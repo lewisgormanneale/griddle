@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import PreferencesPage from '../preferences/page';
+import PreferencesPage from './page';
 import { renderWithProviders } from '@/utils/test-utils';
 
 describe('Preferences page', () => {

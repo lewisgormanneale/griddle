@@ -12,6 +12,7 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['**/?(*.)+(test).[tj]s?(x)'],
 };
 
 module.exports = createJestConfig(customJestConfig);
