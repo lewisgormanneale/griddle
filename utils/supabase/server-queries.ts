@@ -132,3 +132,21 @@ export async function getUserStats(userId: string): Promise<{
     return { totalSolved: 0, completedPacks: 0 };
   }
 }
+
+export async function getPackById(id: number): Promise<PackWithProfile | undefined> {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from('packs')
+      .select('*, profiles(username)')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data as PackWithProfile | undefined;
+  } catch (error) {
+    logError('Failed to load pack by id', error);
+    return undefined;
+  }
+}

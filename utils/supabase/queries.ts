@@ -90,6 +90,36 @@ export async function getUserCompletionOfNonogram(
   }
 }
 
+export async function getUserCompletionsForNonograms(
+  user_id: string,
+  nonogramIds: number[]
+): Promise<Record<number, Tables<'completed_nonograms'>>> {
+  if (nonogramIds.length === 0) {
+    return {};
+  }
+
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from('completed_nonograms')
+      .select('*')
+      .eq('user_id', user_id)
+      .in('nonogram_id', nonogramIds);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return (data ?? []).reduce<Record<number, Tables<'completed_nonograms'>>>((acc, item) => {
+      acc[item.nonogram_id] = item as Tables<'completed_nonograms'>;
+      return acc;
+    }, {});
+  } catch (error) {
+    logError('Failed to load user completions for pack', error);
+    return {};
+  }
+}
+
 export type CompletedNonogramWithProfile = Tables<'completed_nonograms'> & {
   profiles: Tables<'profiles'>;
 };
@@ -183,6 +213,38 @@ export async function getPacks({
   } catch (error) {
     logError('Failed to load packs', error);
     return { data: [], count: 0 };
+  }
+}
+
+export async function updatePack({
+  id,
+  name,
+  description,
+}: {
+  id: number;
+  name: string;
+  description?: string;
+}): Promise<Tables<'packs'> | undefined> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from('packs')
+      .update({
+        name,
+        description: description ?? null,
+      })
+      .eq('id', id)
+      .select('*')
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  } catch (error) {
+    logError('Failed to update pack', error);
+    return undefined;
   }
 }
 

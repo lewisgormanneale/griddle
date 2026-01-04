@@ -12,6 +12,10 @@ jest.mock('@/utils/supabase/queries', () => ({
   getNonogramsForPack: jest.fn(),
 }));
 
+jest.mock('@/hooks/use-auth-user', () => ({
+  useAuthUser: () => ({ user: null, loading: false }),
+}));
+
 const mockedGetNonogramsForPack = getNonogramsForPack as jest.MockedFunction<
   typeof getNonogramsForPack
 >;
