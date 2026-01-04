@@ -29,47 +29,44 @@ const columnHints = [[2], [1, 1, 1], [1, 3], [1], [1]];
 
 const makeEmpty = () => Array.from({ length: 25 }, () => CellState.Blank);
 
-const steps: TutorialStep[] = [
-  {
-    id: 'clue-3',
-    title: 'Start with a 3',
-    description: 'Row one has a single 3, so the middle three cells must be filled.',
-    cellStates: (() => {
-      const next = makeEmpty();
-      next[1] = CellState.Filled;
-      next[2] = CellState.Filled;
-      next[3] = CellState.Filled;
-      return next;
-    })(),
-  },
-  {
-    id: 'column-3',
-    title: 'Use overlaps',
-    description: 'Column three has a 3, so the center stack locks in another filled cell.',
-    cellStates: (() => {
-      const next = makeEmpty();
-      [1, 2, 3].forEach((col) => {
-        next[col] = CellState.Filled;
-      });
-      next[2 + 5 * 2] = CellState.Filled;
-      return next;
-    })(),
-  },
-  {
-    id: 'mark-empties',
-    title: 'Mark empties',
-    description: 'Once a run is complete, mark the remaining cells as empty and move on.',
-    cellStates: (() => {
-      const next = makeEmpty();
-      next[1] = CellState.Filled;
-      next[2] = CellState.Filled;
-      next[3] = CellState.Filled;
-      next[0] = CellState.CrossedOut;
-      next[4] = CellState.CrossedOut;
-      return next;
-    })(),
-  },
-];
+const steps: TutorialStep[] = (() => {
+  const grid = makeEmpty();
+  const stepsLocal: TutorialStep[] = [];
+
+  const addFilled = (indices: number[]) => indices.forEach((i) => (grid[i] = CellState.Filled));
+  const addCrosses = (indices: number[]) =>
+    indices.forEach((i) => (grid[i] = CellState.CrossedOut));
+
+  addFilled([2, 12]);
+  stepsLocal.push({
+    id: 'step-1',
+    title: 'Looking for larger clue numbers',
+    description:
+      'In any 5-wide line with a single 3, the middle cell is guaranteed no matter where the block goes.',
+    cellStates: [...grid],
+  });
+
+  addFilled([17, 22]);
+  addCrosses([7]);
+  stepsLocal.push({
+    id: 'step-2',
+    title: 'Checking clue and gap combinations compared to the line length',
+    description:
+      'See the third column? It has a "1" and a "3" clue. And knowing that there is a gap of at least 1 cell between them, that gives us 5. As the column is only 5 cells high, we can fill in the blocks completely - remember the order of clues will always match the order they appear in the line.',
+    cellStates: [...grid],
+  });
+
+  addCrosses([15, 16, 18, 19, 20, 24]);
+  stepsLocal.push({
+    id: 'step-3',
+    title: 'Using filled cells to mark impossibilities',
+    description:
+      'We have quite a few filled cells now - and we can use them to mark some impossibilities! We use X to mark cells that cannot possibly be filled.\nFor example, in the fourth row, we have a filled cell in the middle - so the "1" clue must refer to that cell. In the fifth row, the "2" clue means we can mark an X on both cells that are more than 1 cell away from the filled cell in the middle.',
+    cellStates: [...grid],
+  });
+
+  return stepsLocal;
+})();
 
 export function HowToPlayTutorial() {
   return (
@@ -107,11 +104,13 @@ export function HowToPlayTutorial() {
                     <Text size="sm" fw={600}>
                       Thought process
                     </Text>
-                    <Text size="sm" c="dimmed" data-testid="how-to-play-step-description">
+                    <Text
+                      size="sm"
+                      c="dimmed"
+                      data-testid="how-to-play-step-description"
+                      style={{ whiteSpace: 'pre-wrap' }}
+                    >
                       {step.description}
-                    </Text>
-                    <Text size="sm" c="dimmed">
-                      Keep bouncing between rows and columns to reveal more forced moves.
                     </Text>
                   </Stack>
                 </Group>
