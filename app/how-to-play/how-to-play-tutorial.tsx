@@ -91,9 +91,9 @@ export function HowToPlayTutorial() {
         >
           {steps.map((step) => (
             <CarouselSlide key={step.id} data-testid={`how-to-play-step-${step.id}`}>
-              <Stack gap="md">
+              <Stack gap="md" align="center">
                 <Title order={4}>{step.title}</Title>
-                <Group align="flex-start" gap="lg" wrap="wrap">
+                <Group align="flex-start" gap="lg" wrap="wrap" justify="center">
                   <Grid
                     nonogram={tutorialNonogram}
                     rowHints={rowHints}
