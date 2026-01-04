@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { IconCheck } from '@tabler/icons-react';
 import type { EmblaCarouselType } from 'embla-carousel';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import {
@@ -12,12 +13,16 @@ import {
   Center,
   Group,
   Loader,
+  Progress,
   Text,
   Title,
 } from '@mantine/core';
 import { useAsyncData } from '@/hooks/use-async-data';
+import { useAuthUser } from '@/hooks/use-auth-user';
+import type { Tables } from '@/types/database.types';
 import {
   getNonogramsForPack,
+  getUserCompletionsForNonograms,
   NonogramWithProfile,
   PackWithProfile,
 } from '@/utils/supabase/queries';
@@ -26,11 +31,26 @@ import classes from './pack.module.css';
 
 const Pack = ({ pack }: { pack: PackWithProfile }) => {
   const ownerName = pack.profiles?.username;
+  const { user, loading: authLoading } = useAuthUser();
   const loadNonograms = useCallback(() => getNonogramsForPack(pack.id), [pack.id]);
   const { data: nonograms = [], loading } = useAsyncData<NonogramWithProfile[]>(
     loadNonograms,
     [loadNonograms],
     { initialData: [] }
+  );
+  const nonogramIds = useMemo(() => nonograms.map((item) => item.id), [nonograms]);
+  const { data: completions = {}, loading: completionLoading } = useAsyncData<
+    Record<number, Tables<'completed_nonograms'>>
+  >(
+    () =>
+      user && nonogramIds.length > 0
+        ? getUserCompletionsForNonograms(user.id, nonogramIds)
+        : Promise.resolve({}),
+    [user?.id, nonogramIds.join(',')],
+    {
+      initialData: {},
+      enabled: !!user && nonogramIds.length > 0 && !authLoading,
+    }
   );
   const pages = useMemo(() => {
     const chunkSize = 3;
@@ -42,6 +62,12 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
   }, [nonograms]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [embla, setEmbla] = useState<EmblaCarouselType | null>(null);
+  const completedCount = useMemo(
+    () => nonograms.filter((item) => completions[item.id]).length,
+    [completions, nonograms]
+  );
+  const completionPercent =
+    nonograms.length > 0 ? Math.round((completedCount / nonograms.length) * 100) : 0;
 
   useEffect(() => {
     if (activeSlide >= pages.length) {
@@ -79,6 +105,19 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
       )}
 
       <CardSection px="sm" pb="xs" data-testid="pack-content">
+        {nonograms.length > 0 && (
+          <>
+            <Group justify="space-between" align="center" mb="xs">
+              <Text size="xs" fw={600}>
+                Progress
+              </Text>
+              <Text size="xs" c="dimmed">
+                {completionLoading ? 'Loading...' : `${completedCount}/${nonograms.length}`}
+              </Text>
+            </Group>
+            <Progress value={completionPercent} size="sm" mb="sm" data-testid="pack-progress" />
+          </>
+        )}
         {loading ? (
           <Center py="lg" data-testid="pack-loading">
             <Loader size="sm" />
@@ -106,16 +145,32 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
                         data-testid="pack-nonogram-card"
                       >
                         <div>
-                          <Text fw={600} size="sm">
-                            {nonogram.title}
-                          </Text>
-                          <Text size="xs" color="dimmed" fw={500}>
-                            {nonogram.height} × {nonogram.width}
-                          </Text>
+                          <Group gap={6} align="center" justify="space-between">
+                            <Group gap={6} align="center">
+                              {completions[nonogram.id] && (
+                                <IconCheck
+                                  size={16}
+                                  color="var(--mantine-color-green-6)"
+                                  data-testid="nonogram-completed"
+                                />
+                              )}
+                              <Text fw={600} size="sm">
+                                {nonogram.title}
+                              </Text>
+                            </Group>
+                            <Text size="xs" color="dimmed" fw={500}>
+                              {nonogram.height} × {nonogram.width}
+                            </Text>
+                          </Group>
                         </div>
 
                         <div className={classes.preview}>
-                          <NonogramGridPreview rows={nonogram.height} columns={nonogram.width} />
+                          <NonogramGridPreview
+                            rows={nonogram.height}
+                            columns={nonogram.width}
+                            solution={nonogram.solution}
+                            showSolution={Boolean(completions[nonogram.id])}
+                          />
                         </div>
 
                         <Button
