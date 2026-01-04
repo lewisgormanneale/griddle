@@ -29,7 +29,13 @@ import {
 import NonogramGridPreview from './nonogram-grid-preview';
 import classes from './pack.module.css';
 
-const Pack = ({ pack }: { pack: PackWithProfile }) => {
+type PackProps = {
+  pack: PackWithProfile;
+  editable?: boolean;
+  showOwner?: boolean;
+};
+
+const Pack = ({ pack, editable = false, showOwner = true }: PackProps) => {
   const ownerName = pack.profiles?.username;
   const { user, loading: authLoading } = useAuthUser();
   const loadNonograms = useCallback(() => getNonogramsForPack(pack.id), [pack.id]);
@@ -88,10 +94,23 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
           <Title order={4} m={0}>
             {pack.name}
           </Title>
-          {ownerName && (
-            <Badge variant="light" size="sm">
-              by {ownerName}
-            </Badge>
+          {editable ? (
+            <Button
+              component={Link}
+              href={`/edit-pack/${pack.id}`}
+              size="xs"
+              variant="light"
+              data-testid="edit-pack-button"
+            >
+              Edit
+            </Button>
+          ) : (
+            ownerName &&
+            showOwner && (
+              <Badge variant="light" size="sm">
+                by {ownerName}
+              </Badge>
+            )
           )}
         </Group>
       </CardSection>
@@ -105,7 +124,7 @@ const Pack = ({ pack }: { pack: PackWithProfile }) => {
       )}
 
       <CardSection px="sm" pb="xs" data-testid="pack-content">
-        {nonograms.length > 0 && (
+        {nonograms.length > 0 && user && (
           <>
             <Group justify="space-between" align="center" mb="xs">
               <Text size="xs" fw={600}>

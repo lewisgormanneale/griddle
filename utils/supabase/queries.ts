@@ -216,6 +216,38 @@ export async function getPacks({
   }
 }
 
+export async function updatePack({
+  id,
+  name,
+  description,
+}: {
+  id: number;
+  name: string;
+  description?: string;
+}): Promise<Tables<'packs'> | undefined> {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from('packs')
+      .update({
+        name,
+        description: description ?? null,
+      })
+      .eq('id', id)
+      .select('*')
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  } catch (error) {
+    logError('Failed to update pack', error);
+    return undefined;
+  }
+}
+
 export async function getNonogramsForPack(id: number): Promise<NonogramWithProfile[]> {
   const supabase = createClient();
   try {
