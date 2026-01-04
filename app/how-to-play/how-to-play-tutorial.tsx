@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Card, CardSection, Group, Stack, Text, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { InteractionControls } from '@/components/nonogram/control-panel/interaction-controls';
 import { Grid } from '@/components/nonogram/grid/grid';
 import type { Tables } from '@/types/database.types';
 import { CellState } from '@/types/types';
@@ -82,6 +83,8 @@ const steps: TutorialStep[] = (() => {
 
 export function HowToPlayTutorial() {
   const [isInteractiveSolved, setIsInteractiveSolved] = useState(false);
+  const [interactionMode, setInteractionMode] = useState<'cursor' | 'touch'>('cursor');
+  const [touchAction, setTouchAction] = useState<'fill' | 'cross' | 'erase'>('fill');
   const notifiedRef = useRef(false);
 
   const handleInteractiveWin = () => {
@@ -125,12 +128,19 @@ export function HowToPlayTutorial() {
                       winConditionMet={isInteractive ? isSolved : true}
                       onWinConditionMet={isInteractive ? handleInteractiveWin : () => {}}
                       interactive={isInteractive}
+                      interactionMode={isInteractive ? interactionMode : 'cursor'}
+                      touchAction={isInteractive ? touchAction : 'fill'}
                       initialCellStates={step.cellStates}
                     />
                     <Stack gap="xs" maw={260}>
-                      <Text size="sm" fw={600}>
-                        Thought process
-                      </Text>
+                      {isInteractive && (
+                        <InteractionControls
+                          interactionMode={interactionMode}
+                          onInteractionModeChange={setInteractionMode}
+                          touchAction={touchAction}
+                          onTouchActionChange={setTouchAction}
+                        />
+                      )}
                       <Text
                         size="sm"
                         c="dimmed"
