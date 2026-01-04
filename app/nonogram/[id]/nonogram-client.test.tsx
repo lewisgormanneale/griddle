@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
-import { NonogramClient } from '../nonogram/[id]/nonogram-client';
+import { NonogramClient } from './nonogram-client';
 import { useAuthUser } from '@/hooks/use-auth-user';
 import {
   type NonogramWithProfile,

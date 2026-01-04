@@ -7,6 +7,7 @@
 - Ensure accessibility best practices are followed in UI components.
 - Use Next.js routing conventions for navigation.
 - Maintain consistent styling using CSS modules as per the project's existing styles.
+- Run relevant tests and linters to ensure code quality and passing tests before finalizing changes. Add new/update existing tests for new features.
 
 ## Testing
 

@@ -61,9 +61,14 @@ export default function HowToPlayPage() {
                   </ThemeIcon>
                 }
               >
-                <ListItem>Numbers tell you the lengths of consecutive filled blocks.</ListItem>
+                <ListItem>
+                  The numbers next to each row and column are your clues. They tell you the lengths
+                  of consecutive filled blocks on that line.
+                </ListItem>
                 <ListItem>Blocks are separated by at least one empty cell.</ListItem>
-                <ListItem>Fill, mark, and narrow down until the picture appears.</ListItem>
+                <ListItem>
+                  Fill, mark, and narrow down cells in the grid until the puzzle is complete!
+                </ListItem>
               </List>
             </CardSection>
           </Card>
@@ -75,9 +80,9 @@ export default function HowToPlayPage() {
                   <IconGridDots size={22} />
                 </ThemeIcon>
                 <Stack flex={1} gap={0}>
-                  <Title order={4}>Reading Clues</Title>
+                  <Title order={4}>Tips & Tricks</Title>
                   <Text size="xs" c="dimmed">
-                    Clues represent filled cells in that line.
+                    Things to keep in mind when solving nonograms.
                   </Text>
                 </Stack>
               </Group>
@@ -92,9 +97,17 @@ export default function HowToPlayPage() {
                   </ThemeIcon>
                 }
               >
-                <ListItem>Sum of the numbers plus minimum gaps must fit the line.</ListItem>
-                <ListItem>Big numbers often anchor the earliest moves.</ListItem>
-                <ListItem>Use overlaps to find guaranteed filled cells.</ListItem>
+                <ListItem>
+                  Guesswork will never be necessary to complete a nonogram - always use logic!
+                </ListItem>
+                <ListItem>
+                  Some nonograms may have clues that equal the grid's length (e.g., "10" on a
+                  10-cell line). Look for these straight away to see if you can fill in any rows or
+                  columns.
+                </ListItem>
+                <ListItem>
+                  When starting out, look for large numbers or columns/rows with a lot of blocks.
+                </ListItem>
               </List>
             </CardSection>
           </Card>
