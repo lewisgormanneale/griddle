@@ -132,23 +132,23 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
                 winConditionMet={winConditionMet}
                 initialTime={completion?.completion_time}
               />
-              <Group justify="space-between" mt="xs">
+              <Flex justify="center" align="center" gap="sm" wrap="wrap" mt="xs">
                 <SegmentedControl
                   value={interactionMode}
                   onChange={(value) => setInteractionMode(value as 'cursor' | 'touch')}
                   data={[
                     {
                       label: (
-                        <Center w={32} h={32}>
-                          <IconMouse size={24} />
+                        <Center w={26} h={26}>
+                          <IconMouse size={20} />
                         </Center>
                       ),
                       value: 'cursor',
                     },
                     {
                       label: (
-                        <Center w={32} h={32}>
-                          <IconHandFinger size={24} />
+                        <Center w={26} h={26}>
+                          <IconHandFinger size={20} />
                         </Center>
                       ),
                       value: 'touch',
@@ -172,7 +172,7 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
                     ))}
                   </Button.Group>
                 )}
-              </Group>
+              </Flex>
             </Card.Section>
             <Card.Section>
               <Flex justify="center" p="md">
