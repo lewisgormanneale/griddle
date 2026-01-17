@@ -34,7 +34,7 @@
     "next": "16.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "supabase": "^2.67.1"
+    "supabase": "^2.72.8"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
