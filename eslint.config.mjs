@@ -8,10 +8,6 @@ export default defineConfig(
   ...mantine,
   { ignores: ["**/*.{mjs,cjs,js,d.ts,d.mts}", ".next", "supabase/functions/**"] },
   {
-    files: ["**/*.story.tsx"],
-    rules: { "no-console": "off" },
-  },
-  {
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: process.cwd(),
