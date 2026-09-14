@@ -48,7 +48,7 @@ describe('NonogramClient', () => {
     describe('when the puzzle loads', () => {
       it('then renders the playable grid', async () => {
         mockedUseAuthUser.mockReturnValue({ user: null, loading: false });
-        mockedGetCompletion.mockResolvedValue(null);
+        mockedGetCompletion.mockResolvedValue(undefined);
         renderWithProviders(
           <NonogramClient nonogram={nonogram} rowHints={[[1], [1]]} columnHints={[[1], [1]]} />
         );
