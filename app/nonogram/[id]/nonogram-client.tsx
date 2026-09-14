@@ -91,7 +91,7 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
 
   return (
     <Flex direction="column" align="center" data-testid="nonogram-client">
-      <Card w="100%" p="md" data-testid="nonogram-card">
+      <Card w="100%" padding="md" data-testid="nonogram-card">
         <Card.Section withBorder inheritPadding py="xs">
           <Group justify="space-between">
             <Text c="dimmed" size="sm">
@@ -103,7 +103,7 @@ export function NonogramClient({ nonogram, rowHints, columnHints }: NonogramClie
           </Group>
         </Card.Section>
         <Card.Section p="md">
-          <Card withBorder p="md" data-testid="nonogram-grid-card">
+          <Card withBorder padding="md" data-testid="nonogram-grid-card">
             <Card.Section withBorder inheritPadding py="xs" data-testid="nonogram-control-panel">
               <ControlPanel
                 winConditionMet={winConditionMet}
