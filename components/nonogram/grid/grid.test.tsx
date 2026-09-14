@@ -13,6 +13,7 @@ const baseNonogram: Tables<'nonograms'> = {
   pack_id: null,
   user_id: null,
   created_at: null,
+  daily_date: null,
 };
 
 describe('Grid', () => {

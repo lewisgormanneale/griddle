@@ -38,6 +38,7 @@ const nonogram: NonogramWithProfile = {
   pack_id: pack.id,
   user_id: 'user-1',
   created_at: '',
+  daily_date: null,
   profiles: { username: 'mara' },
 };
 

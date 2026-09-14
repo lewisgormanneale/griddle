@@ -1,348 +1,343 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
-  }
+    PostgrestVersion: '13.0.4';
+  };
   public: {
     Tables: {
       completed_nonograms: {
         Row: {
-          completion_time: number
-          id: number
-          nonogram_id: number
-          user_id: string
-        }
+          completion_time: number;
+          id: number;
+          nonogram_id: number;
+          user_id: string;
+        };
         Insert: {
-          completion_time: number
-          id?: number
-          nonogram_id: number
-          user_id: string
-        }
+          completion_time: number;
+          id?: number;
+          nonogram_id: number;
+          user_id: string;
+        };
         Update: {
-          completion_time?: number
-          id?: number
-          nonogram_id?: number
-          user_id?: string
-        }
+          completion_time?: number;
+          id?: number;
+          nonogram_id?: number;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "completed_nonograms_nonogram_id_fkey"
-            columns: ["nonogram_id"]
-            isOneToOne: false
-            referencedRelation: "nonograms"
-            referencedColumns: ["id"]
+            foreignKeyName: 'completed_nonograms_nonogram_id_fkey';
+            columns: ['nonogram_id'];
+            isOneToOne: false;
+            referencedRelation: 'nonograms';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "completed_nonograms_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: 'completed_nonograms_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
-        ]
-      }
-      "keep-alive": {
+        ];
+      };
+      'keep-alive': {
         Row: {
-          id: number
-          name: string | null
-          random: string | null
-        }
+          id: number;
+          name: string | null;
+          random: string | null;
+        };
         Insert: {
-          id?: number
-          name?: string | null
-          random?: string | null
-        }
+          id?: number;
+          name?: string | null;
+          random?: string | null;
+        };
         Update: {
-          id?: number
-          name?: string | null
-          random?: string | null
-        }
-        Relationships: []
-      }
+          id?: number;
+          name?: string | null;
+          random?: string | null;
+        };
+        Relationships: [];
+      };
       nonogram_hints: {
         Row: {
-          direction: Database["public"]["Enums"]["direction"]
-          hints: number[] | null
-          id: number
-          index: number | null
-          nonogram_id: number | null
-        }
+          direction: Database['public']['Enums']['direction'];
+          hints: number[] | null;
+          id: number;
+          index: number | null;
+          nonogram_id: number | null;
+        };
         Insert: {
-          direction: Database["public"]["Enums"]["direction"]
-          hints?: number[] | null
-          id?: number
-          index?: number | null
-          nonogram_id?: number | null
-        }
+          direction: Database['public']['Enums']['direction'];
+          hints?: number[] | null;
+          id?: number;
+          index?: number | null;
+          nonogram_id?: number | null;
+        };
         Update: {
-          direction?: Database["public"]["Enums"]["direction"]
-          hints?: number[] | null
-          id?: number
-          index?: number | null
-          nonogram_id?: number | null
-        }
+          direction?: Database['public']['Enums']['direction'];
+          hints?: number[] | null;
+          id?: number;
+          index?: number | null;
+          nonogram_id?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "nonogram_hints_nonogram_id_fkey"
-            columns: ["nonogram_id"]
-            isOneToOne: false
-            referencedRelation: "nonograms"
-            referencedColumns: ["id"]
+            foreignKeyName: 'nonogram_hints_nonogram_id_fkey';
+            columns: ['nonogram_id'];
+            isOneToOne: false;
+            referencedRelation: 'nonograms';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       nonograms: {
         Row: {
-          created_at: string | null
-          height: number
-          id: number
-          pack_id: number | null
-          solution: string
-          title: string
-          user_id: string | null
-          width: number
-        }
+          created_at: string | null;
+          daily_date: string | null;
+          height: number;
+          id: number;
+          pack_id: number | null;
+          solution: string;
+          title: string;
+          user_id: string | null;
+          width: number;
+        };
         Insert: {
-          created_at?: string | null
-          height: number
-          id: number
-          pack_id?: number | null
-          solution: string
-          title: string
-          user_id?: string | null
-          width: number
-        }
+          created_at?: string | null;
+          daily_date?: string | null;
+          height: number;
+          id: number;
+          pack_id?: number | null;
+          solution: string;
+          title: string;
+          user_id?: string | null;
+          width: number;
+        };
         Update: {
-          created_at?: string | null
-          height?: number
-          id?: number
-          pack_id?: number | null
-          solution?: string
-          title?: string
-          user_id?: string | null
-          width?: number
-        }
+          created_at?: string | null;
+          daily_date?: string | null;
+          height?: number;
+          id?: number;
+          pack_id?: number | null;
+          solution?: string;
+          title?: string;
+          user_id?: string | null;
+          width?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "nonograms_pack_id_fkey"
-            columns: ["pack_id"]
-            isOneToOne: false
-            referencedRelation: "packs"
-            referencedColumns: ["id"]
+            foreignKeyName: 'nonograms_pack_id_fkey';
+            columns: ['pack_id'];
+            isOneToOne: false;
+            referencedRelation: 'packs';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "nonograms_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: 'nonograms_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       packs: {
         Row: {
-          created_at: string
-          description: string | null
-          id: number
-          name: string | null
-          user_id: string | null
-        }
+          created_at: string;
+          description: string | null;
+          id: number;
+          name: string | null;
+          user_id: string | null;
+        };
         Insert: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string | null
-          user_id?: string | null
-        }
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          name?: string | null;
+          user_id?: string | null;
+        };
         Update: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string | null
-          user_id?: string | null
-        }
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          name?: string | null;
+          user_id?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "packs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: 'packs_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       profiles: {
         Row: {
-          avatar_url: string | null
-          id: string
-          updated_at: string | null
-          username: string | null
-          website: string | null
-        }
+          avatar_url: string | null;
+          id: string;
+          updated_at: string | null;
+          username: string | null;
+          website: string | null;
+        };
         Insert: {
-          avatar_url?: string | null
-          id: string
-          updated_at?: string | null
-          username?: string | null
-          website?: string | null
-        }
+          avatar_url?: string | null;
+          id: string;
+          updated_at?: string | null;
+          username?: string | null;
+          website?: string | null;
+        };
         Update: {
-          avatar_url?: string | null
-          id?: string
-          updated_at?: string | null
-          username?: string | null
-          website?: string | null
-        }
-        Relationships: []
-      }
-    }
+          avatar_url?: string | null;
+          id?: string;
+          updated_at?: string | null;
+          username?: string | null;
+          website?: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      direction: "row" | "column"
-      size: "5" | "10" | "15" | "20"
-    }
+      direction: 'row' | 'column';
+      size: '5' | '10' | '15' | '20';
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Insert: infer I;
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Update: infer U;
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+    | keyof DefaultSchema['Enums']
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+    : never;
 
 export const Constants = {
   public: {
     Enums: {
-      direction: ["row", "column"],
-      size: ["5", "10", "15", "20"],
+      direction: ['row', 'column'],
+      size: ['5', '10', '15', '20'],
     },
   },
-} as const
+} as const;

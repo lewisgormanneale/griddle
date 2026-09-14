@@ -1,7 +1,7 @@
 import type { Tables } from '@/types/database.types';
+import { logError } from '@/utils/logger';
 import type { NonogramWithProfile, PackWithProfile } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
-import { logError } from '@/utils/logger';
 
 export async function getNonogramServer(id: number): Promise<NonogramWithProfile | undefined> {
   const supabase = await createClient();
@@ -130,6 +130,47 @@ export async function getUserStats(userId: string): Promise<{
   } catch (error) {
     logError('Failed to load user stats', error);
     return { totalSolved: 0, completedPacks: 0 };
+  }
+}
+
+export async function getDailyNonogramIdServer(): Promise<number | undefined> {
+  const supabase = await createClient();
+  const today = new Date().toISOString().slice(0, 10);
+
+  try {
+    const { data, error } = await supabase
+      .from('nonograms')
+      .select('id')
+      .eq('daily_date', today)
+      .maybeSingle();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data) {
+      return data.id;
+    }
+
+    // Today's puzzle may not have generated yet (e.g. the cron job hasn't run,
+    // or is misconfigured) - fall back to the most recent daily puzzle rather
+    // than sending players to a dead end.
+    const { data: latest, error: latestError } = await supabase
+      .from('nonograms')
+      .select('id')
+      .not('daily_date', 'is', null)
+      .order('daily_date', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (latestError) {
+      throw new Error(latestError.message);
+    }
+
+    return latest?.id;
+  } catch (error) {
+    logError('Failed to load daily nonogram', error);
+    return undefined;
   }
 }
 

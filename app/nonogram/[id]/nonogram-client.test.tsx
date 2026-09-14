@@ -33,6 +33,7 @@ const nonogram: NonogramWithProfile = {
   pack_id: null,
   user_id: 'user-1',
   created_at: '',
+  daily_date: null,
   profiles: null,
 };
 
