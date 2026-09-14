@@ -37,7 +37,7 @@ export default function HowToPlayPage() {
         />
 
         <Group gap="md" grow align="stretch" wrap="wrap">
-          <Card withBorder radius="md" data-testid="how-to-play-basics">
+          <Card withBorder radius="md" p="md" data-testid="how-to-play-basics">
             <CardSection withBorder inheritPadding py="sm">
               <Group gap="sm" wrap="nowrap" align="center">
                 <ThemeIcon color="moss" variant="light" size={44} radius="md">
@@ -73,7 +73,7 @@ export default function HowToPlayPage() {
             </CardSection>
           </Card>
 
-          <Card withBorder radius="md" data-testid="how-to-play-clues">
+          <Card withBorder radius="md" p="md" data-testid="how-to-play-clues">
             <CardSection withBorder inheritPadding py="sm">
               <Group wrap="nowrap" align="center">
                 <ThemeIcon color="amber" variant="light" size={44} radius="md">

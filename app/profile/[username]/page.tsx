@@ -64,7 +64,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
         </Stack>
       </Group>
 
-      <Card withBorder radius="md">
+      <Card withBorder radius="md" p="md">
         <Group justify="space-around">
           <Stack gap={4} align="center">
             <Title order={3}>{stats.totalSolved}</Title>

@@ -102,7 +102,7 @@ export function HowToPlayTutorial() {
   };
 
   return (
-    <Card withBorder radius="md" data-testid="how-to-play-tutorial">
+    <Card withBorder radius="md" p="md" data-testid="how-to-play-tutorial">
       <CardSection withBorder inheritPadding py="sm">
         <Group justify="space-between" align="center">
           <Title order={4}>Step-By-Step Tutorial</Title>

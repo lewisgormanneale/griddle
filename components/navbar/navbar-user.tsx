@@ -60,7 +60,7 @@ export function NavbarUser({ close }: { close: () => void }) {
 
         <UnstyledButton
           component={Link}
-          href="/auth/sign-up"
+          href="/auth/login?type=register"
           className={classes.authButtonPrimary}
           onClick={close}
         >
