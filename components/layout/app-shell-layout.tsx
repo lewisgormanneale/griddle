@@ -1,11 +1,11 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { AppShell, Box, Burger, Flex, Group, Text } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import classes from '@/app/layout.module.css';
 import { ColorSchemeToggle } from '@/components/color-scheme-toggle';
 import { Navbar } from '@/components/navbar/navbar';
@@ -27,7 +27,9 @@ function NoticeListener() {
         ? 'That nonogram could not be found.'
         : notice === 'profile-missing'
           ? 'That profile could not be found.'
-          : 'Sorry, we could not find what you were looking for.';
+          : notice === 'no-daily-puzzle'
+            ? "Today's puzzle hasn't been generated yet - check back soon."
+            : 'Sorry, we could not find what you were looking for.';
 
     notifications.show({ color: 'red', message });
     setNoticeShown(notice);
@@ -53,7 +55,14 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
         <Flex justify="space-between" align="center" h="100%">
           <Group align="center" h="100%" px="sm" gap="sm">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Text size="xl" lh={0} tt="uppercase" className="font-zen-dots" component={Link} href="/">
+            <Text
+              size="xl"
+              lh={0}
+              tt="uppercase"
+              className="font-zen-dots"
+              component={Link}
+              href="/"
+            >
               Griddle
             </Text>
           </Group>

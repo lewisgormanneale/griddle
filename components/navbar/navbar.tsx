@@ -14,7 +14,7 @@ import classes from './navbar.module.css';
 
 const navbarItems = [
   { link: '/', label: 'Home', icon: IconHomeFilled },
-  { link: '/nonogram/1', label: "Today's Puzzle", icon: IconPuzzleFilled },
+  { link: '/daily', label: "Today's Puzzle", icon: IconPuzzleFilled },
   { link: '/packs', label: 'Packs', icon: IconLibraryFilled },
   { link: '/how-to-play', label: 'How to play', icon: IconInfoCircle },
   { link: '/create', label: 'Create', icon: IconSquarePlus },

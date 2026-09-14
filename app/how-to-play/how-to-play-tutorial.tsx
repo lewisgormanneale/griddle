@@ -26,6 +26,7 @@ const tutorialNonogram: Tables<'nonograms'> = {
   pack_id: null,
   user_id: null,
   created_at: null,
+  daily_date: null,
 };
 
 const rowHints = [[1, 1], [3], [5], [3], [1, 1]];

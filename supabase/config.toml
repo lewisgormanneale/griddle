@@ -1,0 +1,6 @@
+project_id = "eebmtscbnqdooktanwnj"
+
+[functions.generate-daily-puzzle]
+# Requires a valid Supabase JWT (the service role key, when called from the
+# scheduled cron job below) in the Authorization header.
+verify_jwt = true
