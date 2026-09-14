@@ -43,7 +43,7 @@ export function EditPackClient({ pack, profileUsername }: EditPackClientProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card withBorder radius="md" data-testid="edit-pack-form">
+      <Card withBorder radius="md" padding="md" data-testid="edit-pack-form">
         <Stack gap="sm">
           <TextInput
             label="Title"

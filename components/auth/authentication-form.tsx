@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { IconInfoCircle } from '@tabler/icons-react';
 import {
   Alert,
@@ -23,7 +23,11 @@ import { createClient } from '@/utils/supabase/client';
 import { GitHubButton } from './github-button';
 
 export function AuthenticationForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login', 'register']);
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get('type') === 'register' ? 'register' : 'login';
+  const [type, toggle] = useToggle(
+    initialType === 'register' ? ['register', 'login'] : ['login', 'register']
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const form = useForm({
@@ -86,7 +90,7 @@ export function AuthenticationForm(props: PaperProps) {
   return (
     <Paper radius="md" p="lg" withBorder {...props}>
       <Text size="lg" fw={500}>
-        Welcome to Mantine, {type} with
+        Welcome to Griddle, {type} with
       </Text>
 
       <Group grow mb="md" mt="md">

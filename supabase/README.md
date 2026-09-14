@@ -1,10 +1,10 @@
 # Supabase: daily puzzle generation
 
 This project's schema and edge functions weren't previously tracked in git -
-they were built directly in the Supabase dashboard. This folder starts
-bringing that under version control, beginning with what's needed for
-automatic daily puzzles. Everything below needs to be applied to the live
-project by someone with access (I don't have credentials for it from here).
+they were built directly in the Supabase dashboard. This folder brings that
+under version control, starting with what's needed for automatic daily
+puzzles. Apply the migrations and deploy the function below using an account
+with access to the live project (see "One-time deploy steps").
 
 ## What's here
 

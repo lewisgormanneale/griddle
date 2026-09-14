@@ -6,7 +6,7 @@ import { theme } from '../styles/theme';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <Notifications />
       {children}
     </MantineProvider>

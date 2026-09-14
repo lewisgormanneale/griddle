@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { Center, Loader, Pagination } from '@mantine/core';
+import { Center, Loader, Pagination, Stack } from '@mantine/core';
 import Pack from '@/components/packs/pack';
 import { useAsyncData } from '@/hooks/use-async-data';
 import { PackWithProfile, getPacks } from '@/utils/supabase/queries';
@@ -28,7 +28,11 @@ export function PacksClient() {
           <Loader />
         </Center>
       ) : (
-        packs.map((pack) => <Pack key={pack.id} pack={pack} />)
+        <Stack gap="md" data-testid="packs-list">
+          {packs.map((pack) => (
+            <Pack key={pack.id} pack={pack} />
+          ))}
+        </Stack>
       )}
 
       <Center mt="md">
